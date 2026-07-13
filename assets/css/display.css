@@ -60,6 +60,7 @@ body {
 }
 
 .dsp {
+  height: 100vh; /* fallback for smart-TV browsers without dvh */
   height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr auto auto;

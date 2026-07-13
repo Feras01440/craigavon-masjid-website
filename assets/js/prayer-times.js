@@ -100,7 +100,10 @@
   }
 
   function rawTimes(date) {
-    return new adhan.PrayerTimes(COORDS, date || new Date(), buildParams());
+    // anchor to the Europe/London calendar day (noon, DST-safe) so visitors
+    // in other timezones still see the masjid's day, not their device's
+    var ymd = londonYMD(date || new Date()).split('-').map(Number);
+    return new adhan.PrayerTimes(COORDS, new Date(ymd[0], ymd[1] - 1, ymd[2], 12, 0, 0), buildParams());
   }
 
   /* ---------- iqāmah resolution ---------- */
@@ -165,7 +168,8 @@
   function nextPrayer(now) {
     now = now || new Date();
     for (var dayOffset = 0; dayOffset <= 1; dayOffset++) {
-      var d = new Date(now.getTime() + dayOffset * 86400000);
+      // calendar-day step, not +24h: the UK spring-forward day is 23h long
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset, 12, 0, 0);
       var s = schedule(d);
       for (var i = 0; i < FIVE.length; i++) {
         var k = FIVE[i];

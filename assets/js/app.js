@@ -71,6 +71,10 @@
 
   function iqamahLabel(sched, key) {
     if (key === 'sunrise') return '';
+    // on Fridays the Dhuhr congregation is Jumuʿah, not the daily offset
+    if (key === 'dhuhr' && sched.isFriday && sched.jumuah.length) {
+      return '<div class="prayer-cell__iqamah">Jumuʿah <strong>' + esc(sched.jumuah[0].time) + '</strong></div>';
+    }
     var rule = ((cfg.prayer || {}).iqamah || {})[key];
     if (rule && rule.type === 'joined') {
       return '<div class="prayer-cell__iqamah">with Maghrib</div>';
@@ -105,32 +109,53 @@
     var host = $('[data-next-prayer-card]');
     if (!host || !prayer) return;
 
+    var painted = { key: null, isTomorrow: null, day: null };
+
+    function jamaahText(sched, key, iqamah) {
+      if (key === 'dhuhr' && sched.isFriday && sched.jumuah.length) {
+        return 'jumuʿah ' + esc(sched.jumuah[0].time);
+      }
+      return iqamah ? 'jamāʿah ' + prayer.fmt(iqamah) : '';
+    }
+
+    // full rebuild only when the next prayer or the calendar day changes;
+    // the 1-second tick touches nothing but the countdown text node
     function paint() {
       var now = new Date();
       var next = prayer.nextPrayer(now);
       if (!next) return;
-      var sched = prayer.schedule(now);
-      var c = prayer.until(next.time, now);
-      var rows = '';
-      prayer.FIVE.forEach(function (k) {
-        var meta = prayer.META.filter(function (m) { return m.key === k; })[0];
-        var rule = ((cfg.prayer || {}).iqamah || {})[k];
-        var iqTxt = rule && rule.type === 'joined' ? 'with Maghrib'
-          : (sched.iqamah[k] ? prayer.fmt(sched.iqamah[k]) : '—');
-        rows += '<div class="next-prayer-card__row"><span>' + meta.name +
-          '</span><strong>' + prayer.fmt(sched.adhan[k]) +
-          ' <span aria-hidden="true">·</span> ' + iqTxt + '</strong></div>';
-      });
-      host.innerHTML =
-        '<div class="next-prayer-card__label"><span>Next prayer' +
-          (next.isTomorrow ? ' — tomorrow' : '') + '</span>' +
-          '<span class="date">' + esc(prayer.hijriString(now)) + '</span></div>' +
-        '<div class="next-prayer-card__name">' + next.name +
-          ' <span class="arabic" lang="ar">' + next.arabic + '</span></div>' +
-        '<div class="next-prayer-card__time">' + prayer.fmt(next.time) + '</div>' +
-        '<div class="next-prayer-card__countdown">begins in <strong>' + c.text + '</strong>' +
-          (next.iqamah ? ' · jamāʿah ' + prayer.fmt(next.iqamah) : '') + '</div>' +
-        '<hr>' + rows;
+      var day = prayer.londonYMD(now);
+
+      if (next.key !== painted.key || next.isTomorrow !== painted.isTomorrow || day !== painted.day) {
+        painted = { key: next.key, isTomorrow: next.isTomorrow, day: day };
+        var sched = prayer.schedule(now);
+        var rows = '';
+        prayer.FIVE.forEach(function (k) {
+          var meta = prayer.META.filter(function (m) { return m.key === k; })[0];
+          var rule = ((cfg.prayer || {}).iqamah || {})[k];
+          var iqTxt = k === 'dhuhr' && sched.isFriday && sched.jumuah.length
+            ? 'Jumuʿah ' + esc(sched.jumuah[0].time)
+            : rule && rule.type === 'joined' ? 'with Maghrib'
+            : (sched.iqamah[k] ? prayer.fmt(sched.iqamah[k]) : '—');
+          rows += '<div class="next-prayer-card__row"><span>' + meta.name +
+            '</span><strong>' + prayer.fmt(sched.adhan[k]) +
+            ' <span aria-hidden="true">·</span> ' + iqTxt + '</strong></div>';
+        });
+        var jam = jamaahText(sched, next.key, next.iqamah);
+        host.innerHTML =
+          '<div class="next-prayer-card__label"><span>Next prayer' +
+            (next.isTomorrow ? ' — tomorrow' : '') + '</span>' +
+            '<span class="date">' + esc(prayer.hijriString(now)) + '</span></div>' +
+          '<div class="next-prayer-card__name">' + next.name +
+            ' <span class="arabic" lang="ar">' + next.arabic + '</span></div>' +
+          '<div class="next-prayer-card__time">' + prayer.fmt(next.time) + '</div>' +
+          '<div class="next-prayer-card__countdown">begins in <strong data-countdown></strong>' +
+            (jam ? ' · ' + jam : '') + '</div>' +
+          '<hr>' + rows;
+      }
+
+      var cd = host.querySelector('[data-countdown]');
+      if (cd) cd.textContent = prayer.until(next.time, now).text;
     }
     paint();
     setInterval(paint, 1000);

@@ -56,7 +56,7 @@
   /* colour */
   --ink:        #1c241f;
   --ink-soft:   #4c5a52;
-  --ink-faint:  #75837a;
+  --ink-faint:  #5f6d64; /* AA 5.4:1 on white, 5.1:1 on paper */
   --paper:      #faf7f0;
   --paper-warm: #f2ecdf;
   --paper-deep: #e9e1cf;
@@ -71,7 +71,7 @@
   --green-100:  #dce8e0;
   --green-050:  #edf3ee;
 
-  --gold-600:   #a3762f;
+  --gold-600:   #876021; /* AA 4.8:1 even on the warm section background */
   --gold-500:   #b98a44;
   --gold-400:   #cfa35f;
   --gold-300:   #e0bf85;
@@ -455,7 +455,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-@media (max-width: 900px) {
+/* the inline nav needs ~1160px (brand block + 7 nowrap links);
+   collapse to the toggle menu below that, not at 900px */
+@media (max-width: 1160px) {
   .nav-toggle { display: flex; }
   .site-nav {
     position: fixed;
@@ -573,6 +575,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 .next-prayer-card__countdown {
   margin-top: 0.7rem;
   font-size: var(--text-sm);
+  color: #c4d1c8; /* fallback for browsers without color-mix */
   color: color-mix(in srgb, var(--green-100) 80%, transparent);
   font-variant-numeric: tabular-nums;
 }
@@ -585,6 +588,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   display: flex;
   justify-content: space-between;
   font-size: var(--text-sm);
+  color: #c6d3ca; /* fallback for browsers without color-mix */
   color: color-mix(in srgb, var(--green-100) 82%, transparent);
   padding: 0.22rem 0;
 }
@@ -639,7 +643,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 .prayer-cell--next .prayer-cell__name { color: var(--gold-300); }
 .prayer-cell--next .prayer-cell__arabic { color: var(--gold-400); }
 .prayer-cell--next .prayer-cell__time { color: var(--paper); }
-.prayer-cell--next .prayer-cell__iqamah { color: color-mix(in srgb, var(--green-100) 70%, transparent); }
+.prayer-cell--next .prayer-cell__iqamah { color: #a9bdb1; color: color-mix(in srgb, var(--green-100) 70%, transparent); }
 .prayer-cell--next .prayer-cell__iqamah strong { color: var(--green-100); }
 .prayer-cell--next::after {
   content: 'Next';
@@ -662,6 +666,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
 @media (max-width: 480px) {
   .prayer-strip { grid-template-columns: repeat(2, 1fr); }
 }
+/* let the no-JS message span the strip instead of one grid track */
+.prayer-strip noscript { display: contents; }
 
 /* Timetable (monthly) */
 .timetable-wrap {
@@ -944,6 +950,7 @@ details.faq .faq__body { padding: 0 0 1.2rem; color: var(--ink-soft); max-width:
 .site-footer {
   position: relative;
   background: linear-gradient(180deg, var(--green-900), var(--green-950));
+  color: #c9d5cc; /* fallback for browsers without color-mix */
   color: color-mix(in srgb, var(--green-100) 85%, transparent);
   overflow: hidden;
 }
@@ -972,7 +979,7 @@ details.faq .faq__body { padding: 0 0 1.2rem; color: var(--ink-soft); max-width:
   margin-bottom: 1rem;
 }
 .site-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
-.site-footer a { color: color-mix(in srgb, var(--green-100) 88%, transparent); text-decoration: none; font-size: var(--text-sm); }
+.site-footer a { color: #cfdbd2; color: color-mix(in srgb, var(--green-100) 88%, transparent); text-decoration: none; font-size: var(--text-sm); }
 .site-footer a:hover { color: var(--gold-300); }
 .site-footer p { font-size: var(--text-sm); line-height: 1.7; }
 .site-footer .brand { color: var(--paper); margin-bottom: 1rem; }
@@ -986,6 +993,7 @@ details.faq .faq__body { padding: 0 0 1.2rem; color: var(--ink-soft); max-width:
   justify-content: space-between;
   gap: 0.75rem;
   font-size: var(--text-xs);
+  color: #9fb2a7; /* fallback for browsers without color-mix */
   color: color-mix(in srgb, var(--green-100) 55%, transparent);
 }
 .site-footer__bottom a { font-size: inherit; }
@@ -1067,9 +1075,16 @@ details.faq .faq__body { padding: 0 0 1.2rem; color: var(--ink-soft); max-width:
 
 /* ---------- Print ---------- */
 @media print {
-  .site-header, .site-footer, .hero__actions, .nav-toggle, .no-print { display: none !important; }
+  .site-header, .site-footer, .hero__actions, .nav-toggle, .no-print,
+  .hero, .page-hero, .next-prayer-card, .panel--green { display: none !important; }
   body { background: #fff; color: #000; }
   .timetable th { position: static; background: #eee; color: #000; }
   .timetable-wrap { border: 1px solid #999; box-shadow: none; }
+  .prayer-cell--next { background: #fff !important; }
+  .prayer-cell--next .prayer-cell__time,
+  .prayer-cell--next .prayer-cell__name,
+  .prayer-cell--next .prayer-cell__iqamah,
+  .prayer-cell--next .prayer-cell__iqamah strong { color: #000 !important; }
+  .prayer-cell--next::after { display: none; }
   a { text-decoration: none; color: inherit; }
 }

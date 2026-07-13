@@ -45,6 +45,8 @@
       var isNext = next && !next.isTomorrow && next.key === m.key;
       var rule = ((cfg.prayer || {}).iqamah || {})[m.key];
       var iq = m.key === 'sunrise' ? ''
+        : m.key === 'dhuhr' && sched.isFriday && sched.jumuah.length
+          ? '<div class="dsp-cell__iqamah">Jumuʿah ' + esc(sched.jumuah[0].time) + '</div>'
         : rule && rule.type === 'joined' ? '<div class="dsp-cell__iqamah">with Maghrib</div>'
         : sched.iqamah[m.key] ? '<div class="dsp-cell__iqamah">Iqāmah ' + prayer.fmt(sched.iqamah[m.key]) + '</div>'
         : '';
@@ -61,7 +63,7 @@
     if (els.jumuah) {
       var j = (cfg.prayer || {}).jumuah || [];
       els.jumuah.innerHTML = j.map(function (x) {
-        return '<span class="dsp-jumuah__item">Jumuʿah <strong>' + x.time + '</strong></span>';
+        return '<span class="dsp-jumuah__item">Jumuʿah <strong>' + esc(x.time) + '</strong></span>';
       }).join('');
     }
   }
