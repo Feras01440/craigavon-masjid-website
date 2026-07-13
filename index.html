@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Craigavon Masjid — Mosque &amp; Muslim Community of Craigavon, Portadown &amp; Lurgan</title>
+  <meta name="description" content="Craigavon Masjid (Muslim Association of Craigavon) — live prayer times, Jumuʿah, classes and community life at 16 Legahory Centre, Craigavon BT65 5BE. All are welcome.">
+  <link rel="canonical" href="https://craigavonmasjid.io/">
+  <meta name="theme-color" content="#0f2e24">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Craigavon Masjid — Mosque &amp; Muslim Community of County Armagh">
+  <meta property="og:description" content="Live prayer times, Jumuʿah, education and community life. The masjid serving Craigavon, Portadown &amp; Lurgan. All are welcome.">
+  <meta property="og:url" content="https://craigavonmasjid.io/">
+  <meta property="og:image" content="https://craigavonmasjid.io/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Mosque",
+    "name": "Craigavon Masjid",
+    "alternateName": "Muslim Association of Craigavon",
+    "url": "https://craigavonmasjid.io/",
+    "telephone": "+447400088823",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "16 Legahory Centre",
+      "addressLocality": "Craigavon",
+      "addressRegion": "County Armagh",
+      "postalCode": "BT65 5BE",
+      "addressCountry": "GB"
+    },
+    "geo": { "@type": "GeoCoordinates", "latitude": 54.4478326, "longitude": -6.3711607 }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Craigavon Masjid — home">
+        <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <g fill="none" stroke="#1b4d3b" stroke-width="2">
+            <rect x="12" y="12" width="24" height="24"/>
+            <rect x="12" y="12" width="24" height="24" transform="rotate(45 24 24)"/>
+          </g>
+          <circle cx="24" cy="24" r="4.5" fill="none" stroke="#b98a44" stroke-width="2"/>
+        </svg>
+        <span class="brand__name">Craigavon Masjid<small>Muslim Association of Craigavon</small></span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="prayer-times.html">Prayer Times</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="education.html">Education</a>
+        <a href="community.html">Community</a>
+        <a href="new-to-islam.html">New to Islam</a>
+        <a class="btn btn--gold" href="contact.html">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <svg class="hero__pattern" width="100%" height="100%" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="khatam-hero" width="96" height="96" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="30" y="30" width="36" height="36"/>
+              <rect x="30" y="30" width="36" height="36" transform="rotate(45 48 48)"/>
+              <circle cx="48" cy="48" r="8"/>
+            </g>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#khatam-hero)"/>
+      </svg>
+      <div class="container hero__inner">
+        <div>
+          <p class="hero__salam" lang="ar">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+          <h1>The masjid at the heart of County&nbsp;Armagh</h1>
+          <p class="hero__lede">Craigavon Masjid is the home of the Muslim community of Craigavon, Portadown and Lurgan — a place of prayer, learning and friendship. Whether you pray with us five times a day or have never stepped inside a mosque, you are welcome here.</p>
+          <div class="hero__actions">
+            <a class="btn btn--gold btn--lg" href="prayer-times.html">Prayer times</a>
+            <a class="btn btn--ghost-light btn--lg" href="new-to-islam.html">New to Islam?</a>
+          </div>
+        </div>
+        <div class="next-prayer-card" data-next-prayer-card aria-live="off">
+          <div class="next-prayer-card__label"><span>Prayer times</span></div>
+          <div class="next-prayer-card__name">Loading…</div>
+          <div class="next-prayer-card__countdown">Times calculated for Craigavon (54.45°N)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Today's prayer times ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Ṣalāh at the masjid</p>
+          <h2>Today’s prayer times</h2>
+          <p><span data-today-date></span> · <span data-hijri-date></span> — calculated for Craigavon and updated automatically every day.</p>
+        </div>
+        <div class="prayer-strip" data-prayer-strip>
+          <noscript><div class="prayer-cell" style="grid-column:1/-1;">Please enable JavaScript to see today’s prayer times, or view us on <a href="https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom">MAWAQIT</a>.</div></noscript>
+        </div>
+        <div class="star-divider" aria-hidden="true">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="12"/><rect x="6" y="6" width="12" height="12" transform="rotate(45 12 12)"/></svg>
+        </div>
+        <div class="split">
+          <div class="panel panel--gold-edge">
+            <p class="eyebrow">Every Friday</p>
+            <h3>Jumuʿah — the Friday prayer</h3>
+            <dl class="def-rows" data-jumuah></dl>
+            <p style="margin-top:1rem;"><small>Please arrive early. Note: Maghrib and ʿIshāʾ are currently prayed together in congregation at the masjid.</small></p>
+          </div>
+          <div class="panel">
+            <p class="eyebrow">Full timetable</p>
+            <h3>Monthly timetable &amp; method</h3>
+            <p>See begin and jamāʿah times for the whole month, how our times are calculated for Northern Ireland’s latitude, and the qibla direction from Craigavon.</p>
+            <a class="link-arrow" href="prayer-times.html">Open the monthly timetable</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Announcements + events ============ -->
+    <section class="section section--warm">
+      <div class="container">
+        <div class="split split--wide-left">
+          <div>
+            <div class="section-head">
+              <p class="eyebrow">From the committee</p>
+              <h2>Announcements</h2>
+            </div>
+            <div class="announcement-list" data-announcements="3"></div>
+            <p style="margin-top:1.4rem;"><a class="link-arrow" href="community.html">All announcements &amp; news</a></p>
+          </div>
+          <div>
+            <div class="section-head">
+              <p class="eyebrow">What’s on</p>
+              <h2>Upcoming</h2>
+            </div>
+            <div class="event-list" data-events="3"></div>
+            <p style="margin-top:1.4rem;"><a class="link-arrow" href="community.html">Events &amp; weekly activities</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Verse band ============ -->
+    <section class="section section--deep">
+      <div class="container">
+        <blockquote class="verse">
+          <span class="arabic" lang="ar">إِنَّمَا يَعْمُرُ مَسَاجِدَ اللَّهِ مَنْ آمَنَ بِاللَّهِ وَالْيَوْمِ الْآخِرِ وَأَقَامَ الصَّلَاةَ</span>
+          <p class="translation">“The mosques of Allah are only to be maintained by those who believe in Allah and the Last Day and establish prayer.”</p>
+          <cite>Qurʾān · At-Tawbah 9:18</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ============ Services ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="eyebrow">How we serve</p>
+          <h2>At your side for every step of life</h2>
+          <p>From daily prayer to life’s biggest moments, the masjid is here for you and your family.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <h3>Daily prayers &amp; Jumuʿah</h3>
+            <p>Five daily prayers in congregation and the Friday Jumuʿah prayer with khuṭbah — the heartbeat of the masjid.</p>
+            <a class="link-arrow" href="prayer-times.html">Prayer times</a>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+            <h3>Nikāḥ — marriage</h3>
+            <p>Islamic marriage ceremonies, with guidance on the civil requirements that apply in Northern Ireland.</p>
+            <a class="link-arrow" href="services.html#nikah">How it works</a>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+            <h3>Janāzah — funerals</h3>
+            <p>Support for bereaved families: washing, shrouding, the funeral prayer and burial arrangements, handled with dignity.</p>
+            <a class="link-arrow" href="services.html#janazah">Funeral support</a>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <h3>Shahādah &amp; new Muslims</h3>
+            <p>Thinking about Islam, or newly Muslim? We offer a warm welcome, one-to-one support and no pressure — ever.</p>
+            <a class="link-arrow" href="new-to-islam.html">Start here</a>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+            <h3>Education for all ages</h3>
+            <p>Qurʾān and Islamic studies for children, and learning circles for adults — building knowledge across generations.</p>
+            <a class="link-arrow" href="education.html">Classes</a>
+          </article>
+          <article class="card">
+            <div class="card__icon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h3>Ramadan &amp; Eid</h3>
+            <p>Tarāwīḥ prayers, community ifṭārs, Ramadan meals and Eid celebrations that bring the whole community together.</p>
+            <a class="link-arrow" href="services.html#ramadan">Seasonal programmes</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ New to Islam invitation ============ -->
+    <section class="section section--warm">
+      <div class="container">
+        <div class="split">
+          <div>
+            <p class="eyebrow">For our neighbours</p>
+            <h2>Curious about Islam? Come and see for yourself.</h2>
+            <p>Nearly a fifth of the world’s people are Muslim, and more than ten thousand Muslims now call Northern Ireland home. If you’ve ever wondered what we believe, what happens inside a mosque, or why we pray the way we do — the best way to find out is to ask.</p>
+            <p>Visitors of all faiths and none are welcome at Craigavon Masjid. Come for a look around, bring your questions, and leave with answers over a cup of tea.</p>
+            <div class="hero__actions" style="margin-top:1.6rem;">
+              <a class="btn btn--primary" href="new-to-islam.html">Learn about Islam</a>
+              <a class="btn btn--ghost" href="contact.html">Arrange a visit</a>
+            </div>
+          </div>
+          <div class="panel panel--green">
+            <p class="eyebrow">Good to know</p>
+            <h3>Visiting the masjid</h3>
+            <dl class="def-rows" style="--line-soft: rgba(255,255,255,0.12);">
+              <div class="def-row" style="border-color:rgba(255,255,255,0.12);"><dt style="color:rgba(237,230,214,0.65);">Where</dt><dd style="color:#faf7f0;">16 Legahory Centre, BT65 5BE</dd></div>
+              <div class="def-row" style="border-color:rgba(255,255,255,0.12);"><dt style="color:rgba(237,230,214,0.65);">When</dt><dd style="color:#faf7f0;">Around prayer times, or by arrangement</dd></div>
+              <div class="def-row" style="border-color:rgba(255,255,255,0.12);"><dt style="color:rgba(237,230,214,0.65);">Dress</dt><dd style="color:#faf7f0;">Modest clothing; headscarf optional</dd></div>
+              <div class="def-row" style="border-color:rgba(255,255,255,0.12);"><dt style="color:rgba(237,230,214,0.65);">Cost</dt><dd style="color:#faf7f0;">Always free</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Visit band ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="split split--wide-left">
+          <div>
+            <p class="eyebrow">Find us</p>
+            <h2>In the heart of Craigavon</h2>
+            <p>You’ll find us at the Legahory Centre in central Craigavon — minutes from both Portadown and Lurgan, with parking and step-free access.</p>
+            <dl class="def-rows" style="max-width:26rem;">
+              <div class="def-row"><dt>Address</dt><dd>16 Legahory Centre, BT65 5BE</dd></div>
+              <div class="def-row"><dt>Phone / WhatsApp</dt><dd><a href="tel:+447400088823">+44 7400 088823</a></dd></div>
+              <div class="def-row"><dt>Jumuʿah</dt><dd>Friday 13:00</dd></div>
+            </dl>
+            <div class="hero__actions" style="margin-top:1.6rem;">
+              <a class="btn btn--primary" href="contact.html">Contact &amp; directions</a>
+              <a class="btn btn--ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Craigavon%20Masjid%2C%2016%20Legahory%20Centre%2C%20Craigavon%20BT65%205BE" rel="noopener">Open in Google Maps</a>
+            </div>
+          </div>
+          <div class="panel">
+            <p class="eyebrow">Facilities</p>
+            <h3>What to expect</h3>
+            <ul style="columns:2; column-gap:2rem; font-size:var(--text-sm); color:var(--ink-soft);">
+              <li>Prayer hall</li>
+              <li>Women’s prayer space</li>
+              <li>Wudū (ablution) areas</li>
+              <li>Step-free access</li>
+              <li>Parking nearby</li>
+              <li>Children’s classes</li>
+              <li>Ramadan meals</li>
+              <li>Janāzah facilities</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
+    <svg class="site-footer__pattern" width="100%" height="100%" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="khatam-footer" width="96" height="96" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="30" y="30" width="36" height="36"/>
+            <rect x="30" y="30" width="36" height="36" transform="rotate(45 48 48)"/>
+            <circle cx="48" cy="48" r="8"/>
+          </g>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#khatam-footer)"/>
+    </svg>
+    <div class="container site-footer__verse">
+      <blockquote class="verse">
+        <span class="arabic" lang="ar">فِي بُيُوتٍ أَذِنَ اللَّهُ أَن تُرْفَعَ وَيُذْكَرَ فِيهَا اسْمُهُ</span>
+        <p class="translation">“In houses which Allah has permitted to be raised, and in which His name is remembered.”</p>
+        <cite>Qurʾān · An-Nūr 24:36</cite>
+      </blockquote>
+    </div>
+    <div class="container site-footer__grid">
+      <div>
+        <a class="brand" href="index.html">
+          <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="#cfa35f" stroke-width="2">
+              <rect x="12" y="12" width="24" height="24"/>
+              <rect x="12" y="12" width="24" height="24" transform="rotate(45 24 24)"/>
+            </g>
+            <circle cx="24" cy="24" r="4.5" fill="none" stroke="#faf7f0" stroke-width="2"/>
+          </svg>
+          <span class="brand__name">Craigavon Masjid<small>Muslim Association of Craigavon</small></span>
+        </a>
+        <p>The mosque and Muslim community association serving Craigavon, Portadown, Lurgan and County Armagh. A place of prayer, learning and welcome — for everyone.</p>
+      </div>
+      <div>
+        <h3>Visit</h3>
+        <ul>
+          <li>16 Legahory Centre</li>
+          <li>Craigavon, BT65 5BE</li>
+          <li><a href="tel:+447400088823">+44 7400 088823</a></li>
+          <li><a href="https://wa.me/447400088823" rel="noopener">WhatsApp</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="prayer-times.html">Prayer times</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="community.html">Community &amp; news</a></li>
+          <li><a href="new-to-islam.html">New to Islam</a></li>
+          <li><a href="about.html">About us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Connect</h3>
+        <ul>
+          <li><a href="https://www.facebook.com/p/Craigavon-Masjid-100079448451488/" rel="noopener">Facebook — Craigavon Masjid</a></li>
+          <li><a href="https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom" rel="noopener">MAWAQIT listing</a></li>
+          <li><a href="contact.html">Contact the committee</a></li>
+          <li><a href="display.html">TV display mode</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container site-footer__bottom">
+      <span>© <span data-year>2026</span> Muslim Association of Craigavon.</span>
+      <span>Prayer times computed locally · Moonsighting Committee method · <a href="prayer-times.html#method">how times are calculated</a></span>
+    </div>
+  </footer>
+
+  <script src="content/config.js" defer></script>
+  <script src="content/announcements.js" defer></script>
+  <script src="content/events.js" defer></script>
+  <script src="assets/vendor/adhan.umd.min.js" defer></script>
+  <script src="assets/js/prayer-times.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

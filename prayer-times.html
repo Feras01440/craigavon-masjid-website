@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prayer Times — Craigavon Masjid</title>
+  <meta name="description" content="Today's prayer and jamāʿah times at Craigavon Masjid, plus the full monthly timetable, Jumuʿah times, qibla direction and how times are calculated for Northern Ireland.">
+  <link rel="canonical" href="https://craigavonmasjid.io/prayer-times.html">
+  <meta name="theme-color" content="#0f2e24">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Prayer Times — Craigavon Masjid">
+  <meta property="og:description" content="Live prayer times and the monthly timetable for Craigavon, Portadown &amp; Lurgan.">
+  <meta property="og:image" content="https://craigavonmasjid.io/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Craigavon Masjid — home">
+        <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <g fill="none" stroke="#1b4d3b" stroke-width="2">
+            <rect x="12" y="12" width="24" height="24"/>
+            <rect x="12" y="12" width="24" height="24" transform="rotate(45 24 24)"/>
+          </g>
+          <circle cx="24" cy="24" r="4.5" fill="none" stroke="#b98a44" stroke-width="2"/>
+        </svg>
+        <span class="brand__name">Craigavon Masjid<small>Muslim Association of Craigavon</small></span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="prayer-times.html" aria-current="page">Prayer Times</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="education.html">Education</a>
+        <a href="community.html">Community</a>
+        <a href="new-to-islam.html">New to Islam</a>
+        <a class="btn btn--gold" href="contact.html">Visit Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ Page hero with live card ============ -->
+    <section class="hero">
+      <svg class="hero__pattern" width="100%" height="100%" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="khatam-hero" width="96" height="96" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="currentColor" stroke-width="1">
+              <rect x="30" y="30" width="36" height="36"/>
+              <rect x="30" y="30" width="36" height="36" transform="rotate(45 48 48)"/>
+              <circle cx="48" cy="48" r="8"/>
+            </g>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#khatam-hero)"/>
+      </svg>
+      <div class="container hero__inner" style="padding-block: clamp(3rem, 7vw, 5rem);">
+        <div>
+          <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><span>Prayer times</span></nav>
+          <h1 style="color:var(--paper);">Prayer times</h1>
+          <p class="hero__lede">Calculated fresh every day for Craigavon — <span data-today-date></span>, <span data-hijri-date></span>. Begin times mark when each prayer comes in; jamāʿah is when we pray together at the masjid.</p>
+          <div class="hero__actions">
+            <a class="btn btn--gold" href="#timetable">Monthly timetable</a>
+            <a class="btn btn--ghost-light" href="#method">How times are calculated</a>
+          </div>
+        </div>
+        <div class="next-prayer-card" data-next-prayer-card aria-live="off">
+          <div class="next-prayer-card__label"><span>Prayer times</span></div>
+          <div class="next-prayer-card__name">Loading…</div>
+          <div class="next-prayer-card__countdown">Times calculated for Craigavon (54.45°N)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Today ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Today at the masjid</p>
+          <h2>Today’s times</h2>
+        </div>
+        <div class="prayer-strip" data-prayer-strip>
+          <noscript><div class="prayer-cell" style="grid-column:1/-1;">Please enable JavaScript to see prayer times, or view us on <a href="https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom">MAWAQIT</a>.</div></noscript>
+        </div>
+
+        <div class="split" style="margin-top:2.2rem;">
+          <div class="panel panel--gold-edge">
+            <p class="eyebrow">Every Friday</p>
+            <h3>Jumuʿah</h3>
+            <dl class="def-rows" data-jumuah></dl>
+            <p style="margin-top:1rem;"><small>Eid prayer times are announced each year on the <a href="community.html">community page</a> and our Facebook page.</small></p>
+          </div>
+          <div class="panel">
+            <p class="eyebrow">Worth knowing</p>
+            <h3>Jamāʿah arrangements</h3>
+            <ul style="font-size:var(--text-sm); color:var(--ink-soft);">
+              <li>Maghrib and ʿIshāʾ are currently <strong>prayed together</strong> in congregation.</li>
+              <li>Jamāʿah times may be adjusted by the committee — announcements take precedence.</li>
+              <li>The qibla from Craigavon is <strong><span data-qibla>113°</span></strong> from true north (roughly south-east).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Monthly timetable ============ -->
+    <section class="section section--warm" id="timetable">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Plan ahead</p>
+          <h2>Monthly timetable</h2>
+          <p>Begin times for every prayer, any month of the year — including next Ramadan. Fridays are marked in gold; today is highlighted.</p>
+        </div>
+        <div class="timetable-toolbar no-print">
+          <div class="timetable-toolbar__nav">
+            <button class="btn btn--ghost btn--icon" data-timetable-prev aria-label="Previous month">←</button>
+            <span class="timetable-toolbar__month" data-timetable-month aria-live="polite">…</span>
+            <button class="btn btn--ghost btn--icon" data-timetable-next aria-label="Next month">→</button>
+          </div>
+          <button class="btn btn--primary btn--sm" data-timetable-print>Print this month</button>
+        </div>
+        <div class="timetable-wrap">
+          <table class="timetable" data-timetable>
+            <caption class="visually-hidden">Monthly prayer timetable for Craigavon Masjid</caption>
+          </table>
+        </div>
+        <p style="margin-top:1rem;"><small>All times are for Craigavon (54.45°N, 6.37°W) in UK local time — GMT/BST changes are handled automatically. Jamāʿah times follow the rules shown above and any committee announcements.</small></p>
+      </div>
+    </section>
+
+    <!-- ============ Method ============ -->
+    <section class="section" id="method">
+      <div class="container">
+        <div class="split split--wide-left">
+          <div class="prose">
+            <p class="eyebrow">Transparency</p>
+            <h2>How our times are calculated</h2>
+            <p>Prayer times on this site are computed astronomically for the masjid’s exact location using the <strong><span data-method-name>Moonsighting Committee Worldwide</span></strong> method, with the ʿAsr time following the <strong><span data-madhab-name>standard</span></strong> convention.</p>
+            <p>Northern Ireland sits at 54.4°N — so far north that in high summer the sun never sinks far enough below the horizon for true darkness. In those weeks a naïve formula produces no valid time for ʿIshāʾ and Fajr at all. Like the Moonsighting Committee itself, we resolve this with the <strong>seventh-of-the-night</strong> rule, which caps ʿIshāʾ and Fajr at a practical fraction of the night, so every date of the year has a sound, prayable time.</p>
+            <p>Different mosques and apps use different conventions, so you may notice our Fajr and ʿIshāʾ differ from another app by some minutes — that is a difference of method, not a mistake. When in doubt, the jamāʿah times announced by the masjid committee are what we pray by.</p>
+          </div>
+          <div>
+            <div class="panel panel--green">
+              <p class="eyebrow">Also available</p>
+              <h3>MAWAQIT</h3>
+              <p style="font-size:var(--text-sm);">The masjid also publishes times on MAWAQIT, the app used on the screen inside the masjid.</p>
+              <p style="margin-top:1rem;"><a class="btn btn--gold btn--sm" href="https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom" rel="noopener">Craigavon Masjid on MAWAQIT</a></p>
+            </div>
+            <div class="panel" style="margin-top:1.4rem;">
+              <p class="eyebrow">In the masjid</p>
+              <h3>TV display</h3>
+              <p style="font-size:var(--text-sm);">A full-screen prayer board built into this website — for the television inside the masjid, or your own screen.</p>
+              <a class="link-arrow" href="display.html">Open display mode</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
+    <svg class="site-footer__pattern" width="100%" height="100%" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="khatam-footer" width="96" height="96" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="30" y="30" width="36" height="36"/>
+            <rect x="30" y="30" width="36" height="36" transform="rotate(45 48 48)"/>
+            <circle cx="48" cy="48" r="8"/>
+          </g>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#khatam-footer)"/>
+    </svg>
+    <div class="container site-footer__grid">
+      <div>
+        <a class="brand" href="index.html">
+          <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="#cfa35f" stroke-width="2">
+              <rect x="12" y="12" width="24" height="24"/>
+              <rect x="12" y="12" width="24" height="24" transform="rotate(45 24 24)"/>
+            </g>
+            <circle cx="24" cy="24" r="4.5" fill="none" stroke="#faf7f0" stroke-width="2"/>
+          </svg>
+          <span class="brand__name">Craigavon Masjid<small>Muslim Association of Craigavon</small></span>
+        </a>
+        <p>The mosque and Muslim community association serving Craigavon, Portadown, Lurgan and County Armagh. A place of prayer, learning and welcome — for everyone.</p>
+      </div>
+      <div>
+        <h3>Visit</h3>
+        <ul>
+          <li>16 Legahory Centre</li>
+          <li>Craigavon, BT65 5BE</li>
+          <li><a href="tel:+447400088823">+44 7400 088823</a></li>
+          <li><a href="https://wa.me/447400088823" rel="noopener">WhatsApp</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="prayer-times.html">Prayer times</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="education.html">Education</a></li>
+          <li><a href="community.html">Community &amp; news</a></li>
+          <li><a href="new-to-islam.html">New to Islam</a></li>
+          <li><a href="about.html">About us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Connect</h3>
+        <ul>
+          <li><a href="https://www.facebook.com/p/Craigavon-Masjid-100079448451488/" rel="noopener">Facebook — Craigavon Masjid</a></li>
+          <li><a href="https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom" rel="noopener">MAWAQIT listing</a></li>
+          <li><a href="contact.html">Contact the committee</a></li>
+          <li><a href="display.html">TV display mode</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container site-footer__bottom">
+      <span>© <span data-year>2026</span> Muslim Association of Craigavon.</span>
+      <span>Prayer times computed locally · Moonsighting Committee method · <a href="prayer-times.html#method">how times are calculated</a></span>
+    </div>
+  </footer>
+
+  <script src="content/config.js" defer></script>
+  <script src="content/announcements.js" defer></script>
+  <script src="content/events.js" defer></script>
+  <script src="assets/vendor/adhan.umd.min.js" defer></script>
+  <script src="assets/js/prayer-times.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+  <script src="assets/js/prayer-page.js" defer></script>
+</body>
+</html>
