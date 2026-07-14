@@ -1,8 +1,11 @@
 # Accessibility report
 
-**Product:** Muslim Association of Craigavon website and prayer display  
-**Target:** WCAG 2.2 Level AA  
-**Evidence date:** 13 July 2026  
+**Product:** Muslim Association of Craigavon website and prayer display
+
+**Target:** WCAG 2.2 Level AA
+
+**Evidence date:** 14 July 2026
+
 **Status:** The automated Chromium production matrix passed. Cross-engine, manual and
 assistive-technology evidence remains a launch gate.
 
@@ -19,7 +22,7 @@ a pass until its output has been reviewed.
 | Public route and component source review | Pass   | Semantic landmarks, heading contract, skip link, labelled navigation, reduced-motion and forced-colour rules were reviewed. |
 | Automated accessibility suite            | Pass   | `tests/e2e/accessibility.spec.ts`, `tests/e2e/keyboard-and-preferences.spec.ts` and the TV accessibility coverage           |
 | Playwright suite discovery               | Pass   | 185 checks across five specification files and six configured projects                                                      |
-| Production Chromium matrix               | Pass   | 110 passed, 3 expected project-specific skips, 0 failed in 2.0 minutes on the definitive production `next start` build      |
+| Production Chromium matrix               | Pass   | 110 passed, 3 expected project-specific skips, 0 failed in 1.4 minutes on the definitive production `next start` build      |
 | Automated axe scans                      | Pass   | Public routes, the 404 response and the 1920 x 1080 TV surface completed without an untriaged WCAG A/AA violation           |
 | Automated keyboard and preferences       | Pass   | Skip-link focus, responsive menu operation, desktop navigation and reduced-motion behavior passed in Chromium               |
 

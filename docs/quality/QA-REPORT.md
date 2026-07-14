@@ -1,7 +1,9 @@
 # Quality assurance report
 
-**Release candidate:** Production platform rebuild  
-**Evidence date:** 13 July 2026  
+**Release candidate:** Production platform rebuild
+
+**Evidence date:** 14 July 2026
+
 **Overall status:** The automated Chromium production matrix passed. Launch approval still requires
 the cross-engine, manual accessibility, approved-data, authenticated, operational and performance
 evidence listed below.
@@ -14,16 +16,39 @@ test results.
 
 ## Executed evidence
 
-| Area                                         | Command or review                            | Result                                        | Evidence                                                                                            |
-| -------------------------------------------- | -------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| E2E scope definition                         | Repository source and route review           | Complete                                      | `tests/e2e/`                                                                                        |
-| Viewport matrix and stable failure artifacts | Playwright configuration review              | Complete                                      | `playwright.config.ts`                                                                              |
-| Test discovery                               | `playwright test --list`                     | Pass - 185 checks                             | Six configured projects across five specification files                                             |
-| Production Chromium execution                | Four-project Playwright production-build run | Pass - 110 passed, 3 expected skips, 0 failed | Chromium phone, tablet, desktop and 1080p TV; 2.0 minutes; locally installed Microsoft Edge channel |
-| Representative visual evidence               | `node scripts/capture-qa-evidence.mjs`       | Pass                                          | Desktop home and confirmed test-fixture TV screenshots in `docs/quality/evidence/`                  |
+| Area                                         | Command or review                                                  | Result                                        | Evidence                                                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| E2E scope definition                         | Repository source and route review                                 | Complete                                      | `tests/e2e/`                                                                                             |
+| Viewport matrix and stable failure artifacts | Playwright configuration review                                    | Complete                                      | `playwright.config.ts`                                                                                   |
+| Test discovery                               | `playwright test --list`                                           | Pass - 185 checks                             | Six configured projects across five specification files                                                  |
+| Formatting                                   | `pnpm format:check`                                                | Pass                                          | All matched files use Prettier code style                                                                |
+| Static analysis                              | `pnpm lint`; `pnpm typecheck`                                      | Pass                                          | Zero ESLint warnings/errors; strict TypeScript check completed                                           |
+| Unit and deterministic integration tests     | `pnpm test`; `pnpm test:coverage`                                  | Pass - 96 tests in 12 files                   | 91.13% statements, 83.65% branches, 95.19% functions and 93.16% lines                                    |
+| Focused logo regression                      | Public-route contract plus five repeats at each responsive profile | Pass - 42 contract checks and 15/15 repeats   | Official header/footer asset loaded at mobile, tablet and desktop widths                                 |
+| Production Chromium execution                | Four-project Playwright production-build run                       | Pass - 110 passed, 3 expected skips, 0 failed | Chromium phone, tablet, desktop and 1080p TV; 1.4 minutes; locally installed Microsoft Edge channel      |
+| Production build                             | `pnpm build`                                                       | Pass                                          | Next.js production compilation, TypeScript, page-data collection and static generation completed         |
+| Representative visual evidence               | `node scripts/capture-qa-evidence.mjs`                             | Pass                                          | Desktop home and confirmed test-fixture TV screenshots refreshed in `docs/quality/evidence/`             |
+| Local secret-pattern review                  | High-confidence token pattern scan of non-ignored files            | Pass - no matches                             | CI Gitleaks remains the authoritative full-history gate                                                  |
+| Dependency audit                             | `pnpm audit --audit-level=high`                                    | Not verified                                  | Registry access was unavailable in the managed environment; the committed CI dependency job remains open |
 
-The production execution used the definitive `next start` build after the final application and
-security changes. The three skips are intentional viewport-specific exclusions, not failures.
+The production execution used the definitive `next start` build after the final application,
+security and logo-delivery changes. The three skips are intentional viewport-specific exclusions,
+not failures.
+
+## Official-logo regression evidence
+
+The failed element was the home-page footer image at tablet and desktop widths. The header image
+loaded, and the shared static WebP returned HTTP 200, but Chromium left the footer image with
+`complete=false`, `naturalWidth=0` and an empty `currentSrc`. Both instances used the same already
+compressed local logo through different responsive `next/image` candidate sets. Loading the footer
+eagerly alone did not resolve candidate selection after programmatic scrolling.
+
+Both fixed-size logo instances now use direct, unoptimised delivery of the 5,134-byte WebP. The
+header remains prioritised, the footer remains eager, and both retain explicit intrinsic dimensions,
+decorative empty alternative text and visible adjacent organisation text. This removes the redundant
+responsive optimiser candidate sets without changing the authorised artwork. The complete 42-check
+public-route contract passed, followed by 15/15 focused checks: five consecutive executions at each
+mobile, tablet and desktop profile.
 
 ## Automated E2E coverage
 
@@ -105,9 +130,7 @@ For a workstation with an installed Edge/Chrome channel but no downloaded Playwr
 Playwright-managed browser build. If that workstation also lacks Playwright's FFmpeg helper, set
 `PLAYWRIGHT_DISABLE_VIDEO=1`; failure screenshots and traces remain enabled.
 
-## Remaining required pre-release commands
-
-Record exact output against the release commit:
+## Completed local release commands
 
 ```powershell
 pnpm format:check
@@ -116,14 +139,27 @@ pnpm typecheck
 pnpm test
 pnpm test:coverage
 pnpm build
-pnpm exec playwright test --project=firefox-desktop --project=webkit-mobile
+pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet --project=chromium-desktop --project=tv-1080p --workers=2
 ```
+
+The repository-local internal-link assertions passed in the browser matrix. The CI-only Gitleaks,
+CodeQL, dependency-review, registry-backed dependency audit, offline Markdown-link action and local
+Supabase migration replay/lint have not been represented as local passes.
+
+## Remaining pre-release commands and environments
+
+- Run the committed CI workflow, including Gitleaks, CodeQL, dependency review/audit,
+  repository-link integrity and isolated Supabase migration replay/lint.
+- Run `pnpm exec playwright test --project=firefox-desktop --project=webkit-mobile` after the
+  managed Firefox and WebKit binaries are available.
+- Run credentialed staging scenarios for Auth/MFA, every role, content publication, prayer
+  publication/withdrawal, private media, enquiries, audit and backup/restore.
 
 ## Release decision
 
 Release remains blocked until:
 
-- all remaining required commands pass at the release commit;
+- the pending CI, migration, cross-engine and credentialed-staging gates pass at the release commit;
 - critical public journeys pass in Firefox and WebKit as well as Chromium;
 - axe has no untriaged serious, critical, A or AA violation in those engines;
 - the manual accessibility checklist is signed off;

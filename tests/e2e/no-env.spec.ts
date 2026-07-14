@@ -19,7 +19,7 @@ test.describe("safe fallbacks without Supabase configuration", () => {
     await gotoReady(page, "/");
 
     await expect(
-      page.getByRole("heading", { level: 2, name: "No unapproved times are shown" }),
+      page.getByRole("heading", { level: 2, name: "Approved prayer information only" }),
     ).toBeVisible();
     await expect(page.getByText("Start and congregational times are withheld")).toBeVisible();
     await expect(page.getByText(/could not be checked/i).first()).toBeVisible();
