@@ -1,0 +1,290 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+  NEXT_TELEMETRY_DISABLED: 1
+  NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+
+jobs:
+  quality:
+    name: Format, lint, and typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm from package.json
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  tests:
+    name: Unit and integration coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm from package.json
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit and integration tests with coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-${{ github.run_id }}
+          path: |
+            coverage/lcov.info
+            coverage/index.html
+          if-no-files-found: ignore
+          retention-days: 7
+          include-hidden-files: false
+
+  build:
+    name: Production build
+    needs: [quality, tests]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm from package.json
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build production application
+        run: pnpm build
+
+  e2e:
+    name: Chromium smoke and accessibility
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Detect Playwright specifications
+        id: specs
+        shell: bash
+        run: |
+          if find tests/e2e -type f \( -name '*.spec.ts' -o -name '*.spec.tsx' -o -name '*.spec.js' \) -print -quit 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No Playwright specifications exist yet; browser checks are skipped without using external credentials."
+          fi
+
+      - name: Set up pnpm from package.json
+        if: steps.specs.outputs.present == 'true'
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        if: steps.specs.outputs.present == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        if: steps.specs.outputs.present == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        if: steps.specs.outputs.present == 'true'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Chromium smoke and axe checks
+        if: steps.specs.outputs.present == 'true'
+        run: >-
+          pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet
+          --project=chromium-desktop --project=tv-1080p
+
+      - name: Upload Playwright diagnostics
+        if: failure() && steps.specs.outputs.present == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-diagnostics-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+          include-hidden-files: false
+
+  links:
+    name: Internal link integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Check repository-local links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline --no-progress --exclude-path node_modules --exclude-path .next './**/*.md'
+            './**/*.html'
+          fail: true
+
+  dependencies:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm from package.json
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit production and development dependencies
+        run: pnpm audit --audit-level=high
+
+      - name: Review dependency changes in this pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out complete history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan commits and working tree with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
+
+  migrations:
+    name: Local Supabase migration lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Detect local Supabase migrations
+        id: migrations
+        shell: bash
+        run: |
+          if [[ -f supabase/config.toml ]] && find supabase/migrations -type f -name '*.sql' -print -quit 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No local Supabase migration set exists; migration lint is skipped."
+          fi
+
+      - name: Set up pinned Supabase CLI
+        if: steps.migrations.outputs.present == 'true'
+        uses: supabase/setup-cli@v2
+        with:
+          version: 2.101.0
+
+      - name: Start isolated local Supabase Postgres
+        if: steps.migrations.outputs.present == 'true'
+        run: supabase db start
+
+      - name: Reapply migrations and seed from a clean state
+        if: steps.migrations.outputs.present == 'true'
+        run: supabase db reset
+
+      - name: Lint local database schema
+        if: steps.migrations.outputs.present == 'true'
+        run: supabase db lint --local --level warning
+
+      - name: Stop isolated local Supabase
+        if: always() && steps.migrations.outputs.present == 'true'
+        continue-on-error: true
+        run: supabase stop --no-backup

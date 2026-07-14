@@ -1,0 +1,119 @@
+name: Bug report
+description: Report a reproducible problem without sharing secrets or personal data.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve the Muslim Association of Craigavon platform.
+
+        **Do not use this public form for a security vulnerability, leaked credential, private enquiry, personal data, or safeguarding concern.** Follow `SECURITY.md` through the Security policy link instead. If current prayer or Jumu'ah information may be wrong and worship is imminent, use the Association's approved private operational route as well as recording the technical issue safely.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Prayer starts or congregation times
+        - Jumu'ah, Ramadan, Eid, or exceptional closure
+        - Mosque TV display
+        - Public website content or navigation
+        - Administration dashboard
+        - Sign-in, invitation, account, or permissions
+        - Enquiries
+        - Media upload or delivery
+        - Accessibility
+        - Build, deployment, migration, or monitoring
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Production public website
+        - Production administration dashboard
+        - Staging or preview deployment
+        - Local development
+        - Mosque TV device
+        - Unknown
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Page or route
+      description:
+        Provide the public path or route name. Remove tokens, query values, email addresses, and
+        record identifiers.
+      placeholder: /prayer-times or Admin > Prayer times
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+      description:
+        Describe the visible behavior and impact. Do not paste enquiry text, access tokens, cookies,
+        private object URLs, or personal data.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Use test or public data only. Include date, time, and timezone when relevant.
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: input
+    id: observed_at
+    attributes:
+      label: Time observed
+      description: Use an ISO 8601 timestamp with timezone if possible.
+      placeholder: 2026-07-13T18:30:00+01:00
+
+  - type: textarea
+    id: client
+    attributes:
+      label: Device and browser
+      description:
+        Include viewport or assistive technology when relevant; do not include device names
+        containing a person's name.
+      placeholder: Android 15, Chrome 138, 200% zoom
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description:
+        Add safe screenshots, console messages, or request IDs. Remove secrets, personal data,
+        enquiry contents, cookies, and private URLs.
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label:
+            I have removed credentials, session data, private enquiry/media content, and personal
+            data from this report.
+          required: true
+        - label:
+            I understand that suspected vulnerabilities must be reported privately through the
+            Security policy rather than described here.
+          required: true

@@ -1,0 +1,422 @@
+.screen {
+  --tv-bg: #0d1713;
+  --tv-panel: #15231d;
+  --tv-line: #3e5048;
+  --tv-paper: #f5f1e7;
+  --tv-muted: #b8c0ba;
+  --tv-accent: #d5b568;
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-width: 20rem;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: var(--tv-paper);
+  background: var(--tv-bg);
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+.screen::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 82% 8%, rgb(213 181 104 / 9%), transparent 32%);
+  content: "";
+  pointer-events: none;
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 4rem);
+  border-bottom: 1px solid var(--tv-line);
+  padding: clamp(1rem, 2vw, 2.5rem) clamp(1.25rem, 4vw, 5rem);
+}
+
+.brand {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 1.2vw, 1.25rem);
+}
+
+.brandLogo {
+  width: clamp(2.75rem, 4.5vw, 4.75rem);
+  height: clamp(2.75rem, 4.5vw, 4.75rem);
+  flex: 0 0 auto;
+  border: 1px solid var(--tv-accent);
+  background: #fff;
+  object-fit: contain;
+}
+
+.brand strong {
+  display: block;
+  font-family: var(--font-display, serif);
+  font-size: clamp(1.1rem, 2vw, 2.3rem);
+  font-weight: 600;
+}
+
+.brand span,
+.status {
+  color: var(--tv-muted);
+  font-size: clamp(0.68rem, 1vw, 1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.clock {
+  color: var(--tv-paper);
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 730;
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+}
+
+.dates {
+  text-align: right;
+}
+
+.dates time,
+.dates span {
+  display: block;
+  font-size: clamp(0.85rem, 1.35vw, 1.55rem);
+}
+
+.dates span {
+  margin-top: 0.35rem;
+  color: var(--tv-accent);
+}
+
+.network {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--tv-line);
+  padding: 0.45rem 1rem;
+  color: var(--tv-muted);
+  background: var(--tv-panel);
+  font-size: clamp(0.7rem, 1vw, 1rem);
+}
+
+.offline {
+  color: #ffcfb9;
+  font-weight: 700;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(16rem, 1fr);
+  gap: clamp(1rem, 2vw, 2.5rem);
+  min-height: 0;
+  padding: clamp(1rem, 2vw, 2.5rem) clamp(1.25rem, 4vw, 5rem);
+}
+
+.prayerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.3vw, 1.5rem);
+  min-height: 0;
+}
+
+.prayer {
+  display: grid;
+  align-content: center;
+  border: 1px solid var(--tv-line);
+  padding: clamp(0.7rem, 1.5vw, 1.7rem);
+  background: var(--tv-panel);
+}
+
+.next {
+  border-color: var(--tv-accent);
+  box-shadow: inset 0 0 0 2px var(--tv-accent);
+}
+
+.prayerName {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--tv-muted);
+  font-size: clamp(0.85rem, 1.3vw, 1.4rem);
+}
+
+.prayerName span[lang="ar"] {
+  color: var(--tv-accent);
+  font-family: var(--font-arabic, serif);
+  font-size: 1.15em;
+}
+
+.start {
+  margin-top: 0.4rem;
+  font-size: clamp(2rem, 4.4vw, 5.2rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.congregation {
+  margin-top: 0.5rem;
+  color: var(--tv-muted);
+  font-size: clamp(0.75rem, 1.25vw, 1.35rem);
+}
+
+.congregation strong {
+  color: var(--tv-paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.aside {
+  display: grid;
+  align-content: stretch;
+  gap: clamp(0.8rem, 1.5vw, 1.5rem);
+  grid-template-rows: auto auto 1fr;
+  min-height: 0;
+}
+
+.panel {
+  border-top: 0.25rem solid var(--tv-accent);
+  padding: clamp(0.8rem, 1.5vw, 1.5rem);
+  color: var(--tv-bg);
+  background: var(--tv-paper);
+}
+
+.panel h2,
+.panel p {
+  margin-top: 0;
+}
+
+.panel h2 {
+  font-size: clamp(0.8rem, 1vw, 1.1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nextValue {
+  margin-bottom: 0.35rem;
+  font-size: clamp(1.25rem, 2.4vw, 2.8rem);
+  font-weight: 750;
+  line-height: 1.05;
+}
+
+.countdown {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.8vw, 4.5rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 720;
+}
+
+.jumuahList {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.jumuahList div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.jumuahList dt,
+.jumuahList dd {
+  margin: 0;
+}
+
+.empty {
+  color: #53605a;
+}
+
+.notice {
+  align-content: center;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--tv-line);
+  padding: clamp(0.8rem, 1.5vw, 1.5rem);
+  background: var(--tv-panel);
+}
+
+.notice p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-bottom: 0;
+  color: var(--tv-muted);
+  font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.notice h2 {
+  margin: 0;
+  color: var(--tv-paper);
+  font-size: clamp(1.2rem, 2vw, 2.3rem);
+  line-height: 1.1;
+}
+
+.footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  border-top: 1px solid var(--tv-line);
+  padding: 0.7rem clamp(1.25rem, 4vw, 5rem);
+  color: var(--tv-muted);
+  font-size: clamp(0.65rem, 0.9vw, 0.95rem);
+}
+
+.emergency {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  padding: 8vw;
+  text-align: center;
+  color: #1c1009;
+  background: #f3be8e;
+}
+
+.emergency p {
+  margin: 0 0 1rem;
+  font-size: clamp(1rem, 2vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.emergency h2 {
+  max-width: 22ch;
+  margin: 0 auto;
+  font-size: clamp(2.5rem, 7vw, 8rem);
+  line-height: 0.98;
+}
+
+.emergency div {
+  max-width: 54ch;
+  margin: 2rem auto 0;
+  font-size: clamp(1.1rem, 2vw, 2.2rem);
+}
+
+.emergency .network,
+.prayerHold .network {
+  max-width: none;
+  margin-top: 3rem;
+  padding-inline: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1.1rem);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.emergency .network {
+  border-color: #6b3216;
+  color: #3c1a0b;
+}
+
+.prayerHold {
+  position: fixed;
+  z-index: 15;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  padding: 8vw;
+  text-align: center;
+  color: var(--tv-paper);
+  background: var(--tv-bg);
+}
+
+.prayerHold span[lang="ar"] {
+  color: var(--tv-accent);
+  font-family: var(--font-arabic, serif);
+  font-size: clamp(2rem, 5vw, 6rem);
+}
+
+.prayerHold h2 {
+  margin: 1rem 0 0;
+  font-size: clamp(2.5rem, 6vw, 7rem);
+}
+
+.prayerHold p {
+  color: var(--tv-muted);
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+
+.unavailable {
+  grid-column: 1 / -1;
+  display: grid;
+  place-content: center;
+  border: 1px solid var(--tv-line);
+  padding: 4vw;
+  text-align: center;
+  background: var(--tv-panel);
+}
+
+.unavailable h1 {
+  max-width: 18ch;
+  margin: 0 auto;
+  font-size: clamp(2rem, 5vw, 5.5rem);
+}
+
+.unavailable p {
+  max-width: 50ch;
+  margin-inline: auto;
+  color: var(--tv-muted);
+  font-size: clamp(1rem, 1.7vw, 1.8rem);
+}
+
+@media (orientation: portrait), (max-width: 900px) {
+  .screen {
+    position: relative;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
+  .topbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .clock {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: center;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .prayerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .screen * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .screen,
+  .prayer,
+  .panel,
+  .notice,
+  .unavailable,
+  .emergency,
+  .prayerHold {
+    border: 2px solid CanvasText;
+    color: CanvasText;
+    background: Canvas;
+  }
+}

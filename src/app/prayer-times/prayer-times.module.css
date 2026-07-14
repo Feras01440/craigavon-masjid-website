@@ -1,0 +1,248 @@
+.page {
+  padding-block: clamp(2.5rem, 6vw, 6rem);
+}
+
+.intro,
+.content {
+  width: min(100% - 2rem, 74rem);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--accent-strong, #705927);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  max-width: 14ch;
+  margin: 0;
+  font-size: clamp(2.25rem, 7vw, 5.5rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 62ch;
+  margin: 1.25rem 0 0;
+  color: var(--muted, #4b5550);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+}
+
+.notice {
+  margin-top: 2rem;
+  border: 1px solid var(--line, #c9cec9);
+  border-left: 0.35rem solid var(--accent, #8a7138);
+  border-radius: 0.3rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface, #fffdf8);
+}
+
+.notice h2,
+.notice p {
+  margin-top: 0;
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+.today {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.prayerCard {
+  border-top: 0.25rem solid var(--ink, #17231e);
+  padding: 1rem;
+  background: var(--surface, #fffdf8);
+  box-shadow: 0 0.5rem 1.5rem rgb(22 35 30 / 8%);
+}
+
+.prayerCard h3,
+.prayerCard p {
+  margin: 0;
+}
+
+.arabic {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted, #4b5550);
+  font-family: var(--font-arabic, serif);
+  font-size: 1.1rem;
+}
+
+.time {
+  margin-top: 1.25rem !important;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.9rem;
+  font-weight: 760;
+}
+
+.congregation {
+  margin-top: 0.35rem !important;
+  color: var(--muted, #4b5550);
+  font-size: 0.9rem;
+}
+
+.jumuah {
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: #fffdf8;
+  background: var(--ink, #17231e);
+}
+
+.jumuah h2 {
+  margin-top: 0;
+}
+
+.jumuahList {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.jumuahList div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  padding-top: 0.8rem;
+}
+
+.jumuahList dt,
+.jumuahList dd {
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 3.5rem;
+}
+
+.controls h2 {
+  margin: 0;
+}
+
+.controlLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.controlLinks a,
+.controlLinks button {
+  min-height: 2.75rem;
+  border: 1px solid currentcolor;
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  color: var(--ink, #17231e);
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tableRegion {
+  overflow-x: auto;
+  margin-top: 1.25rem;
+  border: 1px solid var(--line, #c9cec9);
+  background: var(--surface, #fffdf8);
+}
+
+.table {
+  width: 100%;
+  min-width: 70rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table caption {
+  padding: 0.9rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid var(--line, #d7dbd7);
+  padding: 0.7rem 0.65rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table thead th {
+  background: var(--soft, #eef0eb);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.table tbody th {
+  position: sticky;
+  left: 0;
+  text-align: left;
+  background: var(--surface, #fffdf8);
+}
+
+.todayRow th,
+.todayRow td {
+  background: var(--highlight, #f3ead4);
+}
+
+.todayRow th {
+  background: var(--highlight, #f3ead4) !important;
+}
+
+.source {
+  max-width: 70ch;
+  margin-top: 2rem;
+  color: var(--muted, #4b5550);
+  font-size: 0.9rem;
+}
+
+@media print {
+  .intro,
+  .controls,
+  .notice,
+  .jumuah,
+  .source {
+    display: none !important;
+  }
+
+  .page,
+  .content {
+    width: 100%;
+    padding: 0;
+  }
+
+  .tableRegion {
+    overflow: visible;
+    border: 0;
+  }
+
+  .table {
+    min-width: 0;
+    font-size: 8pt;
+  }
+}
+
+@media (forced-colors: active) {
+  .notice,
+  .prayerCard,
+  .jumuah,
+  .tableRegion {
+    border: 2px solid CanvasText;
+  }
+}
