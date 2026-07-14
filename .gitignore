@@ -27,4 +27,5 @@ supabase/.temp/
 # Editor and runtime state
 .vscode/
 .idea/
+.claude/
 *.log
