@@ -616,9 +616,18 @@ select extensions.lives_ok(
 );
 select extensions.is((select count(*) from public.prayer_settings), 1::bigint, 'prayer draft was stored');
 select extensions.is((select count(*) from public.jumuah_sessions), 1::bigint, 'Friday session was stored with the draft');
-select extensions.throws_ok(
-  $$select * from public.publish_prayer_settings('10000000-0000-0000-0000-000000000003', (select id from public.prayer_settings limit 1), 1, 'Committee-approved test fixture')$$,
-  '42501', null, 'authenticated clients cannot call the server-only publication RPC'
+select extensions.ok(
+  not has_function_privilege(
+    'authenticated',
+    'public.publish_prayer_settings(uuid,uuid,integer,text)',
+    'execute'
+  )
+  and has_function_privilege(
+    'service_role',
+    'public.publish_prayer_settings(uuid,uuid,integer,text)',
+    'execute'
+  ),
+  'authenticated clients cannot call the server-only publication RPC'
 );
 reset role;
 
