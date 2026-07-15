@@ -256,7 +256,11 @@
 }
 
 .notice {
-  align-content: center;
+  /* Top-aligned so that if content ever exceeds the panel, the cut falls
+     after the clamped ellipsis below — never through the middle of a line
+     (the previous centred + hidden combination cropped glyphs at both
+     panel edges on the TV). */
+  align-content: start;
   min-height: 0;
   overflow: hidden;
   border: 1px solid var(--tv-line);
@@ -275,10 +279,14 @@
 }
 
 .notice h2 {
+  display: -webkit-box;
+  overflow: hidden;
   margin: 0;
   color: var(--tv-paper);
   font-size: clamp(1.2rem, 2vw, 2.3rem);
   line-height: 1.1;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .footer {
