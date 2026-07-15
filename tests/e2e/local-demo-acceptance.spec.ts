@@ -220,10 +220,15 @@ test.describe("clean local demonstration acceptance", () => {
     expect(failures, failures.join("\n")).toEqual([]);
   });
 
+  // This walkthrough chains sign-in, MFA enrolment, two content lifecycles,
+  // media upload, prayer overrides, RLS denial and audit verification in one
+  // serial journey; give it an explicit budget instead of the global 30s so a
+  // slow CI runner cannot turn a passing journey red.
   test("administrator completes principal workflows and restricted role is denied", async ({
     browser,
     page,
   }, testInfo) => {
+    test.setTimeout(240_000);
     const failures = await recordConsoleFailures(page);
     const run = Date.now().toString(36);
     const announcementSlug = `local-acceptance-announcement-${run}`;

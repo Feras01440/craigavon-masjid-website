@@ -14,6 +14,7 @@
     "local:link": "node scripts/local-auth-link.mjs",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
+    "start:standalone": "node scripts/start-standalone.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
