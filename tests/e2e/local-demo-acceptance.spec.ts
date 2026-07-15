@@ -144,7 +144,11 @@ test.describe("clean local demonstration acceptance", () => {
       await expect(page.getByRole("heading", { level: 1 })).toContainText(
         "Muslim Association of Craigavon",
       );
-      await expect(page.getByText(/Local demonstration.*not committee approved/i)).toBeVisible();
+      await expect(
+        page.getByRole("status").filter({
+          hasText: /Local demonstration.*not committee approved/i,
+        }),
+      ).toBeVisible();
       await expect(
         page.locator('img[src="/brand/muslim-association-of-craigavon-logo-256.webp"]'),
       ).toHaveCount(2);
