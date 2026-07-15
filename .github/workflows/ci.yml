@@ -339,6 +339,9 @@ jobs:
       - name: Build a clean local database, authentication and demo environment
         run: pnpm setup:local
 
+      - name: Build production application against the clean demo environment
+        run: pnpm build
+
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
@@ -346,6 +349,7 @@ jobs:
         env:
           LOCAL_DEMO_E2E: 1
           PLAYWRIGHT_DISABLE_VIDEO: 1
+          PLAYWRIGHT_WEB_SERVER_COMMAND: pnpm start
         run: >-
           pnpm exec playwright test tests/e2e/local-demo-acceptance.spec.ts
           --project=chromium-desktop --workers=1

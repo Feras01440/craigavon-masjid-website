@@ -204,8 +204,14 @@ test.describe("clean local demonstration acceptance", () => {
       }
       await page.goto("/tv");
       await expect(page.locator("body")).toContainText(/LOCAL DEMONSTRATION/i);
-      await page.goto("/acceptance-route-that-does-not-exist");
-      await expect(page.locator("h1")).toContainText(/page.*not found/i);
+
+      // The browser reports the intentionally requested 404 as a console error.
+      // Keep it on a separate page so the product-console gate remains strict.
+      const notFoundPage = await page.context().newPage();
+      const notFoundResponse = await notFoundPage.goto("/acceptance-route-that-does-not-exist");
+      expect(notFoundResponse?.status()).toBe(404);
+      await expect(notFoundPage.locator("h1")).toContainText(/page.*not found/i);
+      await notFoundPage.close();
     });
 
     expect(failures, failures.join("\n")).toEqual([]);
