@@ -69,18 +69,30 @@ export default async function AdminDashboardPage() {
     });
   }
   if (roleHasPermission(context.role, "enquiries:read")) {
-    const { count, error } = await context.supabase
-      .from("enquiries")
-      .select("id", { count: "exact", head: true })
-      .in("status", ["new", "in_progress", "awaiting_response"])
-      .is("deleted_at", null);
-    summaries.push({
-      label: "Open enquiries",
-      value: error ? null : count,
-      href: "/admin/enquiries",
-      permission: "enquiries:read",
-      detail: "Messages still in the work queue",
-    });
+    if (context.aal !== "aal2") {
+      // Enquiry data (including its count) is AAL2-gated in the database;
+      // an unconfirmed session would otherwise see a misleading zero.
+      summaries.push({
+        label: "Open enquiries",
+        value: null,
+        href: "/admin/security",
+        permission: "enquiries:read",
+        detail: "Confirm your authenticator on the Security page to view the private queue",
+      });
+    } else {
+      const { count, error } = await context.supabase
+        .from("enquiries")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["new", "in_progress", "awaiting_response"])
+        .is("deleted_at", null);
+      summaries.push({
+        label: "Open enquiries",
+        value: error ? null : count,
+        href: "/admin/enquiries",
+        permission: "enquiries:read",
+        detail: "Messages still in the work queue",
+      });
+    }
   }
   if (roleHasPermission(context.role, "users:manage")) {
     const { count, error } = await context.supabase

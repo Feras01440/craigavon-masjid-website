@@ -20,7 +20,10 @@ export default async function EnquiriesPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const context = await requirePermission("enquiries:read");
+  // Enquiry bodies are personal data (including new-Muslim support messages),
+  // so reading the queue requires an authenticator-confirmed session — the
+  // same AAL2 boundary the database policy enforces.
+  const context = await requirePermission("enquiries:read", { requireAal2: true });
   const query = await searchParams;
   const rawFilter = typeof query.status === "string" ? query.status : "open";
   const filter = validFilters.has(rawFilter as EnquiryStatus | "open" | "all") ? rawFilter : "open";

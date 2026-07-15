@@ -564,6 +564,11 @@ select extensions.is(
 );
 select tests.set_auth('10000000-0000-0000-0000-000000000004', 'aal1');
 select extensions.is(
+  (select count(*) from public.enquiries),
+  0::bigint,
+  'AAL1 enquiries manager cannot read enquiry personal data'
+);
+select extensions.is(
   tests.exec_rows($$update public.enquiries set status = 'in_progress' where id = '30000000-0000-0000-0000-000000000001'$$),
   0::bigint,
   'AAL1 enquiries manager cannot alter an enquiry'
@@ -574,6 +579,11 @@ select extensions.is(
   'AAL1 enquiries manager cannot delete an enquiry'
 );
 select tests.set_auth('10000000-0000-0000-0000-000000000004', 'aal2');
+select extensions.is(
+  (select count(*) from public.enquiries),
+  2::bigint,
+  'AAL2 enquiries manager can read the enquiry queue'
+);
 update public.enquiries
 set status = 'in_progress', assigned_to = '10000000-0000-0000-0000-000000000004'
 where id = '30000000-0000-0000-0000-000000000001';
