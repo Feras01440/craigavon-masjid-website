@@ -67,6 +67,9 @@ begin
     raise exception 'The source prayer settings were not found.' using errcode = 'P0002';
   end if;
 
+  -- The demo-only calculation uses a fixed Isha interval so the rolling sample
+  -- remains internally valid at this high latitude. It is not a production
+  -- recommendation and cannot be shown unless local demo mode is explicit.
   insert into public.prayer_settings (
     name, status, effective_from, effective_to, timezone, latitude, longitude,
     calculation_method, madhab, high_latitude_rule, adjustments, congregation_rules,
@@ -400,9 +403,9 @@ begin
     calculation_library_version, created_by, updated_by, demo_local_only
   ) values (
     '[LOCAL DEMO] Prayer calculation example', 'draft', current_date - 30, current_date + 334,
-    'Europe/London', 54.45, -6.39, 'muslim_world_league', 'hanafi', 'middle_of_night',
+    'Europe/London', 54.45, -6.39, 'umm_al_qura', 'hanafi', 'middle_of_night',
     '{"fajr":0,"sunrise":0,"dhuhr":0,"asr":0,"maghrib":0,"isha":0}'::jsonb,
-    '{"fajr":{"type":"offset","minutes":30,"roundTo":5},"dhuhr":{"type":"offset","minutes":20,"roundTo":5},"asr":{"type":"offset","minutes":15,"roundTo":5},"maghrib":{"type":"offset","minutes":10,"roundTo":5},"isha":{"type":"offset","minutes":20,"roundTo":5,"latest":"23:00"}}'::jsonb,
+    '{"fajr":{"type":"offset","minutes":30,"roundTo":5},"dhuhr":{"type":"offset","minutes":20,"roundTo":5},"asr":{"type":"offset","minutes":15,"roundTo":5},"maghrib":{"type":"offset","minutes":10,"roundTo":5},"isha":{"type":"offset","minutes":20,"roundTo":5}}'::jsonb,
     0, '[LOCAL DEMO] Calculated example — not approved prayer data',
     'Generated solely to exercise the local prayer engine.', 'adhan', '4.4.4', p_actor_id, p_actor_id, true
   ) returning id into v_prayer_id;
@@ -410,23 +413,22 @@ begin
   insert into public.jumuah_sessions (
     prayer_settings_id, label, khutbah_time, prayer_time, display_order, notes
   ) values
-    (v_prayer_id, '[LOCAL DEMO] First Friday session', '13:15', '13:30', 1, 'Sample only; not a real Jumuah time.'),
-    (v_prayer_id, '[LOCAL DEMO] Second Friday session', '14:15', '14:30', 2, 'Sample only; not a real Jumuah time.');
+    (v_prayer_id, '[LOCAL DEMO] Friday session', '13:50', '14:00', 1, 'Sample only; not a real Jumuah time.');
 
   insert into public.prayer_overrides (
-    prayer_settings_id, prayer_date, prayer, congregation_at, unavailable, reason, created_by
+    prayer_settings_id, prayer_date, prayer, unavailable, reason, created_by
   ) values (
-    v_prayer_id, current_date + 1, 'maghrib', '20:45', false,
-    '[LOCAL DEMO] One-date congregation override.', p_actor_id
+    v_prayer_id, current_date + 1, 'maghrib', true,
+    '[LOCAL DEMO] One-date unavailable override.', p_actor_id
   );
 
   insert into public.seasonal_arrangements (
     prayer_settings_id, kind, title, starts_on, ends_on, details, created_by
   ) values
     (v_prayer_id, 'other', '[LOCAL DEMO] Current seasonal arrangement', current_date, current_date + 6,
-      '{"public_note":"Sample TV and public-page seasonal note; not a real arrangement.","congregation_rules":{"isha":{"type":"offset","minutes":25,"roundTo":5,"latest":"23:00"}}}'::jsonb, p_actor_id),
+      '{"public_note":"Sample TV and public-page seasonal note; not a real arrangement.","congregation_rules":{"isha":{"type":"offset","minutes":25,"roundTo":5}}}'::jsonb, p_actor_id),
     (v_prayer_id, 'ramadan', '[LOCAL DEMO] Ramadan arrangement', current_date + 30, current_date + 59,
-      '{"public_note":"Fictional dates for workflow testing only.","congregation_rules":{"fajr":{"type":"offset","minutes":20,"roundTo":5},"isha":{"type":"offset","minutes":30,"roundTo":5,"latest":"23:30"}}}'::jsonb, p_actor_id),
+      '{"public_note":"Fictional dates for workflow testing only.","congregation_rules":{"fajr":{"type":"offset","minutes":20,"roundTo":5},"isha":{"type":"offset","minutes":30,"roundTo":5}}}'::jsonb, p_actor_id),
     (v_prayer_id, 'eid_al_fitr', '[LOCAL DEMO] Eid information', current_date + 60, current_date + 60,
       '{"public_note":"Sample Eid information record; no real time or venue is represented.","congregation_rules":{}}'::jsonb, p_actor_id);
 

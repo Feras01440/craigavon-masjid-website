@@ -4,16 +4,25 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
-import { buildPrayerSchedule } from "@/lib/prayer/engine";
+import { buildPrayerSchedule, buildScheduleRange } from "@/lib/prayer/engine";
 import { dateKeySchema, prayerConfigurationSchema } from "@/lib/prayer/types";
 import {
   MAX_PUBLICATION_HORIZON_DAYS,
   publicationHorizon,
+  validateConfigurationSchedule,
   validatePrayerOverrides,
   validatePrayerSchedule,
 } from "@/lib/prayer/validation";
 import { buildContiguousPublishedSchedules } from "@/server/repositories/prayer";
 import { prayerConfigurationFixture } from "@/../tests/fixtures/prayer-configuration";
+
+const completeWorkflowMigration = readFileSync(
+  new URL(
+    "../../supabase/migrations/20260715120000_complete_product_workflows.sql",
+    import.meta.url,
+  ),
+  "utf8",
+);
 
 describe("prayer input hardening", () => {
   it("accepts leap day but rejects impossible ISO calendar dates", () => {
@@ -33,6 +42,72 @@ describe("prayer input hardening", () => {
 
     expect(parsed.success).toBe(true);
   });
+
+  it("keeps the rolling local demonstration timetable safe from 2020 through 2100", () => {
+    const errors: ReturnType<typeof validateConfigurationSchedule> = [];
+
+    for (let year = 2020; year <= 2100; year += 1) {
+      const firstDate = `${year}-01-01`;
+      const finalDate = `${year}-12-31`;
+      const days = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 366 : 365;
+      const configuration = prayerConfigurationFixture({
+        effectiveFrom: firstDate,
+        effectiveTo: finalDate,
+        latitude: 54.45,
+        longitude: -6.39,
+        calculationMethod: "umm_al_qura",
+        madhab: "hanafi",
+        highLatitudeRule: "middle_of_night",
+        congregationRules: {
+          fajr: { type: "offset", minutes: 30, roundTo: 5 },
+          dhuhr: { type: "offset", minutes: 20, roundTo: 5 },
+          asr: { type: "offset", minutes: 15, roundTo: 5 },
+          maghrib: { type: "offset", minutes: 10, roundTo: 5 },
+          // Thirty minutes is the largest Isha offset anywhere in the SQL
+          // seed, so applying it all year is stricter than its seasonal use.
+          isha: { type: "offset", minutes: 30, roundTo: 5 },
+        },
+        jumuahSessions: [
+          {
+            id: "33333333-3333-4333-8333-333333333333",
+            label: "[LOCAL DEMO] Friday session",
+            khutbahTime: "13:50",
+            prayerTime: "14:00",
+            displayOrder: 1,
+          },
+        ],
+        overrides: [
+          {
+            date: `${year}-02-01`,
+            prayer: "maghrib",
+            unavailable: true,
+            reason: "[LOCAL DEMO] One-date unavailable override.",
+          },
+        ],
+        seasonalArrangements: [],
+      });
+      const schedules = buildScheduleRange(configuration, firstDate, days);
+
+      expect(publicationHorizon(configuration).ok).toBe(true);
+      errors.push(
+        ...validateConfigurationSchedule(configuration, schedules).filter(
+          (issue) => issue.severity === "error",
+        ),
+      );
+    }
+
+    expect(errors).toEqual([]);
+    expect(completeWorkflowMigration).toContain(
+      "'Europe/London', 54.45, -6.39, 'umm_al_qura', 'hanafi', 'middle_of_night'",
+    );
+    expect(completeWorkflowMigration).toContain("'[LOCAL DEMO] Friday session', '13:50', '14:00'");
+    expect(completeWorkflowMigration).not.toContain("[LOCAL DEMO] Second Friday session");
+    expect(completeWorkflowMigration).toContain("v_prayer_id, current_date + 1, 'maghrib', true");
+    expect(completeWorkflowMigration).toContain(
+      '"isha":{"type":"offset","minutes":30,"roundTo":5}',
+    );
+    expect(completeWorkflowMigration).not.toContain('"latest"');
+  }, 30_000);
 
   it("rejects joined congregation cycles", () => {
     const base = prayerConfigurationFixture();
