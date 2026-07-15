@@ -99,7 +99,10 @@ async function enrolAuthenticator(page: Page): Promise<void> {
 async function recordConsoleFailures(page: Page): Promise<string[]> {
   const failures: string[] = [];
   page.on("console", (message) => {
-    if (message.type() === "error") failures.push(`console: ${message.text()}`);
+    if (message.type() === "error") {
+      const source = message.location().url;
+      failures.push(`console${source ? ` (${source})` : ""}: ${message.text()}`);
+    }
   });
   page.on("pageerror", (error) => failures.push(`page: ${error.message}`));
   return failures;

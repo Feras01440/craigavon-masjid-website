@@ -184,9 +184,9 @@ export default async function PrayerTimesPage({
                 <Link href={`/prayer-times?month=${shiftedMonth(year, month, 1)}`}>Next month</Link>
                 {schedules.length > 0 ? (
                   <>
-                    <Link href={`/prayer-times/download?month=${monthKey(year, month)}`}>
+                    <a href={`/prayer-times/download?month=${monthKey(year, month)}`} download>
                       Download CSV
-                    </Link>
+                    </a>
                     <PrintButton />
                   </>
                 ) : null}
