@@ -3,13 +3,16 @@ import "server-only";
 import { cache } from "react";
 
 import { primaryNavigation, SITE_NAME } from "@/content/public-copy";
+import { demoModeIsActive } from "@/lib/demo-mode";
 import {
   contactInformationSchema,
+  homepageContentSchema,
   managedSettingDefaults,
   navigationFooterSchema,
   siteIdentitySchema,
   tvDisplaySchema,
   type ContactInformationSetting,
+  type HomepageContentSetting,
   type TvDisplaySetting,
 } from "@/lib/settings/site-settings";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
@@ -28,6 +31,7 @@ const routeDetails: Record<string, PublicNavigationItem> = {
     primaryNavigation.map((item) => [item.href.slice(1), { href: item.href, label: item.label }]),
   ),
   policies: { href: "/policies", label: "Policies" },
+  accessibility: { href: "/accessibility", label: "Accessibility" },
 };
 const fallbackFooter = ["about", "policies", "news", "visit", "contact"];
 
@@ -37,11 +41,19 @@ async function readPublishedSettings(): Promise<Map<string, unknown>> {
       fetch: (input, init) =>
         fetch(input, { ...init, next: { revalidate: 60, tags: ["public-site-settings"] } }),
     });
-    const { data, error } = await client
+    let query = client
       .from("site_settings")
       .select("key,value")
-      .in("key", ["site_identity", "contact_information", "navigation_footer", "tv_display"])
+      .in("key", [
+        "site_identity",
+        "homepage_content",
+        "contact_information",
+        "navigation_footer",
+        "tv_display",
+      ])
       .eq("status", "published");
+    if (!demoModeIsActive()) query = query.eq("demo_local_only", false);
+    const { data, error } = await query;
     if (error) return new Map();
     return new Map((data ?? []).map((row) => [row.key, row.value]));
   } catch {
@@ -85,6 +97,12 @@ export const getPublicContactInformation = cache(
     return parsed.success ? parsed.data : null;
   },
 );
+
+export const getPublicHomepageContent = cache(async (): Promise<HomepageContentSetting> => {
+  const values = await readPublishedSettingsOnce();
+  const parsed = homepageContentSchema.safeParse(values.get("homepage_content"));
+  return parsed.success ? parsed.data : { ...managedSettingDefaults.homepage_content };
+});
 
 export const getPublicTvDisplaySetting = cache(async (): Promise<TvDisplaySetting> => {
   const values = await readPublishedSettingsOnce();

@@ -95,8 +95,15 @@ function applyCongregationRules(
   dateKey: string,
   prayers: Record<PrayerKey, SchedulePrayer>,
 ): void {
+  const seasonalRules = configuration.seasonalArrangements
+    .filter((arrangement) => arrangement.startsOn <= dateKey && arrangement.endsOn >= dateKey)
+    .sort((left, right) => left.startsOn.localeCompare(right.startsOn))
+    .reduce<Partial<PrayerConfiguration["congregationRules"]>>(
+      (rules, arrangement) => ({ ...rules, ...arrangement.congregationRules }),
+      {},
+    );
   for (const key of congregationPrayerKeys) {
-    const rule = configuration.congregationRules[key];
+    const rule = seasonalRules[key] ?? configuration.congregationRules[key];
     const prayer = prayers[key];
     if (!prayer?.startsAt) continue;
     if (rule.type === "unavailable") continue;
@@ -225,6 +232,16 @@ export function buildPrayerSchedule(input: PrayerConfiguration, dateKey: string)
     hijriAdjustment: configuration.hijriAdjustment as -1 | 0 | 1,
     prayers,
     jumuah,
+    seasonalArrangements: configuration.seasonalArrangements
+      .filter((arrangement) => arrangement.startsOn <= dateKey && arrangement.endsOn >= dateKey)
+      .map((arrangement) => ({
+        id: arrangement.id ?? null,
+        kind: arrangement.kind,
+        title: arrangement.title,
+        startsOn: arrangement.startsOn,
+        endsOn: arrangement.endsOn,
+        publicNote: arrangement.publicNote ?? null,
+      })),
     source: {
       name: configuration.sourceName,
       reference: configuration.sourceReference,

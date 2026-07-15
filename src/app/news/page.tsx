@@ -37,11 +37,10 @@ export default async function NewsPage() {
           {content.status === "unavailable" ? (
             <PublishedContentUnavailable subject="Current notices and events" />
           ) : content.status === "empty" ? (
-            <EmptyState title="There are no approved notices or events">
+            <EmptyState title="There are no current notices or events">
               <p>
-                No fictional event or inherited announcement has been added to fill this space. Once
-                publishing begins, notices will show publication and update times and will stop
-                appearing after any approved expiry.
+                New notices will show their publication and update times and will stop appearing
+                after any recorded expiry.
               </p>
             </EmptyState>
           ) : (

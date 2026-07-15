@@ -66,6 +66,18 @@ function readSettingValue(key: ManagedSettingKey, formData: FormData): unknown {
         short_name: formString(formData, "short_name"),
         default_meta_description: formString(formData, "default_meta_description"),
       };
+    case "homepage_content":
+      return {
+        eyebrow: formString(formData, "eyebrow"),
+        heading: formString(formData, "heading"),
+        introduction: formString(formData, "introduction"),
+        primary_cta_label: formString(formData, "primary_cta_label"),
+        primary_cta_route: formString(formData, "primary_cta_route"),
+        secondary_cta_label: formString(formData, "secondary_cta_label"),
+        secondary_cta_route: formString(formData, "secondary_cta_route"),
+        information_heading: formString(formData, "information_heading"),
+        information_points: formStrings(formData, "information_points"),
+      };
     case "contact_information":
       return {
         address_line_1: formString(formData, "address_line_1"),
@@ -189,6 +201,7 @@ function revalidateSettingSurfaces(): void {
   revalidatePath("/admin/settings");
   revalidatePath("/", "layout");
   revalidatePath("/contact");
+  revalidatePath("/accessibility");
   revalidatePath("/tv");
   revalidatePath("/api/display");
 }

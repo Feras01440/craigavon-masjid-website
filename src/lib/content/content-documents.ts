@@ -6,6 +6,7 @@ export const publishableContentKinds = [
   "announcement",
   "emergency_notice",
   "event",
+  "recurring_programme",
   "education",
   "service",
   "faq",
@@ -135,6 +136,7 @@ export const policyDocumentSchema = z
     owner: z.string().trim().min(1).max(160).nullable(),
     effective_on: dateOnlySchema.nullable(),
     review_on: dateOnlySchema.nullable(),
+    download_url: optionalLinkSchema.default(null),
   })
   .strict()
   .superRefine((value, context) => {
@@ -171,6 +173,7 @@ const structuredFormatForKind: Record<PublishableContentKind, ContentDocument["f
   announcement: "notice",
   emergency_notice: "notice",
   event: "event",
+  recurring_programme: "education",
   service: "service",
   education: "education",
   policy: "policy",

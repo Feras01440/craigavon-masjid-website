@@ -4,6 +4,7 @@ import type { ContentStatus, Json } from "@/types/database";
 
 export const managedSettingKeys = [
   "site_identity",
+  "homepage_content",
   "contact_information",
   "navigation_footer",
   "tv_display",
@@ -24,6 +25,7 @@ export const managedRouteKeys = [
   "about",
   "contact",
   "policies",
+  "accessibility",
 ] as const;
 
 export type ManagedRouteKey = (typeof managedRouteKeys)[number];
@@ -66,6 +68,34 @@ export const contactInformationSchema = z
   .strict();
 
 const routeKeySchema = z.enum(managedRouteKeys);
+
+export const homepageContentSchema = z
+  .object({
+    eyebrow: emptyText(80),
+    heading: emptyText(160),
+    introduction: emptyText(600),
+    primary_cta_label: emptyText(80),
+    primary_cta_route: z.union([z.literal(""), routeKeySchema]),
+    secondary_cta_label: emptyText(80),
+    secondary_cta_route: z.union([z.literal(""), routeKeySchema]),
+    information_heading: emptyText(160),
+    information_points: z.array(emptyText(180)).max(3),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    for (const [labelField, routeField] of [
+      ["primary_cta_label", "primary_cta_route"],
+      ["secondary_cta_label", "secondary_cta_route"],
+    ] as const) {
+      if (!!value[labelField] !== !!value[routeField]) {
+        context.addIssue({
+          code: "custom",
+          path: [value[labelField] ? routeField : labelField],
+          message: "Add both the link label and destination, or leave both blank.",
+        });
+      }
+    }
+  });
 
 export const navigationFooterSchema = z
   .object({
@@ -110,6 +140,7 @@ export const managedEnquiryConfigurationSchema = z
   .strict();
 
 export type SiteIdentitySetting = z.infer<typeof siteIdentitySchema>;
+export type HomepageContentSetting = z.infer<typeof homepageContentSchema>;
 export type ContactInformationSetting = z.infer<typeof contactInformationSchema>;
 export type NavigationFooterSetting = z.infer<typeof navigationFooterSchema>;
 export type TvDisplaySetting = z.infer<typeof tvDisplaySchema>;
@@ -118,6 +149,7 @@ export type EnquiryConfigurationSetting = z.infer<typeof managedEnquiryConfigura
 
 export type ManagedSettingValueMap = {
   site_identity: SiteIdentitySetting;
+  homepage_content: HomepageContentSetting;
   contact_information: ContactInformationSetting;
   navigation_footer: NavigationFooterSetting;
   tv_display: TvDisplaySetting;
@@ -133,6 +165,22 @@ export const managedSettingDefaults: ManagedSettingValueMap = {
     public_masjid_name: "",
     short_name: "",
     default_meta_description: "",
+  },
+  homepage_content: {
+    eyebrow: "Prayer and community information",
+    heading: "Muslim Association of Craigavon",
+    introduction:
+      "Find current prayer times, visiting information and Association notices in one place.",
+    primary_cta_label: "View prayer times",
+    primary_cta_route: "prayer-times",
+    secondary_cta_label: "About the Association",
+    secondary_cta_route: "about",
+    information_heading: "Clear, current information",
+    information_points: [
+      "Prayer times include their source and last update.",
+      "Time-sensitive notices stop appearing after their expiry.",
+      "Contact and visit details are shown only when confirmed.",
+    ],
   },
   contact_information: {
     address_line_1: "",
@@ -200,6 +248,12 @@ export const managedSettingDetails: Record<
     description:
       "Record only names and search text that the Association has confirmed for public use.",
   },
+  homepage_content: {
+    title: "Homepage content",
+    eyebrow: "Main public page",
+    description:
+      "Maintain the homepage heading, introduction, links and short information panel without a code change.",
+  },
   contact_information: {
     title: "Contact and visit details",
     eyebrow: "Verified public information",
@@ -252,6 +306,24 @@ function publicationSchema(key: ManagedSettingKey, status: ManagedSettingStatus)
             code: "custom",
             path: ["public_masjid_name"],
             message: "Confirm the public-facing masjid name before publishing.",
+          });
+        }
+      });
+    case "homepage_content":
+      return homepageContentSchema.superRefine((value, context) => {
+        if (!isPublished) return;
+        if (!value.heading) {
+          context.addIssue({
+            code: "custom",
+            path: ["heading"],
+            message: "Add the public homepage heading before publishing.",
+          });
+        }
+        if (!value.introduction) {
+          context.addIssue({
+            code: "custom",
+            path: ["introduction"],
+            message: "Add a concise homepage introduction before publishing.",
           });
         }
       });

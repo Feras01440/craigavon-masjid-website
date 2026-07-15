@@ -1,6 +1,7 @@
 import "server-only";
 
 import { buildPrayerSchedule } from "@/lib/prayer/engine";
+import { demoModeIsActive } from "@/lib/demo-mode";
 import {
   prayerConfigurationSchema,
   type JumuahSession,
@@ -8,6 +9,7 @@ import {
   type PrayerConfiguration,
   type PrayerOverride,
   type PrayerSchedule,
+  type SeasonalArrangement,
 } from "@/lib/prayer/types";
 import { addDaysToDateKey } from "@/lib/prayer/timezone";
 import {
@@ -58,10 +60,32 @@ function mapOverride(row: GenericRow): PrayerOverride {
   };
 }
 
+function mapSeasonalArrangement(row: GenericRow): SeasonalArrangement {
+  const details =
+    row.details && typeof row.details === "object" && !Array.isArray(row.details)
+      ? (row.details as GenericRow)
+      : {};
+  return {
+    id: requiredString(row.id, "seasonal arrangement ID"),
+    kind: requiredString(row.kind, "seasonal arrangement kind") as SeasonalArrangement["kind"],
+    title: requiredString(row.title, "seasonal arrangement title"),
+    startsOn: requiredString(row.starts_on, "seasonal start date"),
+    endsOn: requiredString(row.ends_on, "seasonal end date"),
+    publicNote: nullableString(details.public_note) ?? undefined,
+    congregationRules:
+      details.congregation_rules &&
+      typeof details.congregation_rules === "object" &&
+      !Array.isArray(details.congregation_rules)
+        ? details.congregation_rules
+        : {},
+  };
+}
+
 function mapConfiguration(
   row: GenericRow,
   jumuahRows: GenericRow[],
   overrideRows: GenericRow[],
+  seasonalRows: GenericRow[],
 ): PrayerConfiguration {
   return prayerConfigurationSchema.parse({
     id: row.id,
@@ -89,6 +113,7 @@ function mapConfiguration(
     updatedAt: row.updated_at,
     jumuahSessions: jumuahRows.map(mapJumuah),
     overrides: overrideRows.map(mapOverride),
+    seasonalArrangements: seasonalRows.map(mapSeasonalArrangement),
   });
 }
 
@@ -129,13 +154,17 @@ export async function getPublishedPrayerBundle(
     const client = createSupabaseServiceClient({
       fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
     });
-    const { data: settingsData, error: settingsError } = await client
+    let settingsRequest = client
       .from("prayer_settings")
       .select("*")
       .eq("status", "published")
       .lte("effective_from", finalDate)
-      .or(`effective_to.is.null,effective_to.gte.${firstDate}`)
-      .order("effective_from", { ascending: true });
+      .or(`effective_to.is.null,effective_to.gte.${firstDate}`);
+    if (!demoModeIsActive()) settingsRequest = settingsRequest.eq("demo_local_only", false);
+    const { data: settingsData, error: settingsError } = await settingsRequest.order(
+      "effective_from",
+      { ascending: true },
+    );
 
     if (settingsError) throw settingsError;
     const settingRows = (settingsData ?? []) as GenericRow[];
@@ -147,7 +176,7 @@ export async function getPublishedPrayerBundle(
     }
 
     const ids = settingRows.map((row) => requiredString(row.id, "prayer settings ID"));
-    const [jumuahResult, overridesResult] = await Promise.all([
+    const [jumuahResult, overridesResult, seasonalResult] = await Promise.all([
       client.from("jumuah_sessions").select("*").in("prayer_settings_id", ids),
       client
         .from("prayer_overrides")
@@ -155,11 +184,19 @@ export async function getPublishedPrayerBundle(
         .in("prayer_settings_id", ids)
         .gte("prayer_date", firstDate)
         .lte("prayer_date", finalDate),
+      client
+        .from("seasonal_arrangements")
+        .select("*")
+        .in("prayer_settings_id", ids)
+        .lte("starts_on", finalDate)
+        .gte("ends_on", firstDate),
     ]);
     if (jumuahResult.error) throw jumuahResult.error;
     if (overridesResult.error) throw overridesResult.error;
+    if (seasonalResult.error) throw seasonalResult.error;
     const jumuahRows = (jumuahResult.data ?? []) as GenericRow[];
     const overrideRows = (overridesResult.data ?? []) as GenericRow[];
+    const seasonalRows = (seasonalResult.data ?? []) as GenericRow[];
 
     const configurations = settingRows.map((row) => {
       const id = requiredString(row.id, "prayer settings ID");
@@ -167,6 +204,7 @@ export async function getPublishedPrayerBundle(
         row,
         jumuahRows.filter((item) => item.prayer_settings_id === id),
         overrideRows.filter((item) => item.prayer_settings_id === id),
+        seasonalRows.filter((item) => item.prayer_settings_id === id),
       );
     });
 

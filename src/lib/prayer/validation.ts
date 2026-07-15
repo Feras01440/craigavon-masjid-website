@@ -2,6 +2,7 @@ import {
   prayerKeys,
   type PrayerConfiguration,
   type PrayerIssue,
+  type PrayerKey,
   type PrayerSchedule,
 } from "@/lib/prayer/types";
 import { wallTimeToInstant } from "@/lib/prayer/timezone";
@@ -224,6 +225,23 @@ export function validateWallTimeRules(configuration: PrayerConfiguration): Praye
       message:
         "Adhan's Moonsighting Committee method applies its own seasonal twilight adjustment; the separate high-latitude selection may not change output and must be checked against the approved timetable.",
     });
+  }
+  for (const arrangement of configuration.seasonalArrangements) {
+    for (const date of [arrangement.startsOn, arrangement.endsOn]) {
+      for (const [prayer, rule] of Object.entries(arrangement.congregationRules)) {
+        if (rule.type !== "fixed") continue;
+        const resolved = wallTimeToInstant(date, rule.time, configuration.timezone);
+        if (!resolved.ok) {
+          issues.push({
+            severity: "error",
+            code: "invalid-seasonal-fixed-time",
+            message: `${arrangement.title}: ${prayer} uses a fixed time that is invalid at a clock change.`,
+            date,
+            prayer: prayer as PrayerKey,
+          });
+        }
+      }
+    }
   }
   return issues;
 }

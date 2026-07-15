@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import Image from "next/image";
 
 import type { PublicNavigationItem } from "@/server/repositories/public-site-settings";
 
@@ -19,16 +19,15 @@ export function SiteFooter({
       <div className="site-container site-footer__grid">
         <div>
           <div className="site-footer__brand">
-            <Image
+            <img
               className="site-footer__logo"
               src="/brand/muslim-association-of-craigavon-logo-256.webp"
               alt=""
               aria-hidden="true"
               width={256}
               height={256}
-              sizes="48px"
-              unoptimized
               loading="eager"
+              decoding="async"
             />
             <p className="site-footer__name">{siteName}</p>
           </div>
@@ -39,7 +38,9 @@ export function SiteFooter({
           <ul>
             {navigation.map((item) => (
               <li key={item.href}>
-                <Link href={item.href}>{item.label}</Link>
+                <Link href={item.href} prefetch={false}>
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>
@@ -48,7 +49,7 @@ export function SiteFooter({
       <div className="site-container site-footer__bottom">
         <p>
           {legalNote ||
-            "Contact details and a production domain are awaiting committee confirmation."}
+            "Public information is reviewed before publication and removed when it expires."}
         </p>
       </div>
     </footer>

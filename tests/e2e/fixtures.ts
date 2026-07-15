@@ -2,15 +2,16 @@ import { expect, type Page } from "@playwright/test";
 
 export const publicRoutes = [
   { path: "/", heading: "Muslim Association of Craigavon" },
-  { path: "/prayer-times", heading: "Prayer times, with approval built in." },
-  { path: "/visit", heading: "Please wait for confirmed visit details" },
+  { path: "/prayer-times", heading: "Prayer and congregation times" },
+  { path: "/visit", heading: "Visit information is not currently online" },
   { path: "/services", heading: /service/i },
   { path: "/education", heading: /learning|programme/i },
   { path: "/news", heading: "Announcements and events" },
-  { path: "/new-muslims", heading: "A private contact route is being prepared" },
+  { path: "/new-muslims", heading: "Practical information for a first conversation" },
   { path: "/contact", heading: "Contact the Association" },
-  { path: "/about", heading: "What we can say with confidence" },
-  { path: "/policies", heading: "Policy publication status" },
+  { path: "/about", heading: "About the Association" },
+  { path: "/accessibility", heading: "Using this website" },
+  { path: "/policies", heading: "Policies" },
   { path: "/policies/privacy", heading: /privacy|policy/i },
 ] as const;
 

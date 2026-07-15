@@ -5,7 +5,58 @@ import { AdminAccessError } from "@/lib/auth/errors";
 import { requireAdmin } from "@/lib/auth/session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const allowedOtpTypes = new Set<EmailOtpType>(["email", "invite", "magiclink"]);
+type AllowedOtpType = Extract<EmailOtpType, "email" | "invite" | "magiclink">;
+type AuthenticationResult = { error: { message: string } | null };
+type ValidatedCallback = {
+  completeCallback: () => Promise<AuthenticationResult>;
+};
+
+function isAllowedOtpType(value: string): value is AllowedOtpType {
+  return value === "email" || value === "invite" || value === "magiclink";
+}
+
+function parseCallback(searchParams: URLSearchParams): ValidatedCallback | null {
+  const codes = searchParams.getAll("code");
+  const tokenHashes = searchParams.getAll("token_hash");
+  const types = searchParams.getAll("type");
+  const code = codes[0];
+  const tokenHash = tokenHashes[0];
+  const type = types[0];
+
+  if (
+    codes.length === 1 &&
+    typeof code === "string" &&
+    code.trim().length > 0 &&
+    tokenHashes.length === 0 &&
+    types.length === 0
+  ) {
+    return {
+      completeCallback: async () => {
+        const supabase = await createSupabaseServerClient();
+        return supabase.auth.exchangeCodeForSession(code);
+      },
+    };
+  }
+
+  if (
+    codes.length === 0 &&
+    tokenHashes.length === 1 &&
+    typeof tokenHash === "string" &&
+    tokenHash.trim().length > 0 &&
+    types.length === 1 &&
+    typeof type === "string" &&
+    isAllowedOtpType(type)
+  ) {
+    return {
+      completeCallback: async () => {
+        const supabase = await createSupabaseServerClient();
+        return supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+      },
+    };
+  }
+
+  return null;
+}
 
 function signInRedirect(request: NextRequest, error: string) {
   const url = new URL("/admin/sign-in", request.url);
@@ -14,20 +65,11 @@ function signInRedirect(request: NextRequest, error: string) {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const supabase = await createSupabaseServerClient();
-    const code = request.nextUrl.searchParams.get("code");
-    const tokenHash = request.nextUrl.searchParams.get("token_hash");
-    const type = request.nextUrl.searchParams.get("type") as EmailOtpType | null;
-    let error: { message: string } | null = null;
+  const callback = parseCallback(request.nextUrl.searchParams);
+  if (!callback) return signInRedirect(request, "missing-token");
 
-    if (code) {
-      ({ error } = await supabase.auth.exchangeCodeForSession(code));
-    } else if (tokenHash && type && allowedOtpTypes.has(type)) {
-      ({ error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type }));
-    } else {
-      return signInRedirect(request, "missing-token");
-    }
+  try {
+    const { error } = await callback.completeCallback();
     if (error) return signInRedirect(request, "invalid-link");
 
     await requireAdmin();

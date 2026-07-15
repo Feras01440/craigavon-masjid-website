@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import Image from "next/image";
 
 import type { PublicNavigationItem } from "@/server/repositories/public-site-settings";
 
@@ -12,24 +12,25 @@ export function SiteHeader({
 }) {
   const navigationItems = navigation.map((item) => (
     <li key={item.href}>
-      <Link href={item.href}>{item.label}</Link>
+      <Link href={item.href} prefetch={false}>
+        {item.label}
+      </Link>
     </li>
   ));
 
   return (
     <header className="site-header">
       <div className="site-container site-header__inner">
-        <Link className="wordmark" href="/" aria-label={`${siteName} — home`}>
-          <Image
+        <Link className="wordmark" href="/" prefetch={false} aria-label={`${siteName} — home`}>
+          <img
             className="wordmark__logo"
             src="/brand/muslim-association-of-craigavon-logo-256.webp"
             alt=""
             aria-hidden="true"
             width={256}
             height={256}
-            sizes="(max-width: 36rem) 42px, 50px"
-            unoptimized
-            priority
+            loading="eager"
+            decoding="async"
           />
           <span className="wordmark__name">{siteName}</span>
         </Link>

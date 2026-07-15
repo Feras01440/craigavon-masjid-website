@@ -121,21 +121,30 @@ function PublishedContentDetails({ item }: { item: PublicContentItem }) {
   }
 
   return (
-    <dl className="published-content__details">
-      <Detail label="Policy owner">{details.owner}</Detail>
-      <Detail label="Effective from">
-        <time dateTime={details.effectiveOn}>
-          {policyDateFormatter.format(policyDate(details.effectiveOn))}
-        </time>
-      </Detail>
-      {details.reviewOn && (
-        <Detail label="Review due">
-          <time dateTime={details.reviewOn}>
-            {policyDateFormatter.format(policyDate(details.reviewOn))}
+    <>
+      <dl className="published-content__details">
+        <Detail label="Policy owner">{details.owner}</Detail>
+        <Detail label="Effective from">
+          <time dateTime={details.effectiveOn}>
+            {policyDateFormatter.format(policyDate(details.effectiveOn))}
           </time>
         </Detail>
+        {details.reviewOn && (
+          <Detail label="Review due">
+            <time dateTime={details.reviewOn}>
+              {policyDateFormatter.format(policyDate(details.reviewOn))}
+            </time>
+          </Detail>
+        )}
+      </dl>
+      {details.downloadUrl && (
+        <p className="published-content__action">
+          <a className="text-link" href={details.downloadUrl}>
+            Download policy document
+          </a>
+        </p>
       )}
-    </dl>
+    </>
   );
 }
 

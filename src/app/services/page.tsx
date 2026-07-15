@@ -29,18 +29,17 @@ export default async function ServicesPage() {
   ]);
   const services = serviceContent.status === "ready" ? serviceContent.items : [];
   const faqs = faqContent.status === "ready" ? faqContent.items : [];
-  let introTitle = "Service details are being confirmed";
+  let introTitle = "Services";
   let introDescription =
-    "No ceremony, bereavement, welfare, appointment or other support service is listed until its availability, limits and contact route are approved.";
+    "Current service information is listed with its availability and next step.";
 
   if (serviceContent.status === "unavailable") {
     introTitle = "Service publication status is unavailable";
     introDescription =
       "The website cannot currently verify the approved service register, so no fallback listing is shown.";
   } else if (services.length > 0) {
-    introTitle = "Approved service information";
-    introDescription =
-      "Only services that passed the publication workflow are listed. Each approved entry states its current scope and next step.";
+    introTitle = "Current services";
+    introDescription = "Each listing states its scope, availability and practical next step.";
   }
 
   return (
@@ -62,11 +61,10 @@ export default async function ServicesPage() {
             serviceContent.omittedCount > 0 ? (
             <PublishedContentOmissionNotice />
           ) : services.length === 0 ? (
-            <EmptyState title="No services are approved for public listing yet">
+            <EmptyState title="No services are currently listed online">
               <p>
-                This does not mean that help is unavailable. It means the website cannot yet make a
-                reliable promise about what is offered, when it is available or who monitors an
-                enquiry.
+                This does not necessarily mean that help is unavailable. No unconfirmed service or
+                contact promise is shown here.
               </p>
             </EmptyState>
           ) : (
@@ -108,8 +106,8 @@ export default async function ServicesPage() {
       <section className="section" aria-labelledby="service-standard">
         <div className="site-container content-grid">
           <div className="prose">
-            <p className="eyebrow">Before publication</p>
-            <h2 id="service-standard">Every service page must be practical</h2>
+            <p className="eyebrow">Listing information</p>
+            <h2 id="service-standard">What each service listing explains</h2>
             <ul className="plain-list">
               <li>What the Association can and cannot provide</li>
               <li>Who the service is for and what information is needed</li>
@@ -118,11 +116,10 @@ export default async function ServicesPage() {
               <li>Clear urgent and emergency limitations</li>
             </ul>
           </div>
-          <StatusPanel title="Forms remain unavailable">
+          <StatusPanel label="Current status" title="Online enquiries">
             <p>
-              Public enquiry forms will stay off until recipients, validation, privacy, retention,
-              safeguarding and spam controls are approved. This website is not monitored as an
-              emergency service.
+              The enquiry form is not active. This website is not monitored as an emergency service;
+              use the appropriate public emergency service when immediate help is needed.
             </p>
           </StatusPanel>
         </div>

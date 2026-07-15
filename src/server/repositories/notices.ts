@@ -1,5 +1,6 @@
 import "server-only";
 
+import { demoModeIsActive } from "@/lib/demo-mode";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
 
 export type PublicNotice = {
@@ -30,7 +31,7 @@ export async function getPublishedNotices(): Promise<PublicNoticeResult> {
     };
   }
   const now = new Date().toISOString();
-  const { data, error } = await client
+  let request = client
     .from("content_items")
     .select("id,kind,title,summary,featured,expires_at,updated_at")
     .in("kind", ["announcement", "emergency_notice"])
@@ -40,7 +41,9 @@ export async function getPublishedNotices(): Promise<PublicNoticeResult> {
     .not("published_at", "is", null)
     .lte("published_at", now)
     .or(`publish_at.is.null,publish_at.lte.${now}`)
-    .or(`expires_at.is.null,expires_at.gt.${now}`)
+    .or(`expires_at.is.null,expires_at.gt.${now}`);
+  if (!demoModeIsActive()) request = request.eq("demo_local_only", false);
+  const { data, error } = await request
     .order("featured", { ascending: false })
     .order("updated_at", { ascending: false })
     .limit(12);

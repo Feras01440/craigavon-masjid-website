@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
-import { PageIntro, PublicShell, StatusPanel } from "@/components/site";
+import { PageIntro, PublicShell } from "@/components/site";
 import { SITE_NAME } from "@/content/public-copy";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "What is currently confirmed for the Muslim Association of Craigavon public website and what remains under review.",
+    "About the Muslim Association of Craigavon and how its public information is maintained.",
 };
 
 export default function AboutPage() {
@@ -14,34 +14,24 @@ export default function AboutPage() {
     <PublicShell>
       <PageIntro
         eyebrow="About"
-        title="What we can say with confidence"
-        description="This website is maintained for the Muslim Association of Craigavon. Organisational history, governance and local-role statements remain unpublished until the committee confirms them."
+        title="About the Association"
+        description="This website provides prayer, visiting and community information for the Muslim Association of Craigavon."
         current="About"
       />
 
       <section className="section" aria-labelledby="identity-heading">
-        <div className="site-container content-grid">
-          <div className="prose">
-            <p className="eyebrow">Identity</p>
-            <h2 id="identity-heading">A restrained public record</h2>
-            <p>
-              {SITE_NAME} is the only name used in the public text lock-up during this rebuild. No
-              invented logo, Arabic name, founding story or geographic claim is being carried
-              forward.
-            </p>
-            <p>
-              Once the committee provides evidence and approval, this page can explain the
-              Association&apos;s purpose, governance, history and responsibilities in direct, dated
-              language.
-            </p>
-          </div>
-
-          <StatusPanel title="Organisational details are under review">
-            <p>
-              The official logo, legal naming, governance overview, history and service-area wording
-              are not yet approved for publication.
-            </p>
-          </StatusPanel>
+        <div className="site-container prose prose--wide">
+          <p className="eyebrow">Public information</p>
+          <h2 id="identity-heading">{SITE_NAME}</h2>
+          <p>
+            The Association maintains this website so visitors can find current practical
+            information without relying on old notices or informal copies.
+          </p>
+          <p>
+            This page contains only the Association identity currently authorised for public use.
+            Prayer, visiting, service and contact information is maintained on the relevant page so
+            that practical changes can be dated and reviewed clearly.
+          </p>
         </div>
       </section>
 
@@ -49,7 +39,7 @@ export default function AboutPage() {
         <div className="site-container">
           <div className="section-heading">
             <p className="eyebrow">Editorial approach</p>
-            <h2 id="standards-heading">How information earns its place</h2>
+            <h2 id="standards-heading">How public information is maintained</h2>
           </div>
           <ol className="numbered-principles">
             <li>

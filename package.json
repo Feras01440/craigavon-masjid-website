@@ -10,6 +10,8 @@
   },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
+    "setup:local": "supabase start && supabase db reset && node scripts/setup-local.mjs",
+    "local:link": "node scripts/local-auth-link.mjs",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "format": "prettier --write .",
@@ -50,6 +52,7 @@
     "eslint-config-next": "16.2.10",
     "jsdom": "29.1.1",
     "prettier": "3.9.5",
+    "supabase": "2.101.0",
     "typescript": "npm:@typescript/typescript6@6.0.2",
     "vitest": "4.1.10"
   }

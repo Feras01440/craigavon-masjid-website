@@ -10,14 +10,22 @@ const statusLabels = {
   archived: "Archived",
 } as const;
 
-export default async function ContentIndexPage() {
+export default async function ContentIndexPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}) {
+  const view = (await searchParams).view === "archive" ? "archive" : "active";
   const context = await requirePermission("content:read");
-  const { data: items, error } = await context.supabase
+  let query = context.supabase
     .from("content_items")
-    .select("id, kind, title, slug, status, publish_at, expires_at, updated_at, version")
-    .is("deleted_at", null)
+    .select(
+      "id, kind, title, slug, status, publish_at, expires_at, updated_at, version, deleted_at, demo_local_only",
+    )
     .order("updated_at", { ascending: false })
     .limit(100);
+  query = view === "archive" ? query.not("deleted_at", "is", null) : query.is("deleted_at", null);
+  const { data: items, error } = await query;
   if (error || !items) throw new Error("Content could not be loaded safely.");
   const canWrite = roleHasPermission(context.role, "content:write");
 
@@ -28,6 +36,18 @@ export default async function ContentIndexPage() {
           <p className="admin-eyebrow">Website information</p>
           <h1>Content</h1>
           <p>Create, schedule and review structured public content.</p>
+          <p className="admin-filter-links">
+            <Link href="/admin/content" aria-current={view === "active" ? "page" : undefined}>
+              Active content
+            </Link>{" "}
+            ·{" "}
+            <Link
+              href="/admin/content?view=archive"
+              aria-current={view === "archive" ? "page" : undefined}
+            >
+              Soft-deleted archive
+            </Link>
+          </p>
         </div>
         {canWrite && (
           <Link className="admin-button" href="/admin/content/new">
@@ -37,8 +57,12 @@ export default async function ContentIndexPage() {
       </div>
       {items.length === 0 ? (
         <div className="admin-empty">
-          <h2>No content yet</h2>
-          <p>Start with a draft. Nothing appears publicly until it is deliberately published.</p>
+          <h2>{view === "archive" ? "The archive is empty" : "No content yet"}</h2>
+          <p>
+            {view === "archive"
+              ? "Soft-deleted content will appear here and can be restored as a private draft."
+              : "Start with a draft. Nothing appears publicly until it is deliberately published."}
+          </p>
         </div>
       ) : (
         <div className="admin-table-wrap">
@@ -60,6 +84,9 @@ export default async function ContentIndexPage() {
                 <tr key={item.id}>
                   <th scope="row">
                     <strong>{item.title}</strong>
+                    {item.demo_local_only && (
+                      <span className="admin-table-secondary">Local demonstration data</span>
+                    )}
                     <span className="admin-table-secondary">/{item.slug}</span>
                   </th>
                   <td>{item.kind.replaceAll("_", " ")}</td>
@@ -80,7 +107,8 @@ export default async function ContentIndexPage() {
                   <td>
                     {canWrite ? (
                       <Link href={`/admin/content/${item.id}`}>
-                        Edit<span className="admin-visually-hidden"> {item.title}</span>
+                        {view === "archive" ? "Review or restore" : "Edit"}
+                        <span className="admin-visually-hidden"> {item.title}</span>
                       </Link>
                     ) : (
                       <Link href={`/admin/content/${item.id}`}>

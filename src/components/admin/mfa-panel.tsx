@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
@@ -67,13 +67,13 @@ export function MfaPanel({
       {enrollment && (
         <div className="admin-mfa-enrollment">
           <h3>1. Scan this code</h3>
-          <Image
+          <img
             className="admin-qr"
             src={enrollment.qrCode}
             alt="Authenticator enrolment QR code"
             width={220}
             height={220}
-            unoptimized
+            decoding="async"
           />
           <details>
             <summary>Cannot scan it?</summary>

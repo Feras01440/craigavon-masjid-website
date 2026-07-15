@@ -6,9 +6,19 @@ function createNonce(): string {
   return btoa(String.fromCharCode(...bytes));
 }
 
-function contentSecurityPolicy(nonce: string): string {
+function requestUsesHttps(request: NextRequest): boolean {
+  const forwardedProtocol = request.headers
+    .get("x-forwarded-proto")
+    ?.split(",", 1)[0]
+    ?.trim()
+    .toLowerCase();
+
+  return forwardedProtocol ? forwardedProtocol === "https" : request.nextUrl.protocol === "https:";
+}
+
+function contentSecurityPolicy(nonce: string, upgradeInsecureRequests: boolean): string {
   const developmentScript = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
-  return [
+  const directives = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScript}`,
     "style-src 'self'",
@@ -20,11 +30,20 @@ function contentSecurityPolicy(nonce: string): string {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "upgrade-insecure-requests",
-  ].join("; ");
+  ];
+
+  if (upgradeInsecureRequests) {
+    directives.push("upgrade-insecure-requests");
+  }
+
+  return directives.join("; ");
 }
 
-function applyResponseSecurity(response: NextResponse, policy: string): NextResponse {
+function applyResponseSecurity(
+  response: NextResponse,
+  policy: string,
+  secureTransport: boolean,
+): NextResponse {
   response.headers.set("Content-Security-Policy", policy);
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -36,7 +55,7 @@ function applyResponseSecurity(response: NextResponse, policy: string): NextResp
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
   );
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && secureTransport) {
     response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   }
   return response;
@@ -44,7 +63,8 @@ function applyResponseSecurity(response: NextResponse, policy: string): NextResp
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const nonce = createNonce();
-  const policy = contentSecurityPolicy(nonce);
+  const secureTransport = requestUsesHttps(request);
+  const policy = contentSecurityPolicy(nonce, secureTransport);
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", policy);
@@ -80,7 +100,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     response.headers.set("Cache-Control", "private, no-store");
     response.headers.set("Pragma", "no-cache");
   }
-  return applyResponseSecurity(response, policy);
+  return applyResponseSecurity(response, policy, secureTransport);
 }
 
 export const config = {

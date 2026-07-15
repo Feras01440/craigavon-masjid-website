@@ -8,6 +8,7 @@ import type {
   JumuahSessionRow,
   PrayerOverrideRow,
   PrayerSettingsRow,
+  SeasonalArrangementRow,
 } from "@/types/database";
 
 function trimTime(value: string | null): string | undefined {
@@ -18,6 +19,7 @@ export function mapStoredPrayerConfiguration(
   settings: PrayerSettingsRow,
   sessions: JumuahSessionRow[],
   overrides: PrayerOverrideRow[],
+  seasonalArrangements: SeasonalArrangementRow[],
 ): PrayerConfiguration {
   return prayerConfigurationSchema.parse({
     id: settings.id,
@@ -60,6 +62,26 @@ export function mapStoredPrayerConfiguration(
       unavailable: override.unavailable,
       reason: override.reason,
     })),
+    seasonalArrangements: seasonalArrangements.map((arrangement) => {
+      const details =
+        arrangement.details &&
+        typeof arrangement.details === "object" &&
+        !Array.isArray(arrangement.details)
+          ? arrangement.details
+          : {};
+      return {
+        id: arrangement.id,
+        kind: arrangement.kind,
+        title: arrangement.title,
+        startsOn: arrangement.starts_on,
+        endsOn: arrangement.ends_on,
+        publicNote: typeof details.public_note === "string" ? details.public_note : undefined,
+        congregationRules:
+          details.congregation_rules && typeof details.congregation_rules === "object"
+            ? details.congregation_rules
+            : {},
+      };
+    }),
   });
 }
 
@@ -67,12 +89,22 @@ export async function getPrayerConfigurationForAdmin(
   client: SupabaseClient<Database>,
   id: string,
 ): Promise<PrayerConfiguration | null> {
-  const [settingsResult, sessionsResult, overridesResult] = await Promise.all([
+  const [settingsResult, sessionsResult, overridesResult, seasonalResult] = await Promise.all([
     client.from("prayer_settings").select("*").eq("id", id).maybeSingle(),
     client.from("jumuah_sessions").select("*").eq("prayer_settings_id", id).order("display_order"),
     client.from("prayer_overrides").select("*").eq("prayer_settings_id", id).order("prayer_date"),
+    client
+      .from("seasonal_arrangements")
+      .select("*")
+      .eq("prayer_settings_id", id)
+      .order("starts_on"),
   ]);
-  if (settingsResult.error || sessionsResult.error || overridesResult.error) {
+  if (
+    settingsResult.error ||
+    sessionsResult.error ||
+    overridesResult.error ||
+    seasonalResult.error
+  ) {
     throw new Error("Prayer settings could not be loaded safely.");
   }
   if (!settingsResult.data) return null;
@@ -80,5 +112,6 @@ export async function getPrayerConfigurationForAdmin(
     settingsResult.data,
     sessionsResult.data,
     overridesResult.data,
+    seasonalResult.data,
   );
 }

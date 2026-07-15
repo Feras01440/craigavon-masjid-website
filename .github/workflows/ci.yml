@@ -248,7 +248,7 @@ jobs:
   migrations:
     name: Local Supabase migration lint
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -272,9 +272,9 @@ jobs:
         with:
           version: 2.101.0
 
-      - name: Start isolated local Supabase Postgres
+      - name: Start isolated local Supabase stack
         if: steps.migrations.outputs.present == 'true'
-        run: supabase db start
+        run: bash scripts/database/start-local-supabase.sh
 
       - name: Reapply migrations and seed from a clean state
         if: steps.migrations.outputs.present == 'true'
@@ -282,9 +282,87 @@ jobs:
 
       - name: Lint local database schema
         if: steps.migrations.outputs.present == 'true'
-        run: supabase db lint --local --level warning
+        run: supabase db lint --local --level warning --fail-on warning
+
+      - name: Prove RLS, roles, seeds, constraints, indexes, and publication workflows
+        if: steps.migrations.outputs.present == 'true'
+        run: supabase test db
+
+      - name: Repeat clean replay and prove seed determinism
+        if: steps.migrations.outputs.present == 'true'
+        run: |
+          supabase db reset
+          supabase test db
+
+      - name: Prove local Auth invitation, revocation, disable, and recovery lifecycle
+        if: steps.migrations.outputs.present == 'true'
+        run: bash scripts/database/verify-local-auth.sh
+
+      - name: Rehearse logical backup and restore with realistic data
+        if: steps.migrations.outputs.present == 'true'
+        run: bash scripts/database/verify-backup-restore.sh
 
       - name: Stop isolated local Supabase
         if: always() && steps.migrations.outputs.present == 'true'
+        continue-on-error: true
+        run: supabase stop --no-backup
+
+  local-demo:
+    name: Clean local product acceptance
+    needs: [build, migrations]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm from package.json
+        uses: pnpm/action-setup@v6
+
+      - name: Set up supported Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up pinned Supabase CLI
+        uses: supabase/setup-cli@v2
+        with:
+          version: 2.101.0
+
+      - name: Build a clean local database, authentication and demo environment
+        run: pnpm setup:local
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run authenticated local product acceptance
+        env:
+          LOCAL_DEMO_E2E: 1
+          PLAYWRIGHT_DISABLE_VIDEO: 1
+        run: >-
+          pnpm exec playwright test tests/e2e/local-demo-acceptance.spec.ts
+          --project=chromium-desktop --workers=1
+
+      - name: Upload local acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: local-product-acceptance-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/playwright/
+          if-no-files-found: ignore
+          retention-days: 14
+          include-hidden-files: false
+
+      - name: Stop local Supabase
+        if: always()
         continue-on-error: true
         run: supabase stop --no-backup

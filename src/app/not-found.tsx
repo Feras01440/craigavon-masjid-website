@@ -18,10 +18,7 @@ export default function NotFound() {
         <div className="site-container not-found__inner">
           <p className="eyebrow">404</p>
           <h1>Page not found</h1>
-          <p>
-            The address may be incomplete, or the page may have moved while this website is being
-            rebuilt.
-          </p>
+          <p>The address may be incomplete, or the page may have moved or been withdrawn.</p>
           <div className="button-row">
             <Link className="button button--primary" href="/">
               Go to the home page

@@ -54,8 +54,32 @@ describe("public content repository", () => {
     expect(requestedUrl).not.toBeNull();
 
     const query = requestedUrl!.searchParams;
+    const selectedColumns = query.get("select")?.split(",") ?? [];
+    expect(selectedColumns).toEqual(
+      expect.arrayContaining([
+        "id",
+        "kind",
+        "slug",
+        "title",
+        "summary",
+        "body",
+        "published_at",
+        "updated_at",
+      ]),
+    );
+    for (const privateColumn of [
+      "created_by",
+      "updated_by",
+      "version",
+      "admin_profiles",
+      "enquiries",
+      "audit_log",
+    ]) {
+      expect(selectedColumns).not.toContain(privateColumn);
+    }
     expect(query.get("kind")).toBe("in.(service)");
     expect(query.get("status")).toBe("in.(published,scheduled)");
+    expect(query.get("demo_local_only")).toBe("eq.false");
     expect(query.get("deleted_at")).toBe("is.null");
     expect(query.get("published_by")).toBe("not.is.null");
     expect(query.getAll("published_at")).toHaveLength(2);

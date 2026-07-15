@@ -60,6 +60,8 @@ const contentInputSchema = z
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase words separated by hyphens."),
     title: z.string().trim().min(1).max(160),
     summary: optionalText(500),
+    seoTitle: optionalText(160),
+    seoDescription: optionalText(320),
     bodyText: z.string().trim().min(1, "Add the main content.").max(50_000),
     actionLabel: optionalText(80),
     actionUrl: optionalText(2_048),
@@ -78,6 +80,7 @@ const contentInputSchema = z
     policyOwner: optionalText(160),
     policyEffectiveOn: optionalText(10),
     policyReviewOn: optionalText(10),
+    policyDownloadUrl: optionalText(2_048),
     category: optionalText(80),
     status: z.enum(contentStatuses),
     featured: z.boolean(),
@@ -124,6 +127,7 @@ const contentInputSchema = z
       ["eventUrl", value.eventUrl],
       ["serviceUrl", value.serviceUrl],
       ["educationRegistrationUrl", value.educationRegistrationUrl],
+      ["policyDownloadUrl", value.policyDownloadUrl],
     ] as const) {
       if (link && !safeContentLinkSchema.safeParse(link).success) {
         context.addIssue({
@@ -198,6 +202,8 @@ const revisionSnapshotSchema = z.object({
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: z.string().min(1).max(160),
   summary: z.string().max(500).nullable(),
+  seo_title: z.string().max(160).nullable().optional(),
+  seo_description: z.string().max(320).nullable().optional(),
   body: z.unknown(),
   category: z.string().max(80).nullable(),
   featured: z.boolean(),
@@ -240,6 +246,8 @@ function readContentInput(formData: FormData) {
     slug: formString(formData, "slug"),
     title: formString(formData, "title"),
     summary: formString(formData, "summary"),
+    seoTitle: formString(formData, "seoTitle"),
+    seoDescription: formString(formData, "seoDescription"),
     bodyText: formString(formData, "bodyText"),
     actionLabel: formString(formData, "actionLabel"),
     actionUrl: formString(formData, "actionUrl"),
@@ -258,6 +266,7 @@ function readContentInput(formData: FormData) {
     policyOwner: formString(formData, "policyOwner"),
     policyEffectiveOn: formString(formData, "policyEffectiveOn"),
     policyReviewOn: formString(formData, "policyReviewOn"),
+    policyDownloadUrl: formString(formData, "policyDownloadUrl"),
     category: formString(formData, "category"),
     status: formString(formData, "status"),
     featured: formData.get("featured") === "on",
@@ -335,6 +344,7 @@ function bodyDocument(input: ContentInput): Json {
         service_url: input.serviceUrl,
       });
     case "education":
+    case "recurring_programme":
       return parsedDocumentJson(educationDocumentSchema, {
         version: 2,
         format: "education",
@@ -352,6 +362,7 @@ function bodyDocument(input: ContentInput): Json {
         owner: input.policyOwner,
         effective_on: input.policyEffectiveOn,
         review_on: input.policyReviewOn,
+        download_url: input.policyDownloadUrl,
       });
     case "faq":
       return parsedDocumentJson(faqDocumentSchema, {
@@ -426,6 +437,8 @@ export async function createContentAction(
       slug: parsed.data.slug,
       title: parsed.data.title,
       summary: parsed.data.summary,
+      seo_title: parsed.data.seoTitle,
+      seo_description: parsed.data.seoDescription,
       body: bodyDocument(parsed.data),
       category: parsed.data.category,
       status: parsed.data.status,
@@ -508,6 +521,8 @@ export async function updateContentAction(
         slug: parsed.data.slug,
         title: parsed.data.title,
         summary: parsed.data.summary,
+        seo_title: parsed.data.seoTitle,
+        seo_description: parsed.data.seoDescription,
         body: bodyDocument(parsed.data),
         category: parsed.data.category,
         status: parsed.data.status,
@@ -565,6 +580,36 @@ export async function softDeleteContentAction(formData: FormData): Promise<void>
   revalidatePath("/", "layout");
 }
 
+export async function restoreSoftDeletedContentAction(formData: FormData): Promise<void> {
+  const parsed = itemMutationSchema.safeParse({
+    id: formString(formData, "id"),
+    expectedVersion: formString(formData, "expectedVersion"),
+  });
+  if (!parsed.success)
+    throw new AdminAccessError("validation", "Reload this item before restoring it.");
+  const context = await requirePermission("content:write", { requireAal2: true });
+  const { data, error } = await context.supabase
+    .from("content_items")
+    .update({
+      status: "draft",
+      deleted_at: null,
+      publish_at: null,
+      expires_at: null,
+      published_by: null,
+      published_at: null,
+    })
+    .eq("id", parsed.data.id)
+    .eq("version", parsed.data.expectedVersion)
+    .not("deleted_at", "is", null)
+    .select("id")
+    .maybeSingle();
+  if (error) contentError(error);
+  if (!data)
+    throw new AdminAccessError("conflict", "This item changed. Reload before restoring it.");
+  revalidatePath("/admin/content");
+  revalidatePath(`/admin/content/${parsed.data.id}`);
+}
+
 const restoreSchema = itemMutationSchema.extend({ revisionId: z.coerce.number().int().positive() });
 
 export async function restoreContentRevisionAction(formData: FormData): Promise<void> {
@@ -596,6 +641,8 @@ export async function restoreContentRevisionAction(formData: FormData): Promise<
       slug: snapshot.data.slug,
       title: snapshot.data.title,
       summary: snapshot.data.summary,
+      seo_title: snapshot.data.seo_title ?? null,
+      seo_description: snapshot.data.seo_description ?? null,
       body: snapshot.data.body as Json,
       category: snapshot.data.category,
       featured: snapshot.data.featured,

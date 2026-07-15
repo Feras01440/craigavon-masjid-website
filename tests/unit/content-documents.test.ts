@@ -18,18 +18,13 @@ describe("content document contracts", () => {
       "announcement",
       "emergency_notice",
       "event",
+      "recurring_programme",
       "education",
       "service",
       "faq",
       "policy",
     ]);
-    for (const kind of [
-      "page",
-      "recurring_programme",
-      "navigation",
-      "social_link",
-      "donation_appeal",
-    ] as const) {
+    for (const kind of ["page", "navigation", "social_link", "donation_appeal"] as const) {
       expect(isPublishableContentKind(kind)).toBe(false);
     }
   });

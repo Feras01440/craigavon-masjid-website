@@ -90,6 +90,21 @@ function TodayCards({ schedule }: { schedule: PrayerSchedule }): React.ReactNode
           </dl>
         </section>
       ) : null}
+      {schedule.seasonalArrangements.length > 0 && (
+        <section className={styles.notice} aria-labelledby="seasonal-arrangements-heading">
+          <h2 id="seasonal-arrangements-heading">Current seasonal arrangements</h2>
+          {schedule.seasonalArrangements.map((arrangement) => (
+            <article key={arrangement.id ?? `${arrangement.startsOn}-${arrangement.title}`}>
+              <h3>{arrangement.title}</h3>
+              <p>
+                <time dateTime={arrangement.startsOn}>{arrangement.startsOn}</time> to{" "}
+                <time dateTime={arrangement.endsOn}>{arrangement.endsOn}</time>
+              </p>
+              {arrangement.publicNote && <p>{arrangement.publicNote}</p>}
+            </article>
+          ))}
+        </section>
+      )}
     </>
   );
 }
@@ -122,7 +137,7 @@ export default async function PrayerTimesPage({
       <div className={styles.page}>
         <header className={styles.intro}>
           <p className={styles.eyebrow}>Worship information</p>
-          <h1>Prayer times, with approval built in.</h1>
+          <h1>Prayer and congregation times</h1>
           <p className={styles.lede}>
             Start times and congregation times are different. This page publishes only a timetable
             approved by the Association, with its source and last update shown alongside it.
@@ -150,10 +165,10 @@ export default async function PrayerTimesPage({
             </>
           ) : (
             <section className={styles.notice} aria-labelledby="prayer-unavailable">
-              <h2 id="prayer-unavailable">Prayer information is not yet published</h2>
+              <h2 id="prayer-unavailable">Prayer information is not currently available online</h2>
               <p>
-                The committee still needs to approve the calculation source, congregation policy and
-                Friday prayer arrangements. No estimated congregation time is shown in their place.
+                No approved timetable is active for today. The website does not estimate a
+                congregation time when configuration is missing.
               </p>
               <p>Please contact the masjid through a confirmed channel before travelling.</p>
             </section>

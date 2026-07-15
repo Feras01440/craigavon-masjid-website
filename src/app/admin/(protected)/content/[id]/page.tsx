@@ -1,10 +1,15 @@
 import Link from "next/link";
 
 import { ContentArchiveButton } from "@/components/admin/content-archive-button";
+import { ConfirmedActionButton } from "@/components/admin/confirmed-action-button";
 import { ContentForm } from "@/components/admin/content-form";
 import { roleHasPermission } from "@/lib/permissions";
 import { requirePermission } from "@/lib/auth/session";
-import { restoreContentRevisionAction, softDeleteContentAction } from "@/server/actions/content";
+import {
+  restoreContentRevisionAction,
+  restoreSoftDeletedContentAction,
+  softDeleteContentAction,
+} from "@/server/actions/content";
 
 export default async function EditContentPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -38,14 +43,42 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
     <>
       <div className="admin-page-heading">
         <div>
-          <p className="admin-eyebrow">Content version {item.version}</p>
+          <p className="admin-eyebrow">
+            {item.demo_local_only ? "Local demonstration · " : ""}Content version {item.version}
+          </p>
           <h1>{canWrite ? "Edit content" : "Review content"}</h1>
           <p>
             <Link href="/admin/content">Back to all content</Link>
           </p>
         </div>
+        {!item.deleted_at && (
+          <Link
+            className="admin-button admin-button--quiet"
+            href={`/admin/content/${item.id}/preview`}
+          >
+            Preview
+          </Link>
+        )}
       </div>
-      {canWrite ? (
+      {item.deleted_at ? (
+        <div className="admin-card admin-card--narrow">
+          <p className="admin-eyebrow">Soft-deleted archive</p>
+          <h2>This item is not public or editable</h2>
+          <p>Restore it to create a private draft, then review it before any publication.</p>
+          {canWrite && (
+            <form action={restoreSoftDeletedContentAction}>
+              <input name="id" type="hidden" value={item.id} />
+              <input name="expectedVersion" type="hidden" value={item.version} />
+              <ConfirmedActionButton
+                className="admin-button"
+                question="Restore this soft-deleted item as a private draft?"
+              >
+                Restore as draft
+              </ConfirmedActionButton>
+            </form>
+          )}
+        </div>
+      ) : canWrite ? (
         <ContentForm item={item} />
       ) : (
         <div className="admin-card">
@@ -87,7 +120,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ id
                     {revision.reason ? ` · ${revision.reason}` : ""}
                   </span>
                 </div>
-                {canWrite && (
+                {canWrite && !item.deleted_at && (
                   <form action={restoreContentRevisionAction}>
                     <input name="id" type="hidden" value={item.id} />
                     <input name="expectedVersion" type="hidden" value={item.version} />

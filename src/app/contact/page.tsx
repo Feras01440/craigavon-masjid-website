@@ -22,7 +22,7 @@ export default async function ContactPage() {
       <PageIntro
         eyebrow="Contact"
         title="Contact the Association"
-        description="A public form appears only after its privacy notice, retention period and committee workflow have been approved."
+        description="Use the published contact details or monitored online enquiry form when available."
         current="Contact"
       />
       <section className="section" aria-labelledby="contact-form-heading">
@@ -30,15 +30,15 @@ export default async function ContactPage() {
           <div>
             <p className="eyebrow">Enquiries</p>
             <h2 id="contact-form-heading">
-              {availability.enabled ? "Send a general enquiry" : "Contact route being confirmed"}
+              {availability.enabled ? "Send a general enquiry" : "Online enquiry form"}
             </h2>
             {availability.enabled ? (
               <PublicEnquiryForm />
             ) : (
-              <StatusPanel label="Not yet available" title="The public form is switched off">
+              <StatusPanel label="Current status" title="The public form is not active">
                 <p>
-                  The committee has not yet published the privacy and retention configuration
-                  required for responsible enquiry handling. No data is collected on this page.
+                  No information is collected on this page. Use only contact details published by
+                  the Association through a confirmed channel.
                 </p>
               </StatusPanel>
             )}

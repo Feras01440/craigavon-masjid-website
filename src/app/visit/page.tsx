@@ -23,32 +23,32 @@ export default async function VisitPage() {
         .join(", ")
     : "";
   const visitItems = [
-    { term: "Address", detail: address || "Awaiting confirmation" },
-    { term: "Directions", detail: contact?.directions || "Awaiting confirmation" },
+    { term: "Address", detail: address || "Not currently available online" },
+    { term: "Directions", detail: contact?.directions || "Not currently available online" },
     {
       term: "Entrance and parking",
-      detail: contact?.parking_information || "Awaiting confirmation",
+      detail: contact?.parking_information || "Not currently available online",
     },
     {
       term: "Accessibility and facilities",
-      detail: contact?.access_information || "Awaiting confirmation",
+      detail: contact?.access_information || "Not currently available online",
     },
     {
       term: "Public transport",
-      detail: contact?.public_transport_information || "Awaiting confirmation",
+      detail: contact?.public_transport_information || "Not currently available online",
     },
   ];
   const hasApprovedVisitDetails = visitItems.some(
-    (item) => item.detail !== "Awaiting confirmation",
+    (item) => item.detail !== "Not currently available online",
   );
   return (
     <PublicShell>
       <PageIntro
         eyebrow="Visit"
         title={
-          hasApprovedVisitDetails ? "Plan your visit" : "Please wait for confirmed visit details"
+          hasApprovedVisitDetails ? "Plan your visit" : "Visit information is not currently online"
         }
-        description="Only committee-approved address, route, parking and access information is shown. Missing details are labelled clearly rather than guessed."
+        description="Check the current address, route, parking and access details before travelling. Missing information is never guessed."
         current="Visit"
       />
 
@@ -59,7 +59,7 @@ export default async function VisitPage() {
             <h2 id="visit-status-heading">
               {hasApprovedVisitDetails
                 ? "Approved visit information"
-                : "Information still required"}
+                : "No travel details are published"}
             </h2>
             <dl className="status-list">
               {visitItems.map((item) => (
@@ -72,11 +72,11 @@ export default async function VisitPage() {
           </div>
           <StatusPanel
             label="Before travelling"
-            title={contact?.map_url ? "Open the approved map" : "Confirm missing details first"}
+            title={contact?.map_url ? "Open the map" : "Before travelling"}
           >
             <p>
-              Do not fill gaps with details copied from an older website or an unverified listing.
-              Check that the information needed for your journey is marked as approved here.
+              If the address or route you need is not shown, use a separate confirmed source before
+              travelling. Old listings may no longer be accurate.
             </p>
             {contact?.map_url ? (
               <p>

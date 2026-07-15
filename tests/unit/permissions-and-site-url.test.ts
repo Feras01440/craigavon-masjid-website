@@ -1,16 +1,41 @@
 import { afterEach, describe, expect, it } from "vitest";
 
+import { demoModeIsActive } from "@/lib/demo-mode";
 import { PERMISSIONS, ROLE_LABELS, roleHasPermission } from "@/lib/permissions";
 import { getSiteUrl, indexingIsApproved } from "@/lib/site-url";
 
 const originalSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 const originalIndexing = process.env.NEXT_PUBLIC_INDEXING_ENABLED;
+const originalSupabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const originalDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE;
 
 afterEach(() => {
   if (originalSiteUrl === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
   else process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
   if (originalIndexing === undefined) delete process.env.NEXT_PUBLIC_INDEXING_ENABLED;
   else process.env.NEXT_PUBLIC_INDEXING_ENABLED = originalIndexing;
+  if (originalSupabaseUrl === undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  else process.env.NEXT_PUBLIC_SUPABASE_URL = originalSupabaseUrl;
+  if (originalDemoMode === undefined) delete process.env.NEXT_PUBLIC_DEMO_MODE;
+  else process.env.NEXT_PUBLIC_DEMO_MODE = originalDemoMode;
+});
+
+describe("local demonstration safety gate", () => {
+  it("requires the flag and two explicit HTTP loopback origins", () => {
+    process.env.NEXT_PUBLIC_DEMO_MODE = "true";
+    process.env.NEXT_PUBLIC_SITE_URL = "http://127.0.0.1:3000";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "http://localhost:54321";
+    expect(demoModeIsActive()).toBe(true);
+
+    process.env.NEXT_PUBLIC_SITE_URL = "https://preview.example.org";
+    expect(demoModeIsActive()).toBe(false);
+    process.env.NEXT_PUBLIC_SITE_URL = "http://127.0.0.1:3000";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://project.supabase.co";
+    expect(demoModeIsActive()).toBe(false);
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "http://127.0.0.1:54321";
+    process.env.NEXT_PUBLIC_DEMO_MODE = "false";
+    expect(demoModeIsActive()).toBe(false);
+  });
 });
 
 describe("committee role permissions", () => {

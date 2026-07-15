@@ -9,6 +9,7 @@ import {
   type ContactInformationSetting,
   type EnquiryConfigurationSetting,
   type FeatureFlagsSetting,
+  type HomepageContentSetting,
   type ManagedRouteKey,
   type ManagedSettingKey,
   type ManagedSettingStatus,
@@ -368,6 +369,96 @@ function ContactFields({ value, state }: { value: ContactInformationSetting; sta
   );
 }
 
+function HomepageFields({ value, state }: { value: HomepageContentSetting; state: ActionState }) {
+  const routeOptions = [{ value: "", label: "No link" }].concat(
+    managedRouteKeys.map((route) => ({ value: route, label: `/${route}` })),
+  );
+  return (
+    <>
+      <TextField
+        field="eyebrow"
+        label="Short heading above the title"
+        defaultValue={value.eyebrow}
+        state={state}
+        maxLength={80}
+        optional
+      />
+      <TextField
+        field="heading"
+        label="Homepage heading"
+        defaultValue={value.heading}
+        state={state}
+        maxLength={160}
+      />
+      <TextAreaField
+        field="introduction"
+        label="Introduction"
+        defaultValue={value.introduction}
+        state={state}
+        maxLength={600}
+        rows={4}
+      />
+      <fieldset className="admin-fieldset">
+        <legend>Homepage links</legend>
+        {(["primary", "secondary"] as const).map((position) => (
+          <div className="admin-form-grid" key={position}>
+            <TextField
+              field={`${position}_cta_label`}
+              label={`${position === "primary" ? "Primary" : "Secondary"} link label`}
+              defaultValue={value[`${position}_cta_label`]}
+              state={state}
+              maxLength={80}
+              optional
+            />
+            <div className="admin-field">
+              <label htmlFor={`${position}_cta_route`}>
+                Destination <span className="admin-optional">optional</span>
+              </label>
+              <select
+                id={`${position}_cta_route`}
+                name={`${position}_cta_route`}
+                defaultValue={value[`${position}_cta_route`]}
+              >
+                {routeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <FieldError errors={state.fieldErrors?.[`${position}_cta_route`]} />
+            </div>
+          </div>
+        ))}
+      </fieldset>
+      <TextField
+        field="information_heading"
+        label="Information panel heading"
+        defaultValue={value.information_heading}
+        state={state}
+        maxLength={160}
+        optional
+      />
+      <fieldset className="admin-fieldset">
+        <legend>Information panel points</legend>
+        {[0, 1, 2].map((index) => (
+          <div className="admin-field" key={index}>
+            <label htmlFor={`information-point-${index}`}>
+              Point {index + 1} <span className="admin-optional">optional</span>
+            </label>
+            <input
+              id={`information-point-${index}`}
+              name="information_points"
+              maxLength={180}
+              defaultValue={value.information_points[index] ?? ""}
+            />
+          </div>
+        ))}
+        <FieldError errors={state.fieldErrors?.information_points} />
+      </fieldset>
+    </>
+  );
+}
+
 const routeLabels: Record<ManagedRouteKey, string> = {
   "prayer-times": "Prayer times",
   visit: "Visit",
@@ -378,6 +469,7 @@ const routeLabels: Record<ManagedRouteKey, string> = {
   about: "About",
   contact: "Contact",
   policies: "Policies",
+  accessibility: "Accessibility",
 };
 
 function RouteChecklist({
@@ -679,6 +771,8 @@ function SettingFields({
   switch (settingKey) {
     case "site_identity":
       return <IdentityFields value={value as SiteIdentitySetting} state={state} />;
+    case "homepage_content":
+      return <HomepageFields value={value as HomepageContentSetting} state={state} />;
     case "contact_information":
       return <ContactFields value={value as ContactInformationSetting} state={state} />;
     case "navigation_footer":

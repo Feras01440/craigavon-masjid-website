@@ -10,7 +10,15 @@ import { requirePermission } from "@/lib/auth/session";
 import { parsePrayerDraftForm } from "@/lib/prayer/admin-input";
 import { buildScheduleRange } from "@/lib/prayer/engine";
 import { dateKeyInZone, wallTimeToInstant } from "@/lib/prayer/timezone";
-import { dateKeySchema, prayerConfigurationSchema, prayerOverrideSchema } from "@/lib/prayer/types";
+import {
+  congregationPrayerKeys,
+  congregationRuleSchema,
+  dateKeySchema,
+  prayerConfigurationSchema,
+  prayerOverrideSchema,
+  seasonalArrangementSchema,
+  type CongregationRule,
+} from "@/lib/prayer/types";
 import { publicationHorizon, validateConfigurationSchedule } from "@/lib/prayer/validation";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
 import { getPrayerConfigurationForAdmin } from "@/server/repositories/prayer-admin";
@@ -289,6 +297,113 @@ export async function deletePrayerOverrideAction(formData: FormData): Promise<vo
     p_settings_id: parsed.data.settingsId,
     p_expected_version: parsed.data.expectedVersion,
     p_override_id: parsed.data.id,
+  });
+  if (error) prayerServiceError(error);
+  revalidatePrayerSurfaces(parsed.data.settingsId);
+}
+
+function seasonalCongregationRules(formData: FormData) {
+  const rules: Partial<Record<(typeof congregationPrayerKeys)[number], CongregationRule>> = {};
+  for (const prayer of congregationPrayerKeys) {
+    const type = formString(formData, `seasonal_${prayer}_type`);
+    if (!type || type === "inherit") continue;
+    const candidate =
+      type === "fixed"
+        ? { type, time: formString(formData, `seasonal_${prayer}_time`) }
+        : type === "offset"
+          ? {
+              type,
+              minutes: Number(formString(formData, `seasonal_${prayer}_minutes`)),
+              roundTo: Number(formString(formData, `seasonal_${prayer}_round_to`)),
+              ...(formString(formData, `seasonal_${prayer}_latest`)
+                ? { latest: formString(formData, `seasonal_${prayer}_latest`) }
+                : {}),
+            }
+          : { type };
+    const parsed = congregationRuleSchema.safeParse(candidate);
+    if (!parsed.success) {
+      throw new AdminAccessError(
+        "validation",
+        `Check the ${prayer} congregation rule for this seasonal arrangement.`,
+      );
+    }
+    rules[prayer] = parsed.data;
+  }
+  return rules;
+}
+
+export async function saveSeasonalArrangementAction(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  try {
+    const identity = z
+      .object({
+        settingsId: z.uuid(),
+        expectedVersion: z.coerce.number().int().positive(),
+      })
+      .safeParse({
+        settingsId: formString(formData, "settingsId"),
+        expectedVersion: formString(formData, "expectedVersion"),
+      });
+    if (!identity.success) return validationFailure(identity.error);
+    const arrangement = seasonalArrangementSchema.safeParse({
+      id: formString(formData, "id") || undefined,
+      kind: formString(formData, "kind"),
+      title: formString(formData, "title"),
+      startsOn: formString(formData, "startsOn"),
+      endsOn: formString(formData, "endsOn"),
+      publicNote: formString(formData, "publicNote") || undefined,
+      congregationRules: seasonalCongregationRules(formData),
+    });
+    if (!arrangement.success) return validationFailure(arrangement.error);
+
+    const context = await requirePermission("prayer:write", { requireAal2: true });
+    const { data, error } = await context.supabase.rpc("save_seasonal_arrangement", {
+      p_settings_id: identity.data.settingsId,
+      p_expected_version: identity.data.expectedVersion,
+      p_payload: {
+        ...(arrangement.data.id ? { id: arrangement.data.id } : {}),
+        kind: arrangement.data.kind,
+        title: arrangement.data.title,
+        starts_on: arrangement.data.startsOn,
+        ends_on: arrangement.data.endsOn,
+        details: {
+          public_note: arrangement.data.publicNote ?? "",
+          congregation_rules: arrangement.data.congregationRules,
+        },
+      } as Json,
+    });
+    if (error || !data?.[0]) prayerServiceError(error);
+    revalidatePrayerSurfaces(identity.data.settingsId);
+    return {
+      status: "success",
+      message: `Seasonal arrangement saved. The draft is now version ${data[0].settings_version}.`,
+    };
+  } catch (error) {
+    return safeActionError(error);
+  }
+}
+
+export async function deleteSeasonalArrangementAction(formData: FormData): Promise<void> {
+  const parsed = z
+    .object({
+      settingsId: z.uuid(),
+      expectedVersion: z.coerce.number().int().positive(),
+      id: z.uuid(),
+    })
+    .safeParse({
+      settingsId: formString(formData, "settingsId"),
+      expectedVersion: formString(formData, "expectedVersion"),
+      id: formString(formData, "id"),
+    });
+  if (!parsed.success)
+    throw new AdminAccessError("validation", "Reload before removing this arrangement.");
+  const context = await requirePermission("prayer:write", { requireAal2: true });
+  const { error } = await context.supabase.rpc("delete_seasonal_arrangement", {
+    p_settings_id: parsed.data.settingsId,
+    p_expected_version: parsed.data.expectedVersion,
+    p_arrangement_id: parsed.data.id,
   });
   if (error) prayerServiceError(error);
   revalidatePrayerSurfaces(parsed.data.settingsId);

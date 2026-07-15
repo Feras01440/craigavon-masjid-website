@@ -1,6 +1,9 @@
 packages:
   - "."
 
+overrides:
+  "next>postcss": 8.5.17
+
 allowBuilds:
   sharp: true
   unrs-resolver: true

@@ -55,6 +55,7 @@ export type SiteSettingRow = {
   key: string;
   value: Json;
   status: ContentStatus;
+  demo_local_only: boolean;
   version: number;
   created_by: string | null;
   updated_by: string | null;
@@ -70,9 +71,12 @@ export type ContentItemRow = {
   slug: string;
   title: string;
   summary: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
   body: Json;
   category: string | null;
   status: ContentStatus;
+  demo_local_only: boolean;
   featured: boolean;
   publish_at: string | null;
   expires_at: string | null;
@@ -138,6 +142,7 @@ export type PrayerSettingsRow = {
   id: string;
   name: string;
   status: ContentStatus;
+  demo_local_only: boolean;
   effective_from: string;
   effective_to: string | null;
   timezone: string;
@@ -262,6 +267,7 @@ export type Database = {
           key: string;
           value?: Json;
           status?: ContentStatus;
+          demo_local_only?: boolean;
           version?: number;
           created_by?: string | null;
           updated_by?: string | null;
@@ -280,9 +286,12 @@ export type Database = {
           slug: string;
           title: string;
           summary?: string | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
           body?: Json;
           category?: string | null;
           status?: ContentStatus;
+          demo_local_only?: boolean;
           featured?: boolean;
           publish_at?: string | null;
           expires_at?: string | null;
@@ -356,11 +365,15 @@ export type Database = {
       >;
       prayer_settings: Table<
         PrayerSettingsRow,
-        Omit<PrayerSettingsRow, "id" | "created_at" | "updated_at" | "version"> & {
+        Omit<
+          PrayerSettingsRow,
+          "id" | "created_at" | "updated_at" | "version" | "demo_local_only"
+        > & {
           id?: string;
           created_at?: string;
           updated_at?: string;
           version?: number;
+          demo_local_only?: boolean;
         },
         Partial<Omit<PrayerSettingsRow, "id" | "created_at">>
       >;
@@ -528,6 +541,18 @@ export type Database = {
       delete_prayer_override: {
         Args: { p_settings_id: string; p_expected_version: number; p_override_id: string };
         Returns: number;
+      };
+      save_seasonal_arrangement: {
+        Args: { p_settings_id: string; p_expected_version: number; p_payload: Json };
+        Returns: { arrangement_id: string; settings_version: number }[];
+      };
+      delete_seasonal_arrangement: {
+        Args: { p_settings_id: string; p_expected_version: number; p_arrangement_id: string };
+        Returns: number;
+      };
+      seed_local_demo_data: {
+        Args: { p_actor_id: string; p_marker: string };
+        Returns: Json;
       };
     };
     Enums: {

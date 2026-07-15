@@ -8,11 +8,12 @@ import {
   type PublicContentItem,
   type PublicContentType,
 } from "@/lib/content/public-content";
+import { demoModeIsActive } from "@/lib/demo-mode";
 import { SupabaseConfigurationError } from "@/lib/supabase/env";
 import { createSupabaseServiceClient } from "@/lib/supabase/server";
 
 const PUBLIC_CONTENT_SELECT =
-  "id,kind,slug,title,summary,body,category,status,featured,publish_at,expires_at,published_by,published_at,deleted_at,updated_at";
+  "id,kind,slug,title,summary,seo_title,seo_description,body,category,status,featured,publish_at,expires_at,published_by,published_at,deleted_at,updated_at";
 
 const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store" });
 
@@ -62,6 +63,7 @@ export async function getPublishedContent(
       .lte("published_at", nowIso)
       .or(`publish_at.is.null,publish_at.lte.${nowIso}`)
       .or(`expires_at.is.null,expires_at.gt.${nowIso}`);
+    if (!demoModeIsActive()) request = request.eq("demo_local_only", false);
 
     if (options.slug) request = request.eq("slug", options.slug);
 

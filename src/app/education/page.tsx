@@ -23,18 +23,17 @@ export const revalidate = 0;
 export default async function EducationPage() {
   const content = await getPublishedContent(["education"], { limit: 100 });
   const programmes = content.status === "ready" ? content.items : [];
-  let introTitle = "Programme information is not yet published";
-  let introDescription =
-    "Class subjects, age groups, teachers, times, fees and availability require programme and safeguarding approval before they appear here.";
+  let introTitle = "Learning information";
+  let introDescription = "Current classes and recurring programmes are listed when available.";
 
   if (content.status === "unavailable") {
     introTitle = "Learning publication status is unavailable";
     introDescription =
       "The website cannot currently verify the approved learning register, so no fallback programme details are shown.";
   } else if (programmes.length > 0) {
-    introTitle = "Approved learning information";
+    introTitle = "Learning and recurring programmes";
     introDescription =
-      "Only learning information that passed programme and safeguarding publication checks is shown.";
+      "Read the current audience, schedule and registration information for each listing.";
   }
 
   return (
@@ -51,11 +50,8 @@ export default async function EducationPage() {
           {content.status === "unavailable" ? (
             <PublishedContentUnavailable subject="Current learning information" />
           ) : programmes.length === 0 ? (
-            <EmptyState title="No classes or registration dates are confirmed">
-              <p>
-                The website will not infer a timetable from old notices or advertise a place before
-                the education lead confirms the programme.
-              </p>
+            <EmptyState title="No learning programmes are currently listed">
+              <p>Please check again later. Old timetables are not reused as current information.</p>
             </EmptyState>
           ) : (
             <>
@@ -73,8 +69,8 @@ export default async function EducationPage() {
       <section className="section section--tinted" aria-labelledby="learning-details">
         <div className="site-container content-grid">
           <div className="prose">
-            <p className="eyebrow">When details are approved</p>
-            <h2 id="learning-details">What each listing will explain</h2>
+            <p className="eyebrow">Listing information</p>
+            <h2 id="learning-details">What each programme listing explains</h2>
             <ul className="plain-list">
               <li>Audience, age range and any prerequisite</li>
               <li>Day, time, term dates, capacity and cost</li>

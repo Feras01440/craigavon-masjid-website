@@ -9,7 +9,6 @@ import {
   PublishedContentUnavailable,
   StatusPanel,
 } from "@/components/site";
-import { getPolicyEntry, policyEntries } from "@/content/public-copy";
 import { getPublishedPolicy } from "@/server/repositories/public-content";
 
 type PolicyStatusPageProps = {
@@ -25,48 +24,38 @@ const policyDateFormatter = new Intl.DateTimeFormat("en-GB", {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export function generateStaticParams() {
-  return policyEntries.map((entry) => ({ slug: entry.slug }));
-}
-
 export async function generateMetadata({ params }: PolicyStatusPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const policy = getPolicyEntry(slug);
   const published = await loadPublishedPolicy(slug);
 
   if (published.status === "ready") {
     const approvedPolicy = published.items[0]!;
     return {
-      title: approvedPolicy.title,
-      description: approvedPolicy.summary ?? `Current published policy: ${approvedPolicy.title}.`,
+      title: approvedPolicy.seoTitle ?? approvedPolicy.title,
+      description:
+        approvedPolicy.seoDescription ??
+        approvedPolicy.summary ??
+        `Current published policy: ${approvedPolicy.title}.`,
     };
   }
 
-  if (!policy && published.status === "empty") {
+  if (published.status === "empty") {
     return { title: "Policy not found" };
   }
 
   if (published.status === "unavailable") {
     return {
-      title: policy?.title ?? "Policy information unavailable",
+      title: "Policy information unavailable",
       description: "The current published policy could not be checked.",
       robots: { index: false, follow: true },
     };
   }
 
-  return {
-    title: policy!.title,
-    description: `${policy!.title}: ${policy!.status.toLowerCase()}.`,
-    robots: {
-      index: false,
-      follow: true,
-    },
-  };
+  return { title: "Policy not found" };
 }
 
 export default async function PolicyStatusPage({ params }: PolicyStatusPageProps) {
   const { slug } = await params;
-  const policy = getPolicyEntry(slug);
   const published = await loadPublishedPolicy(slug);
 
   if (published.status === "ready") {
@@ -109,7 +98,7 @@ export default async function PolicyStatusPage({ params }: PolicyStatusPageProps
   }
 
   if (published.status === "unavailable") {
-    const title = policy?.title ?? "Policy information";
+    const title = "Policy information";
     return (
       <PublicShell>
         <PageIntro
@@ -128,41 +117,5 @@ export default async function PolicyStatusPage({ params }: PolicyStatusPageProps
     );
   }
 
-  if (!policy) {
-    notFound();
-  }
-
-  const pendingPolicy = policy;
-
-  return (
-    <PublicShell>
-      <PageIntro
-        eyebrow="Policy status"
-        title={pendingPolicy.title}
-        description={pendingPolicy.summary}
-        current={pendingPolicy.title}
-        parent={{ href: "/policies", label: "Policies" }}
-      />
-
-      <section className="section">
-        <div className="site-container content-grid">
-          <div className="prose">
-            <p className="eyebrow">Current state</p>
-            <h2>{pendingPolicy.status}</h2>
-            <p>{pendingPolicy.requiredBefore}</p>
-            <p>
-              Until approval is recorded, this status page is not a substitute for the final policy
-              and must not be cited as one.
-            </p>
-          </div>
-          <StatusPanel title="No adoption is implied">
-            <p>
-              The approved document will show its owner, approval date, review date and a monitored
-              route for questions or requests.
-            </p>
-          </StatusPanel>
-        </div>
-      </section>
-    </PublicShell>
-  );
+  notFound();
 }

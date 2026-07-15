@@ -19,6 +19,7 @@ const contentTypeLabels: Record<PublicContentItem["sourceKind"], string> = {
   announcement: "Notice",
   emergency_notice: "Urgent notice",
   event: "Event",
+  recurring_programme: "Recurring programme",
   service: "Service",
   education: "Learning",
   policy: "Policy",

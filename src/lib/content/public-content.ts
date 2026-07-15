@@ -23,6 +23,7 @@ export const publicDatabaseContentKinds = [
   "announcement",
   "emergency_notice",
   "event",
+  "recurring_programme",
   "service",
   "education",
   "policy",
@@ -42,6 +43,8 @@ export const publishedContentRowSchema = z
     slug: slugSchema,
     title: z.string().min(1).max(160),
     summary: z.string().max(500).nullable(),
+    seo_title: z.string().max(160).nullable().optional(),
+    seo_description: z.string().max(320).nullable().optional(),
     body: contentDocumentSchema,
     category: z.string().max(80).nullable(),
     status: z.enum(["published", "scheduled"]),
@@ -100,6 +103,7 @@ const kindToPublicType: Record<PublicDatabaseContentKind, PublicContentType> = {
   announcement: "news",
   emergency_notice: "news",
   event: "event",
+  recurring_programme: "education",
   service: "service",
   education: "education",
   policy: "policy",
@@ -110,7 +114,7 @@ const typeToDatabaseKinds: Record<PublicContentType, readonly PublicDatabaseCont
   news: ["announcement", "emergency_notice"],
   event: ["event"],
   service: ["service"],
-  education: ["education"],
+  education: ["education", "recurring_programme"],
   policy: ["policy"],
   faq: ["faq"],
 };
@@ -159,6 +163,7 @@ export type PublicContentDetails =
       owner: string;
       effectiveOn: string;
       reviewOn: string | null;
+      downloadUrl?: string;
     }
   | { format: "faq" };
 
@@ -169,6 +174,8 @@ export type PublicContentItem = {
   slug: string;
   title: string;
   summary: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   bodyBlocks: string[];
   details?: PublicContentDetails;
   category: string | null;
@@ -286,6 +293,7 @@ function mapDocumentDetails(document: ContentDocument): PublicContentDetails | u
         owner: sanitizePlainText(document.owner),
         effectiveOn: document.effective_on,
         reviewOn: document.review_on,
+        ...(document.download_url ? { downloadUrl: document.download_url } : {}),
       };
     case "faq":
       return { format: "faq" };
@@ -331,6 +339,8 @@ export function mapPublishedContentRow(
     slug: row.slug,
     title,
     summary: summary || null,
+    seoTitle: optionalSanitizedText(row.seo_title ?? null),
+    seoDescription: optionalSanitizedText(row.seo_description ?? null),
     bodyBlocks: blocks,
     ...(details ? { details } : {}),
     category: category || null,

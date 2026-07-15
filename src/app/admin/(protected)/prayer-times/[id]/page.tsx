@@ -6,6 +6,7 @@ import { PrayerOverrideForm } from "@/components/admin/prayer-override-form";
 import { PrayerPreview } from "@/components/admin/prayer-preview";
 import { PrayerPublishForm } from "@/components/admin/prayer-publish-form";
 import { PrayerSettingsForm } from "@/components/admin/prayer-settings-form";
+import { PrayerSeasonalForm } from "@/components/admin/prayer-seasonal-form";
 import {
   PrayerWithdrawalForm,
   type PrayerReplacementDraft,
@@ -16,6 +17,7 @@ import type { CongregationRule, PrayerConfiguration } from "@/lib/prayer/types";
 import {
   clonePrayerSettingsAction,
   deletePrayerOverrideAction,
+  deleteSeasonalArrangementAction,
   restorePrayerRevisionAction,
 } from "@/server/actions/prayer";
 import { getPrayerConfigurationForAdmin } from "@/server/repositories/prayer-admin";
@@ -44,6 +46,14 @@ const prayerLabels = {
   asr: "Asr",
   maghrib: "Maghrib",
   isha: "Isha",
+} as const;
+
+const seasonalKindLabels = {
+  ramadan: "Ramadan",
+  eid_al_fitr: "Eid al-Fitr",
+  eid_al_adha: "Eid al-Adha",
+  closure: "Temporary closure",
+  other: "Other",
 } as const;
 
 function formatAdminDateTime(value: string): string {
@@ -370,6 +380,66 @@ export default async function PrayerSettingsDetailPage({
         {isDraft && canWrite && (
           <div className="admin-section">
             <PrayerOverrideForm settingsId={configuration.id} version={configuration.version} />
+          </div>
+        )}
+      </section>
+
+      <section className="admin-section" aria-labelledby="seasonal-heading">
+        <h2 id="seasonal-heading">Ramadan, Eid and seasonal arrangements</h2>
+        <p>
+          Date-bounded notes and congregation rules are included in previews, public prayer data and
+          the TV display. Dated overrides still take final precedence for a particular prayer.
+        </p>
+        {configuration.seasonalArrangements.length === 0 ? (
+          <p className="admin-muted">No seasonal arrangements are recorded.</p>
+        ) : (
+          <div className="admin-stack">
+            {configuration.seasonalArrangements.map((arrangement) => (
+              <article
+                className="admin-card"
+                key={arrangement.id ?? `${arrangement.startsOn}-${arrangement.title}`}
+              >
+                <p className="admin-eyebrow">{seasonalKindLabels[arrangement.kind]}</p>
+                <h3>{arrangement.title}</h3>
+                <p>
+                  <time dateTime={arrangement.startsOn}>{arrangement.startsOn}</time> to{" "}
+                  <time dateTime={arrangement.endsOn}>{arrangement.endsOn}</time>
+                </p>
+                {arrangement.publicNote && <p>{arrangement.publicNote}</p>}
+                <p className="admin-muted">
+                  {Object.keys(arrangement.congregationRules).length} seasonal congregation rule(s)
+                </p>
+                {isDraft && canWrite && (
+                  <>
+                    <details>
+                      <summary>Edit this arrangement</summary>
+                      <PrayerSeasonalForm
+                        settingsId={configuration.id}
+                        version={configuration.version}
+                        arrangement={arrangement}
+                      />
+                    </details>
+                    {arrangement.id && (
+                      <form action={deleteSeasonalArrangementAction}>
+                        <input name="settingsId" type="hidden" value={configuration.id} />
+                        <input name="expectedVersion" type="hidden" value={configuration.version} />
+                        <input name="id" type="hidden" value={arrangement.id} />
+                        <ConfirmedActionButton
+                          question={`Remove the seasonal arrangement “${arrangement.title}”?`}
+                        >
+                          Remove arrangement
+                        </ConfirmedActionButton>
+                      </form>
+                    )}
+                  </>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
+        {isDraft && canWrite && (
+          <div className="admin-section">
+            <PrayerSeasonalForm settingsId={configuration.id} version={configuration.version} />
           </div>
         )}
       </section>

@@ -45,6 +45,7 @@ export function prayerConfigurationFixture(
       },
     ],
     overrides: [],
+    seasonalArrangements: [],
     ...overrides,
   };
 }

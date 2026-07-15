@@ -194,6 +194,37 @@ export function ContentForm({ item }: { item?: ContentItemRow }) {
         />
         <FieldError errors={state.fieldErrors?.summary} />
       </div>
+      <fieldset className="admin-fieldset">
+        <legend>Search and sharing</legend>
+        <div className="admin-form-grid">
+          <div className="admin-field">
+            <label htmlFor="content-seo-title">
+              Search title <span className="admin-optional">optional</span>
+            </label>
+            <input
+              id="content-seo-title"
+              name="seoTitle"
+              maxLength={160}
+              defaultValue={item?.seo_title ?? ""}
+            />
+            <FieldError errors={state.fieldErrors?.seoTitle} />
+          </div>
+          <div className="admin-field">
+            <label htmlFor="content-seo-description">
+              Search description <span className="admin-optional">optional</span>
+            </label>
+            <textarea
+              id="content-seo-description"
+              name="seoDescription"
+              rows={3}
+              maxLength={320}
+              defaultValue={item?.seo_description ?? ""}
+            />
+            <FieldError errors={state.fieldErrors?.seoDescription} />
+          </div>
+        </div>
+        <p className="admin-hint">Leave blank to use the public title and summary.</p>
+      </fieldset>
       <div className="admin-field">
         <label htmlFor="content-body">
           {kind === "faq" ? "Answer" : kind === "event" ? "Event description" : "Main content"}
@@ -370,9 +401,13 @@ export function ContentForm({ item }: { item?: ContentItemRow }) {
           </div>
         </fieldset>
       )}
-      {kind === "education" && (
+      {(kind === "education" || kind === "recurring_programme") && (
         <fieldset className="admin-fieldset">
-          <legend>Learning programme details</legend>
+          <legend>
+            {kind === "recurring_programme"
+              ? "Recurring programme details"
+              : "Learning programme details"}
+          </legend>
           <div className="admin-form-grid">
             <div className="admin-field">
               <label htmlFor="content-education-audience">Audience or age range</label>
@@ -475,6 +510,25 @@ export function ContentForm({ item }: { item?: ContentItemRow }) {
               />
               <FieldError errors={state.fieldErrors?.policyReviewOn} />
             </div>
+          </div>
+          <div className="admin-field">
+            <label htmlFor="content-policy-download">
+              Downloadable document <span className="admin-optional">optional</span>
+            </label>
+            <input
+              id="content-policy-download"
+              name="policyDownloadUrl"
+              type="text"
+              inputMode="url"
+              maxLength={2048}
+              placeholder="/media/document or https://example.org/policy.pdf"
+              defaultValue={documentValue(document, "policy", "download_url")}
+            />
+            <span className="admin-hint">
+              Use a checked site path or HTTPS document. Image uploads remain separate from policy
+              documents.
+            </span>
+            <FieldError errors={state.fieldErrors?.policyDownloadUrl} />
           </div>
         </fieldset>
       )}

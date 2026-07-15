@@ -28,6 +28,46 @@ describe("managed site setting validation", () => {
     }
   });
 
+  it("validates complete homepage copy and paired calls to action", () => {
+    expect(
+      validateManagedSettingValue(
+        "homepage_content",
+        managedSettingDefaults.homepage_content,
+        "published",
+      ).success,
+    ).toBe(true);
+
+    const missingRoute = validateManagedSettingValue(
+      "homepage_content",
+      {
+        ...managedSettingDefaults.homepage_content,
+        primary_cta_route: "",
+      },
+      "draft",
+    );
+    expect(missingRoute.success).toBe(false);
+    if (!missingRoute.success) {
+      expect(missingRoute.error.issues[0]?.path).toEqual(["primary_cta_route"]);
+    }
+
+    const missingLabelAndCopy = validateManagedSettingValue(
+      "homepage_content",
+      {
+        ...managedSettingDefaults.homepage_content,
+        heading: "",
+        introduction: "",
+        secondary_cta_label: "",
+      },
+      "published",
+    );
+    expect(missingLabelAndCopy.success).toBe(false);
+    if (!missingLabelAndCopy.success) {
+      expect(missingLabelAndCopy.error.issues.map((issue) => issue.path[0])).toEqual(
+        expect.arrayContaining(["heading", "introduction", "secondary_cta_label"]),
+      );
+    }
+  });
+
   it("requires secure map links", () => {
     const result = validateManagedSettingValue(
       "contact_information",

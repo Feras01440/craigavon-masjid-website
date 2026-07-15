@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { signOutAction } from "@/lib/auth/actions";
+import { demoModeIsActive } from "@/lib/demo-mode";
 import { roleHasPermission, ROLE_LABELS, type Permission } from "@/lib/permissions";
 import type { AdminContext } from "@/lib/auth/session";
 
@@ -21,6 +22,7 @@ export function AdminShell({ context, children }: { context: AdminContext; child
   const links = navigation.filter(
     (item) => !item.permission || roleHasPermission(context.role, item.permission),
   );
+  const demoMode = demoModeIsActive();
   return (
     <div className="admin-shell">
       <a className="admin-skip-link" href="#admin-main">
@@ -41,6 +43,12 @@ export function AdminShell({ context, children }: { context: AdminContext; child
           </button>
         </form>
       </header>
+      {demoMode && (
+        <div className="admin-demo-notice" role="status">
+          <strong>Local demonstration environment.</strong> Sample content and prayer values are not
+          approved for production. Replace them through the dashboard before launch.
+        </div>
+      )}
       {context.aal !== "aal2" && (
         <div className="admin-security-notice" role="status">
           <strong>Authenticator confirmation needed.</strong> Publishing and other sensitive changes

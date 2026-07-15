@@ -33,6 +33,15 @@ export default async function AuditLogPage({
   const { data, error } = await query;
   const rows = error ? [] : (data ?? []).slice(0, 50);
   const nextCursor = !error && (data?.length ?? 0) > 50 ? rows.at(-1)?.created_at : null;
+  const actorIds = [...new Set(rows.map((row) => row.actor_id).filter((id): id is string => !!id))];
+  const actorNames = new Map<string, string>();
+  if (actorIds.length > 0) {
+    const profiles = await context.supabase
+      .from("admin_profiles")
+      .select("id,display_name")
+      .in("id", actorIds);
+    for (const profile of profiles.data ?? []) actorNames.set(profile.id, profile.display_name);
+  }
 
   return (
     <div className="admin-stack">
@@ -101,7 +110,11 @@ export default async function AuditLogPage({
                   <td>{row.action}</td>
                   <td>{row.entity_type}</td>
                   <td>{row.entity_id ?? "—"}</td>
-                  <td>{row.actor_id ? `…${row.actor_id.slice(-8)}` : "System"}</td>
+                  <td>
+                    {row.actor_id
+                      ? `${actorNames.get(row.actor_id) ?? "Former administrator"} (…${row.actor_id.slice(-8)})`
+                      : "System"}
+                  </td>
                 </tr>
               ))}
             </tbody>

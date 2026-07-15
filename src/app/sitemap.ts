@@ -15,11 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/contact",
     "/policies",
-    "/policies/privacy",
-    "/policies/accessibility",
-    "/policies/safeguarding",
-    "/policies/complaints",
-    "/policies/website-terms",
+    "/accessibility",
   ];
   return paths.map((path, index) => ({
     url: new URL(path, siteUrl).toString(),

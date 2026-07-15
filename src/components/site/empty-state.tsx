@@ -8,7 +8,7 @@ type EmptyStateProps = {
 export function EmptyState({ title, children }: EmptyStateProps) {
   return (
     <div className="empty-state">
-      <p className="empty-state__kicker">Nothing approved for publication</p>
+      <p className="empty-state__kicker">Current information</p>
       <h2>{title}</h2>
       <div>{children}</div>
     </div>

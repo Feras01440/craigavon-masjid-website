@@ -19,9 +19,9 @@ test.describe("safe fallbacks without Supabase configuration", () => {
     await gotoReady(page, "/");
 
     await expect(
-      page.getByRole("heading", { level: 2, name: "Approved prayer information only" }),
+      page.getByRole("heading", { level: 2, name: "Today's prayer times" }),
     ).toBeVisible();
-    await expect(page.getByText("Start and congregational times are withheld")).toBeVisible();
+    await expect(page.getByText(/Prayer times are not currently available online/i)).toBeVisible();
     await expect(page.getByText(/could not be checked/i).first()).toBeVisible();
   });
 
@@ -29,9 +29,12 @@ test.describe("safe fallbacks without Supabase configuration", () => {
     await gotoReady(page, "/prayer-times");
 
     await expect(
-      page.getByRole("heading", { level: 2, name: "Prayer information is not yet published" }),
+      page.getByRole("heading", {
+        level: 2,
+        name: "Prayer information is not currently available online",
+      }),
     ).toBeVisible();
-    await expect(page.getByText(/No estimated congregation time is shown/i)).toBeVisible();
+    await expect(page.getByText(/does not estimate a congregation time/i)).toBeVisible();
     await expect(page.getByRole("table")).toHaveCount(0);
   });
 
@@ -49,9 +52,9 @@ test.describe("safe fallbacks without Supabase configuration", () => {
   test("contact route collects no data until its controls are configured", async ({ page }) => {
     await gotoReady(page, "/contact");
 
-    await expect(page.getByText("The public form is switched off")).toBeVisible();
+    await expect(page.getByText("The public form is not active")).toBeVisible();
     await expect(page.locator("form")).toHaveCount(0);
-    await expect(page.getByText(/No data is collected on this page/i)).toBeVisible();
+    await expect(page.getByText(/No information is collected on this page/i)).toBeVisible();
   });
 
   test("public data APIs fail closed and are never cached", async ({ request }) => {

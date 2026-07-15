@@ -8,7 +8,7 @@ type ApprovalCardProps = {
 export function ApprovalCard({ title, description }: ApprovalCardProps) {
   return (
     <article className="approval-card">
-      <p className="status-badge">Awaiting committee approval</p>
+      <p className="status-badge">Not currently published</p>
       <h3>{title}</h3>
       <p>{description}</p>
       <Link className="text-link" href="/prayer-times">

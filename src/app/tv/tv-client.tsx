@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useState } from "react";
 
 import { nextEvent } from "@/lib/prayer/events";
@@ -68,7 +68,9 @@ function activePrayerHold(
 
 export function TvClient({ initialPayload }: { initialPayload: DisplayPayload }): React.ReactNode {
   const [payload, setPayload] = useState(initialPayload);
-  const [now, setNow] = useState(() => new Date());
+  // Use the server-generated timestamp for the hydration frame. The live clock takes over after
+  // mount, preventing a date/minute boundary from producing different server and client markup.
+  const [now, setNow] = useState(() => new Date(initialPayload.generatedAt));
   const [online, setOnline] = useState(true);
   const [usingCachedData, setUsingCachedData] = useState(
     initialPayload.prayer.status !== "available" || initialPayload.notices.status !== "available",
@@ -157,6 +159,7 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
   const emergency = activeNotices.find((notice) => notice.kind === "emergency_notice");
   const regularNotices = activeNotices.filter((notice) => notice.kind === "announcement");
   const currentNotice = regularNotices[noticeIndex % Math.max(regularNotices.length, 1)];
+  const seasonalArrangement = today?.seasonalArrangements[0];
   const generatedAt = payload.generatedAt;
 
   if (emergency) {
@@ -207,14 +210,15 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
     <main className={styles.screen}>
       <header className={styles.topbar}>
         <div className={styles.brand}>
-          <Image
+          <img
             className={styles.brandLogo}
             src="/brand/muslim-association-of-craigavon-logo-64.png"
             alt=""
             aria-hidden="true"
             width={64}
             height={64}
-            priority
+            loading="eager"
+            decoding="async"
           />
           <div>
             <strong>Muslim Association of Craigavon</strong>
@@ -305,6 +309,14 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
                   <>
                     <h2>{currentNotice.title}</h2>
                     {currentNotice.summary ? <p>{currentNotice.summary}</p> : null}
+                  </>
+                ) : seasonalArrangement ? (
+                  <>
+                    <h2>{seasonalArrangement.title}</h2>
+                    <p>
+                      {seasonalArrangement.publicNote ||
+                        `${seasonalArrangement.startsOn} to ${seasonalArrangement.endsOn}`}
+                    </p>
                   </>
                 ) : (
                   <>

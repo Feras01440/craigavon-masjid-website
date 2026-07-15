@@ -102,6 +102,38 @@ export const prayerOverrideSchema = z
 
 export type PrayerOverride = z.infer<typeof prayerOverrideSchema>;
 
+const seasonalCongregationRulesSchema = z
+  .object({
+    fajr: congregationRuleSchema.optional(),
+    dhuhr: congregationRuleSchema.optional(),
+    asr: congregationRuleSchema.optional(),
+    maghrib: congregationRuleSchema.optional(),
+    isha: congregationRuleSchema.optional(),
+  })
+  .strict();
+
+export const seasonalArrangementSchema = z
+  .object({
+    id: z.string().uuid().optional(),
+    kind: z.enum(["ramadan", "eid_al_fitr", "eid_al_adha", "closure", "other"]),
+    title: z.string().trim().min(1).max(160),
+    startsOn: dateKeySchema,
+    endsOn: dateKeySchema,
+    publicNote: z.string().trim().max(1000).optional(),
+    congregationRules: seasonalCongregationRulesSchema.default({}),
+  })
+  .superRefine((value, context) => {
+    if (value.endsOn < value.startsOn) {
+      context.addIssue({
+        code: "custom",
+        path: ["endsOn"],
+        message: "The end date cannot be before the start date.",
+      });
+    }
+  });
+
+export type SeasonalArrangement = z.infer<typeof seasonalArrangementSchema>;
+
 const adjustmentsSchema = z.object({
   fajr: z.number().int().min(-120).max(120).default(0),
   sunrise: z.number().int().min(-120).max(120).default(0),
@@ -154,6 +186,7 @@ export const prayerConfigurationSchema = z
     updatedAt: z.string().datetime(),
     jumuahSessions: z.array(jumuahSessionSchema).max(10),
     overrides: z.array(prayerOverrideSchema).max(500),
+    seasonalArrangements: z.array(seasonalArrangementSchema).max(100).default([]),
   })
   .superRefine((value, context) => {
     try {
@@ -279,6 +312,14 @@ export type PrayerSchedule = {
   hijriAdjustment: -1 | 0 | 1;
   prayers: Record<PrayerKey, SchedulePrayer>;
   jumuah: ScheduleJumuah[];
+  seasonalArrangements: Array<{
+    id: string | null;
+    kind: SeasonalArrangement["kind"];
+    title: string;
+    startsOn: string;
+    endsOn: string;
+    publicNote: string | null;
+  }>;
   source: {
     name: string;
     reference: string | null;
