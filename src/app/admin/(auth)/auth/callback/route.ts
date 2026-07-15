@@ -3,10 +3,15 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 
 import { AdminAccessError } from "@/lib/auth/errors";
 import { requireAdmin } from "@/lib/auth/session";
+import { getSiteUrl } from "@/lib/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type AllowedOtpType = Extract<EmailOtpType, "email" | "invite" | "magiclink">;
-type AuthenticationResult = { error: { message: string } | null };
+type ServerSupabaseClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+type AuthenticationResult = {
+  client: ServerSupabaseClient;
+  error: { message: string } | null;
+};
 type ValidatedCallback = {
   completeCallback: () => Promise<AuthenticationResult>;
 };
@@ -33,7 +38,8 @@ function parseCallback(searchParams: URLSearchParams): ValidatedCallback | null 
     return {
       completeCallback: async () => {
         const supabase = await createSupabaseServerClient();
-        return supabase.auth.exchangeCodeForSession(code);
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        return { client: supabase, error };
       },
     };
   }
@@ -50,7 +56,8 @@ function parseCallback(searchParams: URLSearchParams): ValidatedCallback | null 
     return {
       completeCallback: async () => {
         const supabase = await createSupabaseServerClient();
-        return supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+        const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+        return { client: supabase, error };
       },
     };
   }
@@ -59,7 +66,7 @@ function parseCallback(searchParams: URLSearchParams): ValidatedCallback | null 
 }
 
 function signInRedirect(request: NextRequest, error: string) {
-  const url = new URL("/admin/sign-in", request.url);
+  const url = new URL("/admin/sign-in", getSiteUrl() ?? request.url);
   url.searchParams.set("error", error);
   return NextResponse.redirect(url);
 }
@@ -68,15 +75,19 @@ export async function GET(request: NextRequest) {
   const callback = parseCallback(request.nextUrl.searchParams);
   if (!callback) return signInRedirect(request, "missing-token");
 
+  let authenticatedClient: ServerSupabaseClient | null = null;
   try {
-    const { error } = await callback.completeCallback();
+    const { client, error } = await callback.completeCallback();
+    authenticatedClient = client;
     if (error) return signInRedirect(request, "invalid-link");
 
-    await requireAdmin();
-    return NextResponse.redirect(new URL("/admin", request.url));
+    // Reuse the client that completed Auth: its cookie store contains the new session during this
+    // response, while a second SSR client may still see only the incoming request cookies.
+    await requireAdmin(client);
+    return NextResponse.redirect(new URL("/admin", getSiteUrl() ?? request.url));
   } catch (error) {
     try {
-      const supabase = await createSupabaseServerClient();
+      const supabase = authenticatedClient ?? (await createSupabaseServerClient());
       await supabase.auth.signOut({ scope: "local" });
     } catch {
       // The route still fails closed if the Auth service is unavailable.

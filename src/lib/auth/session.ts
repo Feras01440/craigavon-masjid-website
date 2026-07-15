@@ -82,8 +82,10 @@ async function activateAcceptedInvite(userId: string, email: string): Promise<vo
   }
 }
 
-export async function requireAdmin(): Promise<AdminContext> {
-  const supabase = await createSupabaseServerClient();
+export async function requireAdmin(
+  authenticatedClient?: SupabaseClient<Database>,
+): Promise<AdminContext> {
+  const supabase = authenticatedClient ?? (await createSupabaseServerClient());
   const { data: claimData, error: claimsError } = await supabase.auth.getClaims();
   if (claimsError || !claimData?.claims) {
     throw new AdminAccessError(

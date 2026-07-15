@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminAccessError } from "@/lib/auth/errors";
 
@@ -24,6 +24,7 @@ const signOut = vi.fn();
 const supabase = {
   auth: { exchangeCodeForSession, verifyOtp, signOut },
 };
+const originalSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 function callbackRequest(query = "") {
   return new NextRequest(`https://www.craigavonmasjid.org/admin/auth/callback${query}`);
@@ -35,11 +36,17 @@ function expectRedirect(response: Response, path: string) {
 }
 
 beforeEach(() => {
+  delete process.env.NEXT_PUBLIC_SITE_URL;
   exchangeCodeForSession.mockReset().mockResolvedValue({ error: null });
   verifyOtp.mockReset().mockResolvedValue({ error: null });
   signOut.mockReset().mockResolvedValue({ error: null });
   mocks.createSupabaseServerClient.mockReset().mockResolvedValue(supabase);
   mocks.requireAdmin.mockReset().mockResolvedValue({});
+});
+
+afterAll(() => {
+  if (originalSiteUrl === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+  else process.env.NEXT_PUBLIC_SITE_URL = originalSiteUrl;
 });
 
 describe("administrator authentication callback", () => {
@@ -50,6 +57,7 @@ describe("administrator authentication callback", () => {
     expect(exchangeCodeForSession).toHaveBeenCalledWith("pkce-code");
     expect(verifyOtp).not.toHaveBeenCalled();
     expect(mocks.requireAdmin).toHaveBeenCalledOnce();
+    expect(mocks.requireAdmin).toHaveBeenCalledWith(supabase);
     expectRedirect(response, "/admin");
   });
 
@@ -62,6 +70,7 @@ describe("administrator authentication callback", () => {
       expect(verifyOtp).toHaveBeenCalledWith({ token_hash: "token-value", type });
       expect(exchangeCodeForSession).not.toHaveBeenCalled();
       expect(mocks.requireAdmin).toHaveBeenCalledOnce();
+      expect(mocks.requireAdmin).toHaveBeenCalledWith(supabase);
       expectRedirect(response, "/admin");
     },
   );
@@ -106,6 +115,14 @@ describe("administrator authentication callback", () => {
     expect(signOut).toHaveBeenCalledOnce();
     expect(signOut).toHaveBeenCalledWith({ scope: "local" });
     expectRedirect(response, "/admin/sign-in?error=disabled");
+  });
+
+  it("uses the configured canonical origin for the authenticated redirect", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://admin.craigavon.example";
+
+    const response = await GET(callbackRequest("?code=valid-code"));
+
+    expect(response.headers.get("location")).toBe("https://admin.craigavon.example/admin");
   });
 
   it("fails closed when callback processing throws and local sign-out also fails", async () => {
