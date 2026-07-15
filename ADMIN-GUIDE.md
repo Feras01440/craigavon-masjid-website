@@ -1,12 +1,11 @@
 # Committee administration guide
 
-This guide describes the dashboard that is present in the repository today. It does not imply that a
-credentialed staging or production environment has been created.
+This guide describes the complete dashboard. The clean local product environment supplies safe
+passwordless role accounts and labelled demonstration data; a hosted production environment still
+requires the approved launch configuration.
 
-Screenshots are intentionally not embedded yet. Capture the named screenshot checkpoints only after
-a protected staging environment has valid test credentials and synthetic or redacted content. Never
-put a magic link, TOTP secret, QR code, service-role key, real enquiry, or personal email address in
-documentation or pull-request screenshots.
+Never put a magic link, TOTP secret, QR code, service-role key, real enquiry, or personal email
+address in documentation or pull-request screenshots.
 
 ## What committee members can use now
 
@@ -15,8 +14,8 @@ documentation or pull-request screenshots.
 | Secure sign-in            | `/admin/sign-in`      | Implemented; requires configured Supabase Auth and an approved profile |
 | Dashboard                 | `/admin`              | Implemented                                                            |
 | Content                   | `/admin/content`      | Implemented with schedule, publish, archive and revision workflows     |
-| Website settings          | `/admin/settings`     | Implemented with controlled schemas and publication checks             |
-| Prayer/Jumu'ah management | `/admin/prayer-times` | Implemented with preview, overrides, revisions and publication checks  |
+| Website settings          | `/admin/settings`     | Homepage, contact, navigation, TV, enquiries and feature settings      |
+| Prayer/Jumu'ah management | `/admin/prayer-times` | Rules, sessions, overrides, seasonal data, preview and publication     |
 | Media                     | `/admin/media`        | Implemented for validated raster images                                |
 | Enquiries                 | `/admin/enquiries`    | Implemented for the private staffed queue                              |
 | Audit log                 | `/admin/audit`        | Implemented as metadata-only, permission-scoped history                |
@@ -101,7 +100,7 @@ scripts, embeds, tracking links, or confidential material.
 1. Confirm AAL2 on **Security**.
 2. Open **Content** and select **Create content**.
 3. Choose the public content type that matches the information. The implemented public types are
-   announcement, emergency notice, event, service, education, FAQ and policy.
+   announcement, emergency notice, event, recurring programme, service, education, FAQ and policy.
 4. Add a specific title, lowercase hyphenated slug, short summary if useful, and the complete
    plain-text body. Complete the type-specific fields: for example, a public event requires its
    Europe/London start and approved location; a public policy requires its owner and effective date.
@@ -172,9 +171,8 @@ mean operators must visually verify the screen rather than promise an exact prop
    category.
 5. Publish only after normal approval and public verification.
 
-If an item was soft-deleted with the **Archive** action, it disappears from the current list and
-there is no archive browser. Recovery may require the known direct edit URL or technical database
-assistance. Do not promise committee self-service recovery until an archive screen exists.
+If an item was soft-deleted with the **Archive** action, open **Content**, choose **Soft-deleted
+archive**, review the record, then select **Restore as draft**. Restoration never republishes it.
 
 - **Screenshot checkpoint I:** revision list with synthetic versions.
 - **Screenshot checkpoint J:** restored item visibly in Draft state.
@@ -197,10 +195,10 @@ separate, fully validated draft.
 
 ## Manage website settings
 
-`/admin/settings` contains fixed schemas for website identity, contact/visit information,
-navigation/footer, TV display, feature flags and public-enquiry controls. Keep unconfirmed values
-blank and in Draft. Publishing a setting requires the applicable permission and AAL2; publication
-does not replace the committee evidence required by the confirmation register.
+`/admin/settings` contains fixed schemas for homepage content, website identity, contact/visit
+information, navigation/footer, TV display, feature flags and public-enquiry controls. Keep
+unconfirmed values blank and in Draft. Publishing a setting requires the applicable permission and
+AAL2; publication does not replace the committee evidence required by the confirmation register.
 
 Published identity, contact and navigation/footer records feed their public surfaces. The published
 TV record controls refresh and notice-rotation intervals, prayer-hold length, Hijri-date/notices
@@ -218,8 +216,9 @@ invalid dependencies leave the public form off.
 
 1. Open `/admin/prayer-times` and create a bounded draft, or clone an immutable published record or
    revision as a new draft.
-2. Record the approved source, effective range, calculation/import mode, congregation rules, Jumu'ah
-   sessions and any per-date overrides.
+2. Record the approved source, effective range, calculation/import mode, congregation rules, one or
+   more Jumu'ah sessions, per-date overrides, and any Ramadan, Eid or other date-bounded seasonal
+   arrangements.
 3. Review the preview. Publication checks every date in the full bounded effective horizon; it is
    not limited to the few dates visible at first glance.
 4. Record committee approval evidence, type `PUBLISH PRAYER TIMES`, and publish only with the
@@ -256,8 +255,22 @@ transaction. If validation or any part of the transaction fails, neither change 
   fallback, privacy version, retention and recent route test are published.
 - **First administrator:** the first super administrator still requires the controlled bootstrap in
   the deployment guide; later invitations and disabling are available in `/admin/users`.
-- **Credentialed proof:** route presence is not proof that Auth, RLS, Storage or scheduled retention
-  works in staging/production. Preserve the release evidence specified by the launch checklist.
+- **Production proof:** the clean local Supabase acceptance job proves Auth, RLS and Storage against
+  disposable containers. Provider configuration, live SMTP and the canonical domain still require
+  the production credentials and approvals in the launch checklist.
+
+## Local demonstration mode
+
+Run `pnpm setup:local`, open the one-time super-administrator link printed by the command, then
+enrol TOTP on **Security**. The dashboard banner identifies the environment, and every seeded
+content or prayer record is marked as local demonstration data. Do not remove those labels.
+Production must set `NEXT_PUBLIC_DEMO_MODE=false`, which excludes marked rows from all public
+repositories.
+
+Replace demonstration values through the normal settings, content, prayer and people/access pages.
+No source-code edit is required. See
+[Local product environment](docs/deployment/LOCAL-DEVELOPMENT.md) for the five role accounts,
+Inbucket mail viewer, reset behavior and troubleshooting.
 
 ## Sign out and shared-device rules
 

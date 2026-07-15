@@ -4,6 +4,28 @@ Every item starts unchecked. Tick it only when the named owner attaches current 
 exact production environment. Documentation, code presence, a successful build, or a provider
 dashboard screenshot alone is not proof that an end-to-end control works.
 
+## Current release-candidate evidence map
+
+This section records executed technical evidence as of 15 July 2026; it does **not** check any
+production launch item below.
+
+| Gate                                   | Current evidence                                                                                                                                                                                                                                                                                                    | What remains before the item can be checked                                                                                        |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Local application quality              | Formatting, zero-warning lint, strict typecheck, 129 Vitest tests in 17 files, coverage at 89.34% statements/81.90% branches/90.17% functions/91.25% lines and the production build passed on the final worktree                                                                                                    | Complete GitHub Actions results at the release commit                                                                              |
+| Dependency security                    | Registry-backed audit passed across 568 dependencies with zero findings after PostCSS was updated to 8.5.17; GitHub Dependency Graph is enabled                                                                                                                                                                     | Green dependency-review, Gitleaks and CodeQL jobs at the release commit                                                            |
+| Clean database and RLS                 | PostgreSQL 17.10 replayed the baseline migration and seed from zero twice; all 84 baseline assertions passed. The completed migration set contains 91 assertions for anonymous, non-admin, every role, disabled identity, constraints, indexes, revisions, expiry, audit and prayer publication                     | Green disposable full-Supabase/Auth/recovery CI job at the release commit                                                          |
+| Administrator/content workflows        | Unit tests pass invite, disable, revoke, recovery-response, sign-out, schedule, expiry, archive, revision restore and public-projection boundaries; clean local authenticated product acceptance is committed in CI                                                                                                 | Green release-commit local-product-acceptance job, then enter real email credentials and committee accounts                        |
+| Backup and restore                     | A realistic logical database recovery rehearsal and verification are checked in                                                                                                                                                                                                                                     | Successful authoritative CI rehearsal, then provider backup/PITR, independent Storage-object, Auth/configuration and RPO/RTO drill |
+| Browser, accessibility and performance | The completed 385-check Chromium/Firefox/WebKit/TV selection passed all 370 applicable checks with 15 intentional local-demo/viewport skips; the 10/10 TV soak and 30 external HTTPS Lighthouse runs passed their budgets; public DOM/screen-reader-oriented and 200%-equivalent/320px reflow reviews were recorded | Native assistive-technology and physical-TV checks remain device limitations; permanent hosting uses the final domain/credentials  |
+| Launch authority                       | No technical test supplies factual prayer, identity, privacy, brand, people or operating authority                                                                                                                                                                                                                  | Committee register, named owners, approved credentials/domain/email/provider plans and go/no-go signatures                         |
+
+Detailed evidence and limitations are in the [QA report](../quality/QA-REPORT.md),
+[database P1 validation](../quality/DATABASE-P1-VALIDATION.md),
+[operational workflow validation](../quality/OPERATIONAL-WORKFLOW-VALIDATION.md),
+[TV accelerated soak report](../quality/TV-ACCELERATED-SOAK-REPORT.md),
+[accessibility report](../quality/ACCESSIBILITY-REPORT.md), and
+[performance budgets](../quality/PERFORMANCE-BUDGETS.md).
+
 ## Current known no-go items
 
 - [ ] Resolve every launch-blocking item in

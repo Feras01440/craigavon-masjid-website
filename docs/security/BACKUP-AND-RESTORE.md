@@ -10,6 +10,25 @@ evidenced before launch.
 The Association must never rely on a single provider account, a single committee member, or a
 database-only backup.
 
+## Automated release-candidate rehearsal
+
+The repository's `scripts/database/verify-backup-restore.sh` implements a credential-free logical
+recovery rehearsal inside the disposable local Supabase stack in CI. It creates realistic synthetic
+administrator/invitation, content/revision, prayer/revision, enquiry, setting, and audit data;
+creates and validates a custom-format `pg_dump`; replays the production migration into a separate
+`template0` database; restores the selected application tables; verifies exact relationships,
+privacy-safe audit snapshots, indexes, and constraints; and then destroys the temporary copy.
+
+The authoritative test command is owned by the `Local Supabase migration lint` GitHub Actions job.
+Its release-commit result is still pending; the workstation's clean PostgreSQL replay is not a
+substitute for this full-stack run. Detailed assertions and evidence boundaries are recorded in
+[`DATABASE-P1-VALIDATION.md`](../quality/DATABASE-P1-VALIDATION.md).
+
+When that job is green, it proves migration-backed logical recovery of representative application
+data within the disposable stack. It is not a provider backup, PITR test, Storage-object restore,
+Auth/configuration restore, or production RPO/RTO measurement. Those remain part of the credentialed
+quarterly drill below.
+
 ## Recovery objectives
 
 These are service targets to approve and fund, not claims about the current environment:

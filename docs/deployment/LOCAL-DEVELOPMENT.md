@@ -1,236 +1,172 @@
-# Local development
+# Local product environment
 
-This procedure recreates the application and database locally. It does not connect to production and
-is not proof that a hosted environment works.
+This is the supported path for inspecting the complete product without production credentials. It
+creates a loopback-only Supabase stack, replays every migration from zero, enables RLS, creates five
+passwordless role accounts, and loads unmistakably labelled demonstration content.
 
 ## Prerequisites
 
 - Git
-- Node.js 22, matching `.node-version` (the package minimum is 20.9, but development and CI should
-  use the pinned major)
-- pnpm 11.7.0, matching `package.json`
-- Docker Desktop or another Docker-compatible engine supported by the Supabase CLI
-- Supabase CLI 2.101.0, installed separately to match CI
+- Node.js 22 (the version in `.node-version`)
+- Corepack/pnpm 11.7.0
+- Docker Desktop, or another Docker engine supported by the Supabase CLI, with at least 4 GB memory
+  available
 
-The Supabase CLI is not a dependency in `package.json`; commands such as `pnpm db:reset` work only
-when `supabase` is already on `PATH`. Follow the
-[official local-development CLI guide](https://supabase.com/docs/guides/local-development/cli/getting-started)
-and do not install an unreviewed global package under a misleading name.
+The repository pins the Supabase CLI as a development dependency. No global Supabase installation or
+hosted Supabase project is required.
 
-## 1. Install locked application dependencies
-
-From the repository root:
+## Clean-clone setup
 
 ```powershell
-node --version
-pnpm --version
-supabase --version
-docker version
+git clone https://github.com/Feras01440/craigavon-masjid-website.git
+Set-Location craigavon-masjid-website
+git switch codex/production-platform-rebuild
+corepack enable
+corepack prepare pnpm@11.7.0 --activate
 pnpm install --frozen-lockfile
-```
-
-Record failures instead of falling back to an unlocked install. A lockfile change should be
-intentional and reviewed.
-
-## 2. Start and rebuild local Supabase
-
-```powershell
-supabase start
-supabase db reset
-supabase status
-```
-
-`supabase db reset` deletes and recreates the **local** database, applies every file in
-`supabase/migrations`, and loads `supabase/seed.sql`. Never run a reset command against a production
-connection string.
-
-The seed adds only draft feature/readiness settings. It intentionally does not add public
-announcements, events, services, contacts, administrator accounts, or prayer times.
-
-Local services normally include the API, database, Studio, and a mail catcher. Use the URLs printed
-by `supabase status`; do not rely on memorised ports if the CLI reports different values.
-
-## 3. Configure the local environment
-
-```powershell
-Copy-Item .env.example .env.local
-```
-
-Fill `.env.local` with the local API URL, publishable/anonymous key, and service-role key printed by
-the local stack:
-
-```dotenv
-NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000
-NEXT_PUBLIC_SUPABASE_URL=<local API URL>
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<local publishable or anon key>
-SUPABASE_SERVICE_ROLE_KEY=<local service-role key>
-NEXT_PUBLIC_INDEXING_ENABLED=false
-NEXT_PUBLIC_IDENTITY_APPROVED=false
-ENQUIRY_TRUSTED_IP_HEADER=x-forwarded-for
-ENQUIRY_FINGERPRINT_PEPPER=<random local test secret>
-CRON_SECRET=<random value of at least 32 characters>
-```
-
-Use `http://127.0.0.1:3000` consistently because `pnpm dev` binds to that address. Mixing
-`localhost` and `127.0.0.1` can break Auth allow-lists and cookies even though both reach the same
-computer.
-
-Keep both public release gates false locally. The enquiry variables are needed only when exercising
-the form behind a trusted local proxy; otherwise the form stays off. `CRON_SECRET` protects the
-retention POST route. The optional monitoring variable remains inactive until a provider integration
-is implemented.
-
-Never paste `supabase status` output into an issue, screenshot, chat, or committed file: it includes
-privileged local credentials.
-
-## 4. Verify the local Auth callback before testing sign-in
-
-The checked-in `supabase/config.toml` uses `http://127.0.0.1:3000` as its Site URL and allows the
-implemented `/admin/auth/callback` route on both `127.0.0.1` and `localhost`. Set
-`NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3000` in `.env.local` so the application and recommended
-local origin use the same value, then verify that the effective Auth configuration includes:
-
-```text
-http://127.0.0.1:3000
-http://127.0.0.1:3000/admin/auth/callback
-```
-
-If you intentionally change `supabase/config.toml`, restart the local stack. Use one origin
-consistently for each test. Production Auth URLs are configured separately in Supabase and must use
-the exact deployed HTTPS origin.
-
-## 5. Create a local-only first administrator
-
-There is no administrator seed because bootstrap authority must not be fabricated. For local
-verification only, create the first synthetic administrator as follows; later accounts can be
-managed through `/admin/users` after AAL2 confirmation:
-
-1. In local Supabase Studio, create or invite a synthetic Auth user with an email address that does
-   not identify a real person.
-2. Copy the new `auth.users.id` UUID.
-3. In the local SQL editor, insert the bootstrap profile and invitation in one transaction,
-   replacing all placeholders:
-
-```sql
-begin;
-
-insert into public.admin_profiles (
-  id, display_name, role, status, mfa_required, invited_by
-) values (
-  '<AUTH-USER-UUID>',
-  'Local Super Admin',
-  'super_admin',
-  'invited',
-  true,
-  '<AUTH-USER-UUID>'
-);
-
-insert into public.admin_invites (
-  email, role, invited_by, expires_at
-) values (
-  'admin-local@example.invalid',
-  'super_admin',
-  '<AUTH-USER-UUID>',
-  now() + interval '7 days'
-);
-
-commit;
-```
-
-4. Open `/admin/sign-in`, request a link for the same lowercase address, and open the newest message
-   in the local mail catcher.
-5. The first accepted link changes the profile from `invited` to `active` and marks the invitation
-   accepted.
-6. Open **Security**, enrol a TOTP factor, and confirm AAL2 before testing mutations.
-
-If any statement fails, roll back and inspect the Auth user, lowercase email, UUID, and existing
-profile before retrying. Do not weaken RLS, enable public sign-up, or put a service-role key in
-browser code to bypass setup.
-
-## 6. Run the application
-
-```powershell
+pnpm setup:local
 pnpm dev
 ```
 
-Open `http://127.0.0.1:3000`. Useful routes are:
+Open <http://127.0.0.1:3000>. The setup command is intentionally destructive only to the local
+Supabase containers: it starts the stack, runs `supabase db reset`, applies every migration, loads
+the safe base seed, creates local Auth users, and then adds the labelled demonstration records. It
+refuses non-loopback URLs and refuses to seed a database that is not in the expected clean local
+shape.
 
-- `/` — public home
-- `/prayer-times` — public timetable and unavailable state
-- `/api/prayer?days=1` — prayer API; returns `503` until an approved configuration exists
-- `/api/health` — configuration/database reachability probe; returns `503` until Supabase is set
-- `/tv` — display mode
-- `/admin/sign-in` — committee sign-in
-- `/admin/content` — protected content management
-- `/admin/settings` — protected controlled public configuration
-- `/admin/prayer-times` — protected draft, preview, publish and withdrawal/replacement workflow
-- `/admin/audit` — protected metadata-only audit history
-- `/admin/security` — protected TOTP enrolment/confirmation
+`pnpm setup:local` writes a new ignored `.env.local` containing only local keys and randomly
+generated local secrets. Never commit or share that file. Running the command again resets all local
+data and creates fresh accounts, factors and one-time links.
 
-The missing prayer configuration is intentional. Do not insert guessed settings merely to make the
-unavailable state disappear.
+## Local URLs
 
-## 7. Verification commands
+| Service                        | URL                                   |
+| ------------------------------ | ------------------------------------- |
+| Public website                 | <http://127.0.0.1:3000>               |
+| Administration                 | <http://127.0.0.1:3000/admin/sign-in> |
+| Supabase API                   | <http://127.0.0.1:54321>              |
+| Supabase Studio                | <http://127.0.0.1:54323>              |
+| Captured Auth email (Inbucket) | <http://127.0.0.1:54324>              |
 
-Run checks separately so the evidence shows which stage failed:
+Use `127.0.0.1` consistently. Mixing it with `localhost` creates different browser origins and can
+invalidate Auth cookies or callbacks.
+
+## Local administrator and role accounts
+
+The setup output prints a one-time sign-in link for the local super administrator. It creates these
+passwordless accounts:
+
+| Email                          | Role                |
+| ------------------------------ | ------------------- |
+| `admin.local@example.test`     | Super administrator |
+| `editor.local@example.test`    | Website editor      |
+| `prayer.local@example.test`    | Prayer-times editor |
+| `enquiries.local@example.test` | Enquiries manager   |
+| `reviewer.local@example.test`  | Read-only reviewer  |
+
+Set `LOCAL_ADMIN_EMAIL` before `pnpm setup:local` to replace only the first address. The account
+still exists solely in the local containers and is tagged as local demonstration data.
+
+Open the printed link, then visit **Security**, select **Set up authenticator**, and confirm a TOTP
+code. Protected mutations require AAL2. To create a fresh one-time link for any local role account:
+
+```powershell
+pnpm local:link -- reviewer.local@example.test
+```
+
+Treat the output as a short-lived credential: open it directly and do not paste it into an issue,
+screenshot, pull request or chat.
+
+The normal sign-in screen also sends links to local Inbucket. Open <http://127.0.0.1:54324>, select
+the newest message, and use its link once. No live SMTP service is involved.
+
+## Demonstration data and replacement
+
+The public site and dashboard show a development-only banner while `NEXT_PUBLIC_DEMO_MODE=true`.
+Seeded records contain `[LOCAL DEMO]`, carry a database `demo_local_only` marker, and are returned
+by public repositories only when the site URL and Supabase URL are both HTTP loopback addresses.
+Production must set `NEXT_PUBLIC_DEMO_MODE=false`; marked rows are then excluded even if copied by
+mistake.
+
+The sample prayer calculation, congregation rules, two Jumu'ah sessions, dated override, Ramadan,
+Eid and TV notice exist only to exercise the product. They are not religious or travel guidance.
+Contact fields and policy approval remain private drafts rather than invented public facts.
+
+Approved values later replace the demo through normal controls:
+
+- **Website settings**: homepage, identity, contact/directions, navigation/footer, feature flags,
+  enquiries and TV settings;
+- **Prayer timetable**: create a bounded draft, edit rules/Jumu'ah/seasonal arrangements/overrides,
+  preview, approve, then atomically publish or replace;
+- **Content**: create approved announcements, events, recurring programmes, education, services,
+  FAQs and policies, attach SEO fields and checked policy-download URLs, then publish; and
+- **People and access**: invite named committee users, verify roles/MFA, then disable the local-only
+  accounts by replacing the local database with the production project.
+
+No code change is required for those replacements.
+
+## Local storage and email
+
+Uploads use the local private `media` Storage bucket. Raster images are signature-checked,
+re-encoded, resized when needed, stripped of metadata and registered with required accessibility
+metadata. Deleting the local containers deletes these objects. Approved policy documents can use a
+checked site path or HTTPS download URL; arbitrary PDF upload remains fail-closed until production
+malware scanning/quarantine is selected.
+
+Supabase Auth mail is captured by Inbucket. The public enquiry workflow uses the private dashboard
+queue and stays disabled until its privacy, retention, ownership and route-test settings are
+approved and published.
+
+## Verification and reset
 
 ```powershell
 pnpm format:check
 pnpm lint
 pnpm typecheck
-pnpm test
+pnpm test:coverage
 pnpm build
-supabase db lint --local --level warning
+pnpm test:e2e
+pnpm exec supabase db lint --local --level warning --fail-on warning
+pnpm exec supabase test db
 ```
 
-`pnpm test:e2e` runs the committed Playwright journeys across phone, tablet, desktop and TV
-projects. Browser availability differs by machine, so record the exact projects, browser channels,
-test count and result from the current run.
-
-`pnpm test:coverage` enforces 80% global thresholds over configured library/server files. Its
-current result must be recorded; the existence of thresholds is not evidence they pass.
-
-## 8. Reset or stop
-
-Use a reset when migration/seed changes need a clean replay:
+Reset to a fresh demonstration product with `pnpm setup:local`. Stop the containers with:
 
 ```powershell
-supabase db reset
+pnpm exec supabase stop --no-backup
 ```
-
-Stop the local stack when finished:
-
-```powershell
-supabase stop
-```
-
-Keep `.env.local`, Supabase CLI state, coverage output, Playwright output, and `.next` out of Git.
 
 ## Troubleshooting
 
-### Administration says it is not configured
+### Docker or setup does not start
 
-Check that all four required values are present in the running process and restart `pnpm dev` after
-editing `.env.local`. Keep the service-role key server-only.
+Start Docker Desktop, wait until its engine is ready, then confirm `docker version`. Ensure ports
+54320–54326 are free and Docker has sufficient memory. If a stale local stack exists, run
+`pnpm exec supabase stop --no-backup`, then retry `pnpm setup:local`.
 
-### The sign-in link returns to the sign-in page
+### The Supabase CLI cannot create its state directory
 
-Check, in order:
+Confirm your user can write to its normal home-directory cache and that endpoint protection is not
+blocking the pinned CLI. Do not run setup as an administrator merely to bypass a permissions error;
+fix ownership or use an approved developer directory.
 
-1. the browser origin exactly matches `NEXT_PUBLIC_SITE_URL`;
-2. the callback URL is in the Auth allow-list;
-3. the Auth user UUID matches `admin_profiles.id`;
-4. the profile is `invited` or `active`, not `disabled`;
-5. an invited profile has a matching lowercase, unexpired, unrevoked invite; and
-6. the newest link was used only once.
+### A sign-in link returns to sign-in
 
-### Prayer API returns 503
+Use the newest link only once, keep the browser on `http://127.0.0.1:3000`, and confirm the app was
+restarted after setup. Generate another link with `pnpm local:link -- <local-email>` if necessary.
 
-This is expected when configuration is absent, unapproved, invalid, outside its effective dates, or
-Supabase is unavailable. Read the JSON `reason`; never convert a safety failure to a fabricated
-timetable.
+### A protected form says authenticator confirmation is needed
 
-### A dashboard navigation link is absent
+Visit `/admin/security`, enrol TOTP if necessary, and enter a current code. A magic link establishes
+AAL1; publishing and other sensitive changes deliberately require AAL2.
 
-Admin navigation is role-aware. Confirm the synthetic profile role and server-enforced permission;
-do not broaden the role merely to expose a screen.
+### Prayer data is unavailable
+
+Confirm the development banner is visible and `.env.local` contains `NEXT_PUBLIC_DEMO_MODE=true`. If
+demo mode is off, local-only records are deliberately filtered. Never remove that filter or invent a
+timetable to make the unavailable state disappear.
+
+### Media upload fails
+
+Confirm local Storage is running in `pnpm exec supabase status`, use a genuine JPEG/PNG/WebP/AVIF
+under 10 MB, and supply meaningful alternative text unless the image is explicitly decorative.

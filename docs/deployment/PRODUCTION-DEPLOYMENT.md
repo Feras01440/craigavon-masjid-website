@@ -27,20 +27,46 @@ documents separate [environment variable scopes](https://vercel.com/docs/environ
 [custom-domain setup](https://vercel.com/docs/domains/set-up-custom-domain), and
 [instant rollback](https://vercel.com/docs/instant-rollback).
 
+## Release-candidate evidence boundary
+
+As of 15 July 2026, the following repository-controlled evidence exists:
+
+- the current local Vitest run passed 129 tests in 17 files, including administrator lifecycle,
+  content scheduling/expiry/revision restoration and fail-closed public projections;
+- the production build, strict typecheck and zero-warning lint passed locally;
+- the registry-backed dependency audit passed with zero findings across 568 dependencies after the
+  vulnerable transitive PostCSS version was replaced by 8.5.17; and
+- clean PostgreSQL 17.10 compatibility environments replayed the baseline migration and seed from
+  zero twice and passed all 84 baseline database/RLS assertions on each run; the completed suite now
+  contains 91 assertions for release-commit Supabase CI;
+- the accelerated TV test passed 10/10 clock/network scenarios; and
+- 30 Lighthouse runs against an external ephemeral HTTPS production preview met the application
+  performance budgets, with the TV Best Practices score recorded at 92 because the intentionally
+  unconfigured preview returned `/api/display` 503.
+
+The detailed boundaries are recorded in the [QA report](../quality/QA-REPORT.md),
+[database P1 validation](../quality/DATABASE-P1-VALIDATION.md) and
+[operational workflow validation](../quality/OPERATIONAL-WORKFLOW-VALIDATION.md). The full local
+Supabase/Auth/recovery GitHub Actions job and the release-commit CI suite must still pass before
+technical release-candidate approval. The completed browser selection passed all 370 applicable
+checks out of 385 selected, with 15 intentional local-demo or viewport-inapplicable skips. None of
+this local evidence substitutes for fixed-origin permanent staging, real SMTP/TOTP, manual
+authenticated accessibility review, production-provider backup/Storage recovery, physical-TV
+acceptance or committee approval.
+
 ## Credential-dependent work remaining
 
-The deployment owner must obtain and record access to:
+The deployment owner must supply and record only the final real-world configuration:
 
-- an organisation-controlled Git host/repository and protected production branch;
-- separate Supabase staging and production projects, database credentials, publishable keys, and
-  server-only service-role keys;
-- a Vercel team/project with at least two organisation-controlled owners;
-- an approved production domain and DNS account;
-- an approved SMTP provider/sender domain for Supabase Auth magic links and invitations;
-- protected backup destinations for database exports, Storage object copies, and configuration
-  evidence;
-- a monitored private operational/security contact and alert route; and
-- approved staging test identities plus at least two named production super administrators.
+1. approved prayer and Jumu'ah values;
+2. approved contact information;
+3. production domain and DNS;
+4. production Supabase credentials and provider configuration;
+5. production Vercel credentials;
+6. production email credentials;
+7. real committee administrator accounts;
+8. approved policies and public content; and
+9. committee sign-off.
 
 Do not copy a credential into this repository, a pull request, a screenshot, or a committee
 document.
@@ -70,6 +96,7 @@ Set these independently in Vercel's Preview/staging and Production scopes:
 | `SUPABASE_SERVICE_ROLE_KEY`            | **Yes** | Server-mediated reads and privileged operations; never expose or log   |
 | `NEXT_PUBLIC_INDEXING_ENABLED`         | No      | Set `true` only for the approved canonical production origin           |
 | `NEXT_PUBLIC_IDENTITY_APPROVED`        | No      | Set `true` only after exact identity approval for Organization JSON-LD |
+| `NEXT_PUBLIC_DEMO_MODE`                | No      | Must be `false`; local-only rows are excluded from public repositories |
 | `ENQUIRY_TRUSTED_IP_HEADER`            | No      | Header the chosen edge overwrites with the real client address         |
 | `ENQUIRY_FINGERPRINT_PEPPER`           | **Yes** | Random secret for non-reversible enquiry rate-limit fingerprints       |
 | `CRON_SECRET`                          | **Yes** | At least 32 characters; authorises enquiry/fingerprint retention purge |
@@ -80,6 +107,12 @@ the staffed private admin queue unless a separately reviewed notification integr
 
 After adding or changing a Vercel variable, create a new deployment. Existing builds do not acquire
 new values retroactively.
+
+Never invoke `seed_local_demo_data` in staging or production. The RPC is service-role-only and also
+refuses any database that is not in the exact clean local-demo shape, but production deployment must
+rely only on `supabase/seed.sql`, which publishes no content, contact details or prayer values.
+Before promotion, confirm `NEXT_PUBLIC_DEMO_MODE=false` and query all three marked tables to verify
+that no `demo_local_only=true` record is intended for launch.
 
 ## Prepare Supabase staging
 
@@ -96,7 +129,8 @@ new values retroactively.
    supabase db push --dry-run
    ```
 
-5. Review the dry run and expected migration `20260713213000_initial_platform.sql`.
+5. Review the dry run and expected migrations through
+   `20260715120000_complete_product_workflows.sql`.
 6. Apply once, with one named operator:
 
    ```powershell
@@ -109,8 +143,10 @@ new values retroactively.
 8. Verify RLS is enabled, the anonymous role has no public-schema table grants, authenticated
    grants/policies match the role matrix, and the private `media` bucket has the migration's 10 MiB
    raster MIME restrictions.
-9. Run credentialed staging integration/RLS/Storage tests when implemented. Current repository
-   coverage does not establish those behaviours end to end.
+9. Run the checked-in database/RLS suite and the administrator, Storage and server-mediated
+   projection journeys against this credentialed staging project. The committed 91-assertion suite
+   and repository unit tests are useful prior evidence after release CI, but do not establish
+   Supabase PostgREST/Storage, SMTP/TOTP or fixed-origin Auth behaviour in this project.
 
 Repeat the same controlled process for production only after staging evidence and release approval.
 If migration history diverges, stop; inspect `supabase migration list` and resolve deliberately. Do
@@ -244,6 +280,11 @@ disable checks merely to make the first link succeed.
    release smoke checks, or use an equivalent controlled promotion workflow.
 
 ## Preview and staging acceptance
+
+The automated prerequisites and their limitations are mapped in the
+[database P1 validation](../quality/DATABASE-P1-VALIDATION.md) and
+[operational workflow validation](../quality/OPERATIONAL-WORKFLOW-VALIDATION.md). Attach staging
+evidence separately; do not relabel the credential-free local runs as staging results.
 
 Use synthetic data and capture evidence for:
 

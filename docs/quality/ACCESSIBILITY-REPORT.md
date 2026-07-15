@@ -4,127 +4,146 @@
 
 **Target:** WCAG 2.2 Level AA
 
-**Evidence date:** 14 July 2026
+**Evidence date:** 15 July 2026
 
-**Status:** The automated Chromium production matrix passed. Cross-engine, manual and
-assistive-technology evidence remains a launch gate.
+**Status:** Automated cross-engine evidence passes for the tested public surface. Manual native
+keyboard, actual screen-reader, authenticated dashboard and physical-display acceptance remain
+launch gates, so this report is not a conformance claim.
 
-## Evidence status
+## Executed evidence
 
-This report separates executed evidence from checks that still require a real browser, device,
-approved dataset or assistive technology. A test being present in the repository is not recorded as
-a pass until its output has been reviewed.
+| Check                             | Result                               | Evidence and boundary                                                                                                                                                                                              |
+| --------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Public semantic/source review     | Pass for reviewed scope              | Skip link, language, named navigation, landmarks, heading contract, status messaging, forced-colour rules and reduced-motion rules were inspected                                                                  |
+| Screen-reader-oriented DOM review | Pass for representative public shell | The home snapshot exposed the expected document language, named navigation regions, one primary heading, main landmark, content regions and footer in a sensible reading order; this is not an NVDA/VoiceOver test |
+| Axe WCAG A/AA scans               | Pass                                 | Public routes and the 404 surface passed in Chromium, Firefox and WebKit; the TV safe and populated states also passed                                                                                             |
+| Public keyboard automation        | Pass                                 | Every public route exercises skip-link/main transfer; responsive menu and desktop navigation coverage are selected by viewport                                                                                     |
+| Production browser walkthrough    | Pass for public shell                | The production build was inspected at desktop and 390 x 844: landmarks, heading order, safe prayer state, mobile menu, accessibility route and noindex 404 were present; browser error log was empty               |
+| Browser preferences               | Pass in automation                   | Reduced motion disables long animation/transition behavior and forced-colour runs retain operability and avoid document-width overflow                                                                             |
+| Narrow reflow                     | Pass in configured browser coverage  | Phone, tablet and WebKit mobile profiles completed public no-overflow/reflow checks                                                                                                                                |
+| Accelerated TV accessibility      | Pass                                 | 1920 x 1080 safe/populated states and the 10-scenario time/network soak completed without an unhandled page error                                                                                                  |
+| Native manual keyboard review     | Incomplete                           | Automated key input is evidence, but a human has not yet signed every public and authenticated dashboard journey                                                                                                   |
+| 200%-equivalent zoom and reflow   | Pass in automation                   | Every public route passed the 640 CSS-pixel/320 CSS-pixel reflow contract; native browser zoom and 400% spoken/visual review remain a documented limitation                                                        |
+| Actual screen reader              | Blocked                              | NVDA/VoiceOver and native mobile Safari testing require the relevant device/software and reviewer                                                                                                                  |
 
-### Executed
+## Public pages covered by automation
 
-| Check                                    | Result | Evidence                                                                                                                    |
-| ---------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
-| Public route and component source review | Pass   | Semantic landmarks, heading contract, skip link, labelled navigation, reduced-motion and forced-colour rules were reviewed. |
-| Automated accessibility suite            | Pass   | `tests/e2e/accessibility.spec.ts`, `tests/e2e/keyboard-and-preferences.spec.ts` and the TV accessibility coverage           |
-| Playwright suite discovery               | Pass   | 185 checks across five specification files and six configured projects                                                      |
-| Production Chromium matrix               | Pass   | 110 passed, 3 expected project-specific skips, 0 failed in 1.4 minutes on the definitive production `next start` build      |
-| Automated axe scans                      | Pass   | Public routes, the 404 response and the 1920 x 1080 TV surface completed without an untriaged WCAG A/AA violation           |
-| Automated keyboard and preferences       | Pass   | Skip-link focus, responsive menu operation, desktop navigation and reduced-motion behavior passed in Chromium               |
+The route-level accessibility, keyboard and preference coverage includes:
 
-The production matrix used the Chromium mobile, tablet, desktop and TV projects with the locally
-installed Microsoft Edge channel. The three skips are intentional viewport-specific exclusions:
-desktop navigation is not exercised on disclosure layouts, and disclosure navigation is not
-exercised on desktop.
+- `/`
+- `/prayer-times`
+- `/visit`
+- `/services`
+- `/education`
+- `/news`
+- `/new-muslims`
+- `/contact`
+- `/about`
+- `/accessibility`
+- `/policies`
+- `/policies/privacy`
+- the not-found response
+- `/tv` in display-specific tests
 
-### Pending before launch
+Each public document is checked for a successful or intentional 404 response, `lang`, one `main`,
+one primary heading, named/usable navigation, the expected title/heading, no common encoding
+corruption and no horizontal document overflow. Axe checks use the WCAG A/AA rules enabled by the
+repository suite.
 
-| Check                                                     | Required evidence                                                                      | Owner/sign-off                         |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------- |
-| Axe WCAG A/AA scan in Firefox and WebKit                  | Saved Playwright report with zero untriaged violations                                 | Engineering                            |
-| Keyboard-only journey review at desktop and mobile widths | Completed manual checklist below; defects linked and retested                          | Accessibility reviewer                 |
-| Screen reader review                                      | NVDA + Firefox or Chrome on Windows; VoiceOver + Safari on iOS where available         | Accessibility reviewer                 |
-| 200% and 400% zoom/reflow                                 | Screenshots and notes for all representative page types                                | Engineering                            |
-| Windows High Contrast / forced colours                    | Screenshots and keyboard notes                                                         | Accessibility reviewer                 |
-| Reduced motion                                            | Manual confirmation on the TV display; the automated browser check has passed          | Engineering                            |
-| Real content review                                       | Approved prayer table, long event titles, policy content, Arabic text and error states | Content owner + accessibility reviewer |
-| Accessibility statement                                   | Approved statement with monitored contact route and known limitations                  | Committee                              |
+## Cross-engine result
 
-## Automated scope
+| Engine   | Executed result                                                                                                                  | Qualification                                                                                                          |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Chromium | The definitive matrix passed the phone, tablet, desktop and 1080p display accessibility, keyboard, preferences and reflow checks | Three viewport-inapplicable navigation variants were intentionally skipped                                             |
+| Firefox  | The definitive desktop project passed every applicable public, accessibility, keyboard, preferences and reflow check             | One mobile-only disclosure test was intentionally skipped; Firefox ran outside the constrained process sandbox         |
+| WebKit   | The definitive mobile project passed every applicable public, accessibility, keyboard, preferences and reflow check              | One desktop-only navigation test was intentionally skipped; Windows WebKit's link-focus preference is documented below |
 
-The Playwright suite scans these public route types with axe rules tagged for WCAG A and AA:
+WebKit on Windows normally skips anchors during Tab navigation when `tabFocusesLinks` is disabled.
+The WebKit test proves that the skip link is the first anchor in DOM order, focuses it explicitly,
+then activates it and verifies that focus moves to `main`. Chromium and Firefox prove the actual
+first-Tab behavior. Native Safari keyboard preferences still require manual device acceptance.
 
-- Home
-- Prayer times
-- Visit
-- Services
-- Learning
-- News
-- New Muslims
-- Contact
-- About
-- Policy register
-- Policy detail
+## Keyboard evidence and open checklist
 
-The suite also checks:
+| ID   | Journey                                                           | Current result                                                                                                    |
+| ---- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| K-01 | Skip link is first actionable keyboard target and becomes visible | Automated pass in Chromium/Firefox; WebKit DOM-order plus explicit-focus pass; native manual sign-off pending     |
+| K-02 | Activating skip link transfers focus to `main`                    | Automated pass across configured engines                                                                          |
+| K-03 | Open/close phone and tablet menu without a focus trap             | Automated pass in disclosure-layout projects; manual touch/keyboard sign-off pending                              |
+| K-04 | Traverse header, main and footer in reading order                 | Automated route coverage passes; full human review pending                                                        |
+| K-05 | Operate prayer month controls and navigate the populated table    | Logic/fixture automation exists; repeat manually with committee-approved timetable data                           |
+| K-06 | Navigate policy/content cards and understand link purpose         | Automated accessible-name coverage passes for available content; repeat with final approved copy                  |
+| K-07 | Trigger admin validation/save/publish feedback                    | Covered by clean local authenticated acceptance; native manual repetition uses the real committee accounts        |
+| K-08 | Complete MFA and destructive confirmations without a trap         | Local TOTP/destructive workflows are implemented in acceptance CI; production-device repetition is a launch check |
 
-- one visible primary heading and one labelled `main` landmark on public pages;
-- English document language;
-- a first-focus skip link that moves focus to the main content;
-- keyboard operation of the mobile/tablet navigation disclosure;
-- visible desktop navigation without disclosure interaction;
-- reduced-motion CSS behavior;
-- useful 404 content and `noindex` metadata;
-- horizontal reflow at phone, tablet and desktop viewports;
-- common text-encoding corruption markers;
-- safe, explicit unavailable-data announcements when Supabase is not configured.
+The in-app browser's synthetic keypress did not provide reliable native Tab movement and therefore
+was not counted as a manual keyboard pass. This prevents assisted inspection from being overstated
+as human/device evidence.
 
-The TV route is tested separately at 1920 x 1080 because it is a display surface rather than a
-conventional document-navigation journey. Both its safe no-data state and a confirmed automated test
-fixture are covered; fixture values are not committee-approved prayer times.
+## Screen-reader-oriented findings
 
-## Manual keyboard checklist
+The representative DOM review found:
 
-Record the date, browser/OS, reviewer and defect reference for every failure.
+- an English document language and descriptive page title;
+- named primary and utility navigation regions;
+- a single primary heading followed by hierarchical section headings;
+- a main landmark that is the skip-link target;
+- labelled sections/status areas for unavailable or pending information; and
+- organisation/footer information after the main content in reading order.
 
-| ID   | Journey                                               | Expected result                                                                | Status                                 |
-| ---- | ----------------------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------- |
-| K-01 | Load each public route and press Tab                  | Skip link is first and clearly visible                                         | Pending                                |
-| K-02 | Activate the skip link                                | Focus lands on the main content; focus indicator remains perceivable           | Pending                                |
-| K-03 | Open and close Menu at phone/tablet width             | Disclosure state is announced and no focus trap occurs                         | Pending                                |
-| K-04 | Traverse header, main and footer links                | Focus order follows reading order; every control is visible                    | Pending                                |
-| K-05 | Use month controls and prayer table                   | Links/buttons are operable; horizontally scrollable table receives focus       | Pending approved timetable data        |
-| K-06 | Navigate policy and content cards                     | Link purpose is understandable from name and context                           | Pending approved content data          |
-| K-07 | Trigger validation and error states in administration | Error summary/status is announced and focus is managed                         | Pending authenticated test environment |
-| K-08 | Complete MFA and destructive confirmation flows       | No keyboard trap; confirmation is explicit; timeout behavior is understandable | Pending authenticated test environment |
+No structural defect was recorded in that representative snapshot. The review cannot prove spoken
+output, verbosity, table navigation, live-region timing, pronunciation, browser/assistive-technology
+interoperability or mobile gestures.
 
-## Screen reader checklist
+| ID    | Required actual assistive-technology check                                         | Status                                                                                      |
+| ----- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| SR-01 | Page title, language, landmarks and primary heading are announced correctly        | DOM-oriented review passes; NVDA/VoiceOver pending                                          |
+| SR-02 | Responsive navigation announces name, role and expanded state                      | Source/automation passes; actual announcement pending                                       |
+| SR-03 | Prayer starts and congregation times are distinguishable in table navigation       | Pending approved timetable plus screen reader                                               |
+| SR-04 | Arabic labels use correct language/direction and pronunciation                     | Encoding checks pass; content owner and screen-reader review pending                        |
+| SR-05 | Offline, stale and unavailable-data status is announced once and at the right time | Visual/automation behavior passes; spoken live-region review pending                        |
+| SR-06 | Admin validation, save, publish and security feedback is announced                 | Semantic/live status implementation reviewed; actual spoken output remains device-dependent |
 
-| ID    | Check                                                                                | Status                                      |
-| ----- | ------------------------------------------------------------------------------------ | ------------------------------------------- |
-| SR-01 | Page title, language, landmarks and primary heading are announced correctly          | Pending                                     |
-| SR-02 | Navigation disclosure exposes name, role and expanded state                          | Pending                                     |
-| SR-03 | Prayer starts and congregation times are distinguishable in table navigation         | Pending approved timetable data             |
-| SR-04 | Arabic labels use the correct language and direction without corrupt characters      | Encoding gate passed; manual review pending |
-| SR-05 | Status, offline state and unavailable-data messages are announced without repetition | Pending                                     |
-| SR-06 | Admin validation, save, publish and security feedback is announced                   | Pending authenticated test environment      |
+## Zoom, reflow, contrast and motion
 
-## Known limitations and launch gates
+| Check                                  | Current evidence                                                                               | Remaining evidence                                            |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Narrow reflow                          | Pixel 7, 820 x 1180 tablet and iPhone 13/WebKit public projects pass without document overflow | Human review with final approved long/Arabic content          |
+| 200%-equivalent and 320px reflow       | Every public route passes at constrained CSS widths without document overflow                  | Native 200%/400% zoom remains a device-level confirmation     |
+| Forced colours / Windows High Contrast | Automated forced-colour emulation passes the public routes without overflow or lost operation  | Native Windows High Contrast visual/keyboard review           |
+| Reduced motion                         | Automated preference disables smooth scrolling and long transition/animation duration          | Manual TV/device confirmation                                 |
+| Focus appearance                       | Skip-link and shared focus CSS inspected and exercised by automation                           | Human contrast/visibility sign-off at zoom and forced colours |
 
-- Automated axe scans cannot prove conformance; they supplement keyboard, screen reader, zoom,
-  cognition and content review.
-- The no-backend state is suitable for safety testing but does not exercise large approved datasets,
-  long translations, media alternatives or full prayer tables.
-- Firefox and WebKit browser binaries were unavailable for the local production run. Their projects
-  remain configured and must run before launch.
-- The official accessibility statement and monitored assistance route require committee approval.
-- No accessibility claim should be published until every pending launch check above has evidence and
-  any critical or serious finding is resolved.
+## Launch-dependent checks and technical limitations
 
-## Reproduction commands
+- Authenticated dashboard keyboard and announcement testing needs an isolated Supabase staging
+  project, approved synthetic accounts for every role and real MFA.
+- Actual NVDA on Windows and VoiceOver/Safari on Apple hardware need a qualified reviewer and the
+  relevant devices.
+- Physical TV scaling, viewing distance, full-screen recovery and reduced-motion behavior need the
+  selected managed display.
+- Real-content review needs committee-approved prayer tables, Arabic labels, policies, long titles,
+  error copy and media alternatives.
+- Publishing an accessibility statement needs committee approval and a monitored assistance route.
+
+## Release interpretation
+
+Automated accessibility evidence is green for the tested public surface and has no known untriaged
+serious/critical A/AA axe finding. The software-controlled accessibility gate **passes**. Native
+screen-reader, native zoom, final-content and physical-display checks remain launch-dependent
+limitations rather than unfinished application code. No WCAG conformance claim should be published
+from this report alone.
+
+## Reproduction
 
 ```powershell
 pnpm build
 $env:PLAYWRIGHT_CHROMIUM_CHANNEL = "msedge"
 $env:PLAYWRIGHT_DISABLE_VIDEO = "1"
 $env:PLAYWRIGHT_WEB_SERVER_COMMAND = "pnpm start --hostname 127.0.0.1 --port 3000"
-pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet --project=chromium-desktop --project=tv-1080p
+pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet --project=chromium-desktop --project=firefox-desktop --project=webkit-mobile --project=tv-1080p
 pnpm exec playwright show-report
 ```
 
 For an already running deployment, set `PLAYWRIGHT_BASE_URL`. Set `E2E_EXPECT_NO_SUPABASE=1` only
-when that target is intentionally configured without Supabase.
+when the target intentionally omits Supabase and fail-closed behavior is the expected result.

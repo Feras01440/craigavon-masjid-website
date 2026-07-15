@@ -2,168 +2,127 @@
 
 **Release candidate:** Production platform rebuild
 
-**Evidence date:** 14 July 2026
+**Evidence date:** 15 July 2026
 
-**Overall status:** The automated Chromium production matrix passed. Launch approval still requires
-the cross-engine, manual accessibility, approved-data, authenticated, operational and performance
-evidence listed below.
+**Decision at this working tree:** **Local technical acceptance passes.** The release commit still
+needs green GitHub Actions, including the clean local Supabase and authenticated product-acceptance
+jobs. The nine real-world configuration and committee approvals remain launch inputs, not unfinished
+software. Nothing in this report authorises a production launch.
 
 ## Result discipline
 
-"Implemented" means a repeatable check exists. "Passed" is used only after that check ran against
-the release candidate and its output was reviewed. Pending rows must not be presented as successful
-test results.
+`Pass` means the named check executed and its output was reviewed. `Implemented` means repeatable
+evidence exists but its authoritative environment has not executed it. `Blocked` means credentials,
+equipment or an approval unavailable to this repository are required. A partial run is not promoted
+to a complete matrix pass.
 
-## Executed evidence
+## Executed release-candidate evidence
 
-| Area                                         | Command or review                                                  | Result                                        | Evidence                                                                                                 |
-| -------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| E2E scope definition                         | Repository source and route review                                 | Complete                                      | `tests/e2e/`                                                                                             |
-| Viewport matrix and stable failure artifacts | Playwright configuration review                                    | Complete                                      | `playwright.config.ts`                                                                                   |
-| Test discovery                               | `playwright test --list`                                           | Pass - 185 checks                             | Six configured projects across five specification files                                                  |
-| Formatting                                   | `pnpm format:check`                                                | Pass                                          | All matched files use Prettier code style                                                                |
-| Static analysis                              | `pnpm lint`; `pnpm typecheck`                                      | Pass                                          | Zero ESLint warnings/errors; strict TypeScript check completed                                           |
-| Unit and deterministic integration tests     | `pnpm test`; `pnpm test:coverage`                                  | Pass - 96 tests in 12 files                   | 91.13% statements, 83.65% branches, 95.19% functions and 93.16% lines                                    |
-| Focused logo regression                      | Public-route contract plus five repeats at each responsive profile | Pass - 42 contract checks and 15/15 repeats   | Official header/footer asset loaded at mobile, tablet and desktop widths                                 |
-| Production Chromium execution                | Four-project Playwright production-build run                       | Pass - 110 passed, 3 expected skips, 0 failed | Chromium phone, tablet, desktop and 1080p TV; 1.4 minutes; locally installed Microsoft Edge channel      |
-| Production build                             | `pnpm build`                                                       | Pass                                          | Next.js production compilation, TypeScript, page-data collection and static generation completed         |
-| Representative visual evidence               | `node scripts/capture-qa-evidence.mjs`                             | Pass                                          | Desktop home and confirmed test-fixture TV screenshots refreshed in `docs/quality/evidence/`             |
-| Local secret-pattern review                  | High-confidence token pattern scan of non-ignored files            | Pass - no matches                             | CI Gitleaks remains the authoritative full-history gate                                                  |
-| Dependency audit                             | `pnpm audit --audit-level=high`                                    | Not verified                                  | Registry access was unavailable in the managed environment; the committed CI dependency job remains open |
+| Area                                    | Result                                           | Actual evidence                                                                                                                                                                                                                                                                       |
+| --------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency audit                        | Pass                                             | Registry-backed audit covered 568 dependencies and returned 0 info, low, moderate, high or critical vulnerabilities after PostCSS was updated to 8.5.17                                                                                                                               |
+| Dependency Graph prerequisite           | Pass                                             | GitHub Dependency Graph was enabled and the repository saved the setting; dependency review still has to pass at the release commit                                                                                                                                                   |
+| Static application gates                | Pass on current tested worktree                  | Zero-warning lint, strict TypeScript check and the Next.js production build completed                                                                                                                                                                                                 |
+| Unit/deterministic integration suite    | Pass                                             | 129 tests in 17 files, 0 failures; 89.34% statements, 81.90% branches, 90.17% functions and 91.25% lines                                                                                                                                                                              |
+| Auth callback boundary                  | Pass                                             | 16 focused tests accept only one nonblank PKCE code or the exact hashed-OTP flow and reject mixed, duplicate, empty and unsupported input before client creation                                                                                                                      |
+| Clean migration and seed replay         | Pass                                             | The production migration and seed replayed from zero on clean PostgreSQL 17.10 twice                                                                                                                                                                                                  |
+| Database roles/RLS/constraints/indexes  | Pass on prior clean baseline; current CI pending | All 84 baseline pgTAP assertions passed on both clean PostgreSQL replays. The completed product migration expands the committed suite to 91 assertions; authoritative zero-state Supabase execution is the release-commit CI gate.                                                    |
+| Public privacy boundary                 | Pass in repository tests                         | Public mappers and database grants exclude drafts, scheduled/expired/deleted content, private enquiries, administrator/profile/invitation data, audit internals and unapproved prayer data                                                                                            |
+| Publication and administrator workflows | Pass in repository tests                         | Invitation compensation, disable/self-disable denial, recovery non-enumeration, session boundaries, draft/preview/schedule/expiry/archive/revision restoration and audit behavior passed deterministic unit/database checks                                                           |
+| TV accelerated soak                     | Pass                                             | 10 of 10 scenarios passed with two workers in 8.9 seconds, covering fit, midnight/Friday, both UK DST changes, multi-day outage, stale-data fail-closed behavior, recovery, notice expiry and offline state                                                                           |
+| Cross-engine browser execution          | Pass                                             | The completed selection contains 385 checks: 360 non-TV checks passed across Chromium, Firefox and WebKit; the final TV project passed 10/10; 15 local-demo or viewport-inapplicable checks were intentionally skipped; no product assertion remains failing                          |
+| External production-preview performance | Pass with recorded TV environment limitation     | 30 Lighthouse cold runs through an external ephemeral HTTPS preview: public routes 99-100 Performance, 100 Accessibility and 100 Best Practices; TV 99-100 Performance, 100 Accessibility and 92 Best Practices because the no-Supabase preview correctly returned `/api/display` 503 |
+| Automated accessibility                 | Pass for tested scope                            | Axe A/AA scans, public skip-link/navigation checks, reduced motion, forced colours and reflow checks passed in the configured browser projects; automation is not a manual screen-reader sign-off                                                                                     |
 
-The production execution used the definitive `next start` build after the final application,
-security and logo-delivery changes. The three skips are intentional viewport-specific exclusions,
-not failures.
+Detailed evidence is in:
 
-## Official-logo regression evidence
+- [Database P1 validation](DATABASE-P1-VALIDATION.md)
+- [Operational workflow validation](OPERATIONAL-WORKFLOW-VALIDATION.md)
+- [TV accelerated soak report](TV-ACCELERATED-SOAK-REPORT.md)
+- [Accessibility report](ACCESSIBILITY-REPORT.md)
+- [Performance evidence](PERFORMANCE-BUDGETS.md)
+- [Backup and restore plan](../security/BACKUP-AND-RESTORE.md)
 
-The failed element was the home-page footer image at tablet and desktop widths. The header image
-loaded, and the shared static WebP returned HTTP 200, but Chromium left the footer image with
-`complete=false`, `naturalWidth=0` and an empty `currentSrc`. Both instances used the same already
-compressed local logo through different responsive `next/image` candidate sets. Loading the footer
-eagerly alone did not resolve candidate selection after programmatic scrolling.
+## Database and recovery boundary
 
-Both fixed-size logo instances now use direct, unoptimised delivery of the 5,134-byte WebP. The
-header remains prioritised, the footer remains eager, and both retain explicit intrinsic dimensions,
-decorative empty alternative text and visible adjacent organisation text. This removes the redundant
-responsive optimiser candidate sets without changing the authorised artwork. The complete 42-check
-public-route contract passed, followed by 15/15 focused checks: five consecutive executions at each
-mobile, tablet and desktop profile.
+The clean PostgreSQL runs prove migration ordering, deterministic seeds, SQL constraints, indexes,
+grants, RLS policy decisions, publication/revision boundaries and cleanup in a fresh database. The
+GitHub workflow now provisions the complete disposable local Supabase stack, resets it twice, runs
+the 91 assertions twice, lints the database with warnings treated as failures, exercises Auth
+invitation/ban/recovery/global-session-revocation, and restores a realistic custom-format logical
+backup into a separately migrated database.
 
-## Automated E2E coverage
+That provider-shaped workflow has not yet produced an authoritative result for the release commit.
+The workstation did not have the full Docker/Supabase runtime, so local PostgreSQL compatibility
+must not be presented as proof of GoTrue, PostgREST, Storage or provider backup behavior.
 
-| Area              | Assertions                                                                                                                      |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Public routes     | Successful document response, language, one `main`, one `h1`, expected heading, title, security headers, no horizontal overflow |
-| 404               | HTTP 404, helpful heading and links, `noindex`                                                                                  |
-| Content integrity | No common mojibake or replacement-character markers in rendered copy                                                            |
-| Accessibility     | Axe WCAG A/AA rule sets across public route types and the TV display                                                            |
-| Keyboard          | First-focus skip link, focus transfer, mobile/tablet menu, desktop navigation                                                   |
-| User preferences  | Reduced-motion preference disables smooth scrolling and long animation/transition durations                                     |
-| No environment    | Prayer and content fallbacks withhold unapproved or stale information                                                           |
-| Public APIs       | No-environment prayer/display responses fail closed and disable caching                                                         |
-| TV display        | 1920 x 1080 fit, safe no-timetable state, confirmed fixture, connection status and offline event handling                       |
+## Browser and viewport evidence
 
-## Browser and viewport matrix
+| Project            | Engine/viewport             | Executed evidence                                                                                                              | RC status                                       |
+| ------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `chromium-mobile`  | Chromium, Pixel 7           | Public, accessibility, keyboard/preferences, forced colours, reduced motion and 200%-equivalent/320px reflow journeys          | Pass; one desktop-only navigation check skipped |
+| `chromium-tablet`  | Chromium, 820 x 1180 touch  | Public, disclosure, accessibility, preferences and reflow journeys                                                             | Pass; one desktop-only navigation check skipped |
+| `chromium-desktop` | Chromium, 1440 x 900        | Public, keyboard, accessibility, preferences, production and reflow journeys                                                   | Pass; one mobile-only navigation check skipped  |
+| `firefox-desktop`  | Firefox, 1440 x 900         | Complete applicable public, accessibility, keyboard, preferences and reflow project                                            | Pass; one mobile-only navigation check skipped  |
+| `webkit-mobile`    | WebKit, iPhone 13           | Complete applicable public, accessibility, keyboard, preferences and reflow project; keyboard preference difference documented | Pass; one desktop-only navigation check skipped |
+| `tv-1080p`         | Chromium, 1920 x 1080 DPR 1 | 10/10 accelerated soak plus accessibility/fit coverage                                                                         | Pass                                            |
 
-| Project            | Engine   | Viewport/device    | Purpose                                 | Status                        |
-| ------------------ | -------- | ------------------ | --------------------------------------- | ----------------------------- |
-| `chromium-mobile`  | Chromium | Pixel 7 profile    | Phone layout and touch navigation       | Pass on definitive production |
-| `chromium-tablet`  | Chromium | 820 x 1180, touch  | Tablet disclosure breakpoint and reflow | Pass on definitive production |
-| `chromium-desktop` | Chromium | 1440 x 900         | Primary desktop release path            | Pass on definitive production |
-| `firefox-desktop`  | Firefox  | 1440 x 900         | Cross-engine semantics and layout       | Pending browser execution     |
-| `webkit-mobile`    | WebKit   | iPhone 13 profile  | Mobile Safari approximation             | Pending browser execution     |
-| `tv-1080p`         | Chromium | 1920 x 1080, DPR 1 | Dedicated prayer display                | Pass on definitive production |
+WebKit on Windows does not expose the native `tabFocusesLinks` preference used by Safari. The test
+therefore verifies that the skip link is the first anchor in DOM order, focuses it explicitly, and
+proves Enter transfers focus to `main`; Chromium and Firefox prove the real first-Tab behavior. This
+is a documented platform limitation, not evidence of a hidden skip-link pass in native Safari.
 
-Failure runs retain a trace, screenshot and, when available, video. Screenshot comparisons use
-disabled animations, a hidden caret, CSS-pixel scaling and a 1% maximum pixel ratio. Visual
-baselines should only be approved from a production build on the pinned Playwright version.
+## Release scenario status
 
-## Representative visual evidence
+| ID   | Gate                                                                | Result                                                                                                                                                         |
+| ---- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P-01 | Public routes, 404, no-backend fail-closed state and public privacy | Pass in repository/browser coverage; repeat with approved staging data                                                                                         |
+| P-02 | Chromium, Firefox, WebKit and responsive navigation                 | Pass: 385 selected, 370 applicable checks passed, 15 local-demo or viewport-inapplicable checks intentionally skipped, 0 unresolved failures                   |
+| P-03 | TV midnight, Friday, DST, outage, stale data and recovery           | Pass, 10/10                                                                                                                                                    |
+| D-01 | Migration, seed, constraints, indexes and RLS from zero             | Prior clean baseline passed twice, 84/84; expanded 91-assertion release suite awaits release-commit Supabase CI                                                |
+| D-02 | Full local Supabase/Auth/restore workflow                           | Implemented; awaiting GitHub Actions at the release commit                                                                                                     |
+| A-01 | Invite, disable, revoke, recovery and multi-session boundaries      | Unit/database evidence passes; clean local Auth lifecycle and TOTP acceptance are implemented in CI; production email and named accounts remain launch inputs  |
+| C-01 | Draft, preview, schedule, expiry, revision restore and audit log    | Repository evidence passes; clean local authenticated dashboard acceptance is implemented in CI                                                                |
+| B-01 | Realistic logical backup and restore                                | Rehearsal is implemented in CI; authoritative Supabase-stack execution and provider/Storage drill remain                                                       |
+| X-01 | Manual public keyboard and screen-reader-oriented review            | Source/DOM and automated keyboard evidence available; native manual keyboard sign-off across every public journey and actual NVDA/VoiceOver review remain open |
+| X-02 | Authenticated dashboard keyboard/screen-reader review               | Blocked on approved staging credentials and test identities                                                                                                    |
+| F-01 | External HTTPS performance measurement                              | Pass for ephemeral production preview; permanent hosting-provider preview and representative-data rerun remain credential-blocked                              |
 
-- [Home page - desktop 1440 x 900](evidence/final-home-desktop.png) shows the production no-backend
-  safe state and the official Facebook-derived visual identity.
-- [TV display - confirmed automated fixture at 1920 x 1080](evidence/final-tv-1080p-confirmed-fixture.png)
-  demonstrates the populated timetable layout and fit. Its prayer values are generated test data,
-  not production or committee-approved prayer times.
+## Evidence still required at the release commit
 
-The evidence can be regenerated against a running production build:
+1. Push the release commit to the existing draft pull request and require green GitHub Actions,
+   including dependency review/audit, Gitleaks, CodeQL, link integrity and the complete disposable
+   Supabase migration/Auth/recovery/restore job.
+2. Review CI artifacts and rerun any flaky or failed job after correcting its cause; do not merge
+   the draft pull request as part of this validation.
 
-```powershell
-$env:PLAYWRIGHT_BASE_URL = "http://127.0.0.1:3000"
-$env:PLAYWRIGHT_CHROMIUM_CHANNEL = "msedge"
-node scripts/capture-qa-evidence.mjs
-```
+## Final launch configuration
 
-## Release test matrix
+The completed software accepts these values without code changes:
 
-| ID   | Scenario                                              | Expected result                                                                  | Status                                                     |
-| ---- | ----------------------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| P-01 | Visit each public route without Supabase variables    | Page succeeds and explicitly withholds unverified data                           | Automated pass on definitive production                    |
-| P-02 | Visit unknown URL                                     | Useful 404 with HTTP 404 and `noindex`                                           | Automated pass on definitive production                    |
-| P-03 | Navigate at phone/tablet/desktop sizes                | No document-width overflow; navigation remains operable                          | Automated pass on definitive production                    |
-| P-04 | View TV display at 1920 x 1080                        | No clipping or document scroll; safe status remains legible                      | Automated pass on definitive production                    |
-| P-05 | Disconnect TV browser                                 | Offline status appears; last-known-good behavior is manually verified            | Offline event passed; cache recovery remains a manual test |
-| P-06 | Cross a Europe/London midnight/DST boundary           | Correct local date and timetable refresh without stale data                      | Pending clock-controlled integration test                  |
-| D-01 | Load seeded approved content and prayer configuration | Only approved, in-window records render                                          | Pending local Supabase fixture                             |
-| D-02 | Withdraw, archive or expire content                   | Public item disappears and safe state returns                                    | Pending local Supabase fixture                             |
-| A-01 | Sign in, enrol MFA and reopen protected page          | Access requires valid invite/session and configured assurance level              | Pending authenticated test environment                     |
-| A-02 | Exercise every role                                   | Viewer/editor/publisher/admin permissions match policy                           | Pending authenticated test environment                     |
-| A-03 | Publish prayer settings                               | Preview, explicit confirmation, audit and immutable revision all agree           | Pending authenticated test environment                     |
-| M-01 | Upload valid/invalid media                            | Type, size, sanitisation, private storage and alt-text controls behave correctly | Pending authenticated test environment                     |
-| E-01 | Submit enquiry abuse cases                            | Honeypot, validation, rate limit, retention and safe admin rendering work        | Pending feature approval and isolated environment          |
-| R-01 | Restore backup to isolated project                    | Schema, auth references, media and records are recoverable                       | Pending operational rehearsal                              |
+1. approved prayer and Jumu'ah values;
+2. approved contact information;
+3. production domain and DNS;
+4. production Supabase credentials;
+5. production Vercel credentials;
+6. production email credentials;
+7. real committee administrator accounts;
+8. approved policies and public content; and
+9. committee sign-off.
 
-## Reproduce the passed Chromium matrix
+## Non-blocking technical limitations
 
-```powershell
-pnpm build
-$env:PLAYWRIGHT_CHROMIUM_CHANNEL = "msedge"
-$env:PLAYWRIGHT_DISABLE_VIDEO = "1"
-$env:PLAYWRIGHT_WEB_SERVER_COMMAND = "pnpm start --hostname 127.0.0.1 --port 3000"
-pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet --project=chromium-desktop --project=tv-1080p --workers=2
-pnpm exec playwright show-report
-```
+- Automated keyboard and screen-reader-oriented DOM evidence is comprehensive, but this workstation
+  did not provide native NVDA, VoiceOver or mobile Safari spoken-output evidence.
+- Accelerated browser soak covers clock changes, outage and recovery; physical TV power-loss,
+  full-screen scaling and viewing-distance acceptance depend on the selected display.
+- Logical backup/restore is rehearsed in the disposable stack; provider-managed PITR and Storage
+  restore measurements belong to production Supabase operations once its credentials exist.
 
-For a workstation with an installed Edge/Chrome channel but no downloaded Playwright Chromium, set
-`PLAYWRIGHT_CHROMIUM_CHANNEL` (for example, `msedge`). CI should normally use the pinned
-Playwright-managed browser build. If that workstation also lacks Playwright's FFmpeg helper, set
-`PLAYWRIGHT_DISABLE_VIDEO=1`; failure screenshots and traces remain enabled.
+## Release-candidate conclusion
 
-## Completed local release commands
-
-```powershell
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm test:coverage
-pnpm build
-pnpm exec playwright test --project=chromium-mobile --project=chromium-tablet --project=chromium-desktop --project=tv-1080p --workers=2
-```
-
-The repository-local internal-link assertions passed in the browser matrix. The CI-only Gitleaks,
-CodeQL, dependency-review, registry-backed dependency audit, offline Markdown-link action and local
-Supabase migration replay/lint have not been represented as local passes.
-
-## Remaining pre-release commands and environments
-
-- Run the committed CI workflow, including Gitleaks, CodeQL, dependency review/audit,
-  repository-link integrity and isolated Supabase migration replay/lint.
-- Run `pnpm exec playwright test --project=firefox-desktop --project=webkit-mobile` after the
-  managed Firefox and WebKit binaries are available.
-- Run credentialed staging scenarios for Auth/MFA, every role, content publication, prayer
-  publication/withdrawal, private media, enquiries, audit and backup/restore.
-
-## Release decision
-
-Release remains blocked until:
-
-- the pending CI, migration, cross-engine and credentialed-staging gates pass at the release commit;
-- critical public journeys pass in Firefox and WebKit as well as Chromium;
-- axe has no untriaged serious, critical, A or AA violation in those engines;
-- the manual accessibility checklist is signed off;
-- approved-data, admin/MFA, prayer-publishing and backup-restore scenarios have evidence;
-- representative performance measurements meet the documented budgets;
-- committee confirmation items and policy prerequisites are closed or the relevant feature remains
-  disabled.
+**Current result: PASS locally / PENDING release-commit CI.** The software-controlled application,
+browser, accessibility, security, TV and performance gates are green on the completed worktree.
+Technical RC status becomes final only when the pushed commit passes every GitHub Actions job. The
+nine real-world values and committee sign-off remain launch configuration, and the draft pull
+request must remain unmerged.
