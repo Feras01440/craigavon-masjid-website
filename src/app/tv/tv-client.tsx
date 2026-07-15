@@ -33,6 +33,14 @@ const names = {
 
 const cacheKey = "mac-tv-last-known-good-v1";
 
+function DemoMarker(): React.ReactNode {
+  return (
+    <p className={styles.demoMarker}>
+      Local demonstration — prayer values and notices are not committee approved
+    </p>
+  );
+}
+
 function countdown(targetIso: string | undefined, now: Date): string {
   if (!targetIso) return "—";
   const remaining = Math.max(0, new Date(targetIso).getTime() - now.getTime());
@@ -66,7 +74,13 @@ function activePrayerHold(
   return null;
 }
 
-export function TvClient({ initialPayload }: { initialPayload: DisplayPayload }): React.ReactNode {
+export function TvClient({
+  demoMode,
+  initialPayload,
+}: {
+  demoMode: boolean;
+  initialPayload: DisplayPayload;
+}): React.ReactNode {
   const [payload, setPayload] = useState(initialPayload);
   // Use the server-generated timestamp for the hydration frame. The live clock takes over after
   // mount, preventing a date/minute boundary from producing different server and client markup.
@@ -165,6 +179,7 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
   if (emergency) {
     return (
       <main className={styles.emergency}>
+        {demoMode ? <DemoMarker /> : null}
         <p>Urgent notice</p>
         <h2>{emergency.title}</h2>
         {emergency.summary ? <div>{emergency.summary}</div> : null}
@@ -186,6 +201,7 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
   if (hold) {
     return (
       <main className={styles.prayerHold}>
+        {demoMode ? <DemoMarker /> : null}
         <span lang="ar" dir="rtl">
           الصلاة قائمة
         </span>
@@ -208,6 +224,7 @@ export function TvClient({ initialPayload }: { initialPayload: DisplayPayload })
 
   return (
     <main className={styles.screen}>
+      {demoMode ? <DemoMarker /> : null}
       <header className={styles.topbar}>
         <div className={styles.brand}>
           <img

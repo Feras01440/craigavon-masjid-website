@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { demoModeIsActive } from "@/lib/demo-mode";
 import { dateKeyInZone } from "@/lib/prayer/timezone";
 import { getPublishedNotices } from "@/server/repositories/notices";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
@@ -21,5 +22,10 @@ export default async function TvPage(): Promise<React.ReactNode> {
     getPublishedNotices(),
     getPublicTvDisplaySetting(),
   ]);
-  return <TvClient initialPayload={{ generatedAt, prayer, notices, display }} />;
+  return (
+    <TvClient
+      demoMode={demoModeIsActive()}
+      initialPayload={{ generatedAt, prayer, notices, display }}
+    />
+  );
 }

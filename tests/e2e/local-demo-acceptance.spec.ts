@@ -206,7 +206,7 @@ test.describe("clean local demonstration acceptance", () => {
         await expect(page.locator("h1").first()).toBeVisible();
       }
       await page.goto("/tv");
-      await expect(page.locator("body")).toContainText(/LOCAL DEMONSTRATION/i);
+      await expect(page.getByText(/Local demonstration.*not committee approved/i)).toBeVisible();
 
       // The browser reports the intentionally requested 404 as a console error.
       // Keep it on a separate page so the product-console gate remains strict.

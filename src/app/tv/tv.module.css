@@ -25,6 +25,26 @@
   pointer-events: none;
 }
 
+.demoMarker {
+  position: fixed;
+  z-index: 30;
+  top: 0.65rem;
+  left: 50%;
+  max-width: min(90vw, 52rem);
+  margin: 0;
+  transform: translateX(-50%);
+  border: 2px solid #713b18;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  color: #32190c;
+  background: #fff0c7;
+  font-size: clamp(0.7rem, 1vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .topbar {
   position: relative;
   z-index: 1;
@@ -414,7 +434,8 @@
   .notice,
   .unavailable,
   .emergency,
-  .prayerHold {
+  .prayerHold,
+  .demoMarker {
     border: 2px solid CanvasText;
     color: CanvasText;
     background: Canvas;
