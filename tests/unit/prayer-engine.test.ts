@@ -222,14 +222,43 @@ describe("approved prayer schedule generation", () => {
     expect(saturday.jumuah).toEqual([]);
   });
 
-  it("blocks a Jumuah session that precedes calculated Dhuhr", () => {
+  it("publishes the authorised Jumuah time independently of calculated Dhuhr", () => {
+    // Product-owner decision (16 July 2026): the administrator-published
+    // Jumu'ah time and the calculated Dhuhr start are independent facts.
+    // 13:00 is the masjid's established arrangement even though calculated
+    // Dhuhr in Craigavon falls after 13:00 throughout BST.
     const configuration = prayerConfigurationFixture({
-      jumuahSessions: [{ label: "Unsafe test session", khutbahTime: "13:00", displayOrder: 1 }],
+      jumuahSessions: [{ label: "Jumu'ah", khutbahTime: "13:00", displayOrder: 1 }],
     });
     const friday = buildPrayerSchedule(configuration, "2026-07-17");
+    expect(new Date(friday.prayers.dhuhr.startsAt!).getTime()).toBeGreaterThan(
+      new Date(friday.jumuah[0]!.khutbahAt).getTime(),
+    );
     expect(
-      validatePrayerSchedule(friday).some((issue) => issue.code === "jumuah-before-dhuhr"),
-    ).toBe(true);
+      validatePrayerSchedule(friday).filter((issue) => issue.code.startsWith("jumuah-")),
+    ).toEqual([]);
+  });
+
+  it("validates the joined Maghrib and Isha congregation on every season", () => {
+    // The masjid currently prays Isha in congregation together with Maghrib;
+    // the joined congregation legitimately precedes Isha's astronomical start
+    // and must publish cleanly (product-owner decision, 16 July 2026).
+    const base = prayerConfigurationFixture();
+    const configuration = prayerConfigurationFixture({
+      congregationRules: {
+        ...base.congregationRules,
+        isha: { type: "joined", with: "maghrib" },
+      },
+    });
+    for (const date of ["2026-01-16", "2026-06-19", "2026-07-17"]) {
+      const schedule = buildPrayerSchedule(configuration, date);
+      expect(schedule.prayers.isha.joinedWith).toBe("maghrib");
+      expect(
+        validatePrayerSchedule(schedule).filter(
+          (issue) => issue.prayer === "isha" && issue.severity === "error",
+        ),
+      ).toEqual([]);
+    }
   });
 
   it("distinguishes the next prayer start from the next congregation", () => {

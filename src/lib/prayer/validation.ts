@@ -125,7 +125,10 @@ export function validatePrayerSchedule(
       return;
     }
     const congregation = new Date(prayer.congregationAt);
-    if (congregation < start) {
+    // A joined prayer is deliberately prayed with its partner congregation
+    // (e.g. Isha joined with Maghrib), so its congregation legitimately
+    // precedes its own astronomical start.
+    if (!prayer.joinedWith && congregation < start) {
       issues.push({
         severity: "error",
         code: "congregation-before-start",
@@ -146,7 +149,6 @@ export function validatePrayerSchedule(
     }
   });
 
-  const dhuhr = schedule.prayers.dhuhr.startsAt ? new Date(schedule.prayers.dhuhr.startsAt) : null;
   const asr = schedule.prayers.asr.startsAt ? new Date(schedule.prayers.asr.startsAt) : null;
   let previousJumuah: Date | null = null;
   for (const session of schedule.jumuah) {
@@ -160,14 +162,10 @@ export function validatePrayerSchedule(
         date: schedule.date,
       });
     }
-    if (dhuhr && khutbah < dhuhr) {
-      issues.push({
-        severity: "error",
-        code: "jumuah-before-dhuhr",
-        message: `${session.label} begins before Dhuhr starts.`,
-        date: schedule.date,
-      });
-    }
+    // The published Jumu'ah time is an authorised administrator decision and
+    // is deliberately independent of the calculated Dhuhr start; no
+    // comparison, warning or acknowledgement is applied (product-owner
+    // decision, 16 July 2026).
     if (asr && prayer >= asr) {
       issues.push({
         severity: "error",
