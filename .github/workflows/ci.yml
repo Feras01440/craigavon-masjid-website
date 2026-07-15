@@ -331,11 +331,6 @@ jobs:
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Set up pinned Supabase CLI
-        uses: supabase/setup-cli@v2
-        with:
-          version: 2.101.0
-
       - name: Build a clean local database, authentication and demo environment
         run: pnpm setup:local
 
@@ -369,4 +364,4 @@ jobs:
       - name: Stop local Supabase
         if: always()
         continue-on-error: true
-        run: supabase stop --no-backup
+        run: pnpm exec supabase stop --no-backup
