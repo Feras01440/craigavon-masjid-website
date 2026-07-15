@@ -58,6 +58,10 @@ export const viewport: Viewport = {
   themeColor: "#173a31",
 };
 
+// A fresh CSP nonce is generated for every HTML request in proxy.ts. Static HTML would be
+// generated before that nonce exists, so all pages must render in the request context.
+export const dynamic = "force-dynamic";
+
 type RootLayoutProps = Readonly<{
   children: ReactNode;
 }>;

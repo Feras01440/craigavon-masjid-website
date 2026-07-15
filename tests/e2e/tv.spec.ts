@@ -16,17 +16,6 @@ test.afterEach(({ page }) => {
   expect(pageErrors.get(page) ?? []).toEqual([]);
 });
 
-function londonDateKey(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date);
-  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-  return `${value.year}-${value.month}-${value.day}`;
-}
-
 function addDays(dateKey: string, days: number): string {
   const date = new Date(`${dateKey}T12:00:00.000Z`);
   date.setUTCDate(date.getUTCDate() + days);
@@ -207,31 +196,13 @@ test("TV route has a safe no-timetable state and live connection status", async 
 });
 
 test("TV route renders a confirmed timetable payload without overflow", async ({ page }) => {
-  const generatedAt = new Date().toISOString();
-  const firstDate = londonDateKey(new Date());
-  const schedules = Array.from({ length: 4 }, (_, index) =>
-    fixtureSchedule(addDays(firstDate, index), generatedAt),
-  );
-
-  await page.route("**/api/display", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        generatedAt,
-        prayer: {
-          status: "available",
-          generatedAt,
-          lastUpdatedAt: generatedAt,
-          schedules,
-          issues: [],
-        },
-        notices: { status: "available", notices: [] },
-      }),
-    });
-  });
+  const generatedAt = "2026-07-13T10:00:00.000Z";
+  await installClock(page, generatedAt);
+  await serveDisplayPayload(page, fixturePayload({ firstDate: "2026-07-13", generatedAt }));
 
   await page.goto("/tv", { waitUntil: "domcontentloaded" });
+  await waitForFixtureHydration(page);
+  await page.clock.pauseAt(new Date(generatedAt));
 
   const timetable = page.getByRole("region", { name: "Today's prayer timetable" });
   await expect(timetable).toBeVisible();
@@ -436,10 +407,12 @@ test("accelerated soak removes an expired notice without a network refresh", asy
 });
 
 test("TV route reflects an offline browser state", async ({ context, page }) => {
-  const generatedAt = new Date().toISOString();
-  const firstDate = londonDateKey(new Date());
-  await serveDisplayPayload(page, fixturePayload({ firstDate, generatedAt }));
+  const generatedAt = "2026-07-13T10:00:00.000Z";
+  await installClock(page, generatedAt);
+  await serveDisplayPayload(page, fixturePayload({ firstDate: "2026-07-13", generatedAt }));
   await page.goto("/tv", { waitUntil: "domcontentloaded" });
+  await waitForFixtureHydration(page);
+  await page.clock.pauseAt(new Date(generatedAt));
   await expect(page.getByRole("region", { name: "Today's prayer timetable" })).toBeVisible();
   await context.setOffline(true);
 
