@@ -451,3 +451,44 @@ revoke all on function public.seed_local_demo_data(uuid, text) from public;
 grant execute on function public.save_seasonal_arrangement(uuid, integer, jsonb) to authenticated;
 grant execute on function public.delete_seasonal_arrangement(uuid, integer, uuid) to authenticated;
 grant execute on function public.seed_local_demo_data(uuid, text) to service_role;
+
+-- Supabase grants application-schema functions and tables to API roles through
+-- platform defaults. Clear those inherited capabilities explicitly, then grant
+-- only the surface used by the server and the authenticated editor workflows.
+-- RLS remains the row boundary; these grants are the independent capability
+-- boundary and prevent server-only RPCs or hard-delete paths from being reached.
+revoke all on all functions in schema public from public, anon, authenticated, service_role;
+
+grant execute on function public.current_admin_role() to authenticated;
+grant execute on function public.has_aal2() to authenticated;
+grant execute on function public.has_permission(text) to authenticated;
+grant execute on function public.register_media_asset(text, text, text, bigint, integer, integer, text, boolean, text, text, public.media_status) to authenticated;
+grant execute on function public.update_media_asset_status(uuid, timestamptz, public.media_status) to authenticated;
+grant execute on function public.save_prayer_draft(uuid, integer, jsonb, jsonb) to authenticated;
+grant execute on function public.clone_prayer_settings_draft(uuid, bigint) to authenticated;
+grant execute on function public.save_prayer_override(uuid, integer, jsonb) to authenticated;
+grant execute on function public.delete_prayer_override(uuid, integer, uuid) to authenticated;
+grant execute on function public.save_seasonal_arrangement(uuid, integer, jsonb) to authenticated;
+grant execute on function public.delete_seasonal_arrangement(uuid, integer, uuid) to authenticated;
+
+grant execute on function public.save_site_setting(uuid, text, integer, public.content_status, jsonb) to service_role;
+grant execute on function public.consume_rate_limit(text, text, integer, integer, integer) to service_role;
+grant execute on function public.purge_expired_operational_data() to service_role;
+grant execute on function public.publish_prayer_settings(uuid, uuid, integer, text) to service_role;
+grant execute on function public.withdraw_prayer_settings(uuid, uuid, integer, text, uuid, integer, text) to service_role;
+grant execute on function public.seed_local_demo_data(uuid, text) to service_role;
+
+revoke all on all tables in schema public from anon, authenticated;
+revoke all on all sequences in schema public from anon, authenticated;
+
+grant select, insert, update on public.admin_profiles, public.admin_invites,
+  public.content_items, public.enquiries, public.redirects
+  to authenticated;
+grant select on public.site_settings to authenticated;
+grant select on public.media_assets, public.media_usage to authenticated;
+grant select on public.prayer_settings, public.jumuah_sessions,
+  public.prayer_overrides, public.seasonal_arrangements to authenticated;
+grant delete on public.enquiries to authenticated;
+grant select on public.content_revisions, public.prayer_settings_revisions,
+  public.audit_log to authenticated;
+grant usage, select on all sequences in schema public to authenticated;
