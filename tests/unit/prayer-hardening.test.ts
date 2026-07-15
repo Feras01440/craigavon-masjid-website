@@ -23,6 +23,17 @@ describe("prayer input hardening", () => {
     }
   });
 
+  it("accepts the offset timestamps returned by Supabase timestamptz columns", () => {
+    const parsed = prayerConfigurationSchema.safeParse(
+      prayerConfigurationFixture({
+        publishedAt: "2026-07-15T16:35:00+00:00",
+        updatedAt: "2026-07-15T16:35:00+00:00",
+      }),
+    );
+
+    expect(parsed.success).toBe(true);
+  });
+
   it("rejects joined congregation cycles", () => {
     const base = prayerConfigurationFixture();
     const parsed = prayerConfigurationSchema.safeParse({
