@@ -29,3 +29,6 @@ supabase/.temp/
 .idea/
 .claude/
 *.log
+
+# Vercel project link
+.vercel/
