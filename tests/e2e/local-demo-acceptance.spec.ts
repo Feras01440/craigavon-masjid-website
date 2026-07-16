@@ -387,7 +387,13 @@ test.describe("clean local demonstration acceptance", () => {
       await page.getByRole("button", { name: "Save override" }).click();
       await expect(page.getByText(/Dated override saved/)).toBeVisible();
       await page.reload();
-      await expect(page.getByText("[LOCAL ACCEPTANCE] Dated override verification.")).toBeVisible();
+      // The saved reason legitimately renders in both the overrides table and
+      // the horizon preview, so assert inside the overrides section only.
+      await expect(
+        page
+          .locator("section[aria-labelledby='override-heading']")
+          .getByText("[LOCAL ACCEPTANCE] Dated override verification."),
+      ).toBeVisible();
       await page.goto("/prayer-times");
       await expect(page.getByRole("heading", { name: "Today's timetable" })).toBeVisible();
     });
