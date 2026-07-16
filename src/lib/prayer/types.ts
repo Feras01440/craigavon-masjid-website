@@ -185,7 +185,9 @@ export const prayerConfigurationSchema = z
     publishedAt: z.string().datetime({ offset: true }).nullable(),
     updatedAt: z.string().datetime({ offset: true }),
     jumuahSessions: z.array(jumuahSessionSchema).max(10),
-    overrides: z.array(prayerOverrideSchema).max(500),
+    // A full imported year needs ~2,200 dated entries (366 days × 6 starts);
+    // the ceiling leaves headroom for congregation rows on top.
+    overrides: z.array(prayerOverrideSchema).max(2600),
     seasonalArrangements: z.array(seasonalArrangementSchema).max(100).default([]),
   })
   .superRefine((value, context) => {

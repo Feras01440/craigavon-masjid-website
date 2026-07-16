@@ -9,6 +9,7 @@ import { AdminAccessError, safeActionError } from "@/lib/auth/errors";
 import { requirePermission } from "@/lib/auth/session";
 import { parsePrayerDraftForm } from "@/lib/prayer/admin-input";
 import { buildScheduleRange } from "@/lib/prayer/engine";
+import { parseTimetableCsv } from "@/lib/prayer/import";
 import { dateKeyInZone, wallTimeToInstant } from "@/lib/prayer/timezone";
 import {
   congregationPrayerKeys,
@@ -160,9 +161,15 @@ export async function publishPrayerSettingsAction(
     const issues = validateConfigurationSchedule(candidate, schedules);
     const errors = issues.filter((issue) => issue.severity === "error");
     if (errors.length > 0) {
+      // The 30-day preview may look clean while a later effective date fails,
+      // so name the first failing dates rather than reporting only a count.
+      const detail = errors
+        .slice(0, 5)
+        .map((issue) => `${issue.date ?? "configuration"}: ${issue.message}`)
+        .join(" · ");
       return {
         status: "error",
-        message: `Publication blocked by ${errors.length} timetable validation ${errors.length === 1 ? "error" : "errors"}. Review the preview and correct every error.`,
+        message: `Publication blocked by ${errors.length} timetable validation ${errors.length === 1 ? "error" : "errors"} — ${detail}${errors.length > 5 ? " · …" : ""}`,
       };
     }
 
@@ -272,6 +279,120 @@ export async function savePrayerOverrideAction(
     return {
       status: "success",
       message: `Dated override saved. The draft is now version ${data[0].settings_version}.`,
+    };
+  } catch (error) {
+    return safeActionError(error);
+  }
+}
+
+const importFormSchema = z.object({
+  settingsId: z.uuid(),
+  expectedVersion: z.coerce.number().int().positive(),
+  mode: z.enum(["preview", "import"]),
+  replaceExisting: z.boolean(),
+  sourceNote: z.string().trim().min(3).max(200),
+  csv: z.string().min(1).max(250_000),
+});
+
+export async function importPrayerTimetableAction(
+  _previous: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  try {
+    const csvValue = formData.get("csv");
+    const parsed = importFormSchema.safeParse({
+      settingsId: formString(formData, "settingsId"),
+      expectedVersion: formString(formData, "expectedVersion"),
+      mode: formString(formData, "mode"),
+      replaceExisting: formData.get("replaceExisting") === "on",
+      sourceNote: formString(formData, "sourceNote"),
+      csv: typeof csvValue === "string" ? csvValue : "",
+    });
+    if (!parsed.success) return validationFailure(parsed.error);
+
+    const context = await requirePermission("prayer:write", { requireAal2: true });
+    const configuration = await getPrayerConfigurationForAdmin(
+      context.supabase,
+      parsed.data.settingsId,
+    );
+    if (
+      !configuration ||
+      configuration.status !== "draft" ||
+      configuration.version !== parsed.data.expectedVersion
+    ) {
+      throw new AdminAccessError(
+        "conflict",
+        "This draft changed or is no longer editable. Reload before importing.",
+      );
+    }
+
+    const report = parseTimetableCsv(parsed.data.csv, {
+      effectiveFrom: configuration.effectiveFrom,
+      effectiveTo: configuration.effectiveTo,
+    });
+
+    const problems = report.errors.map((issue) =>
+      issue.line > 0 ? `Line ${issue.line}: ${issue.message}` : issue.message,
+    );
+    if (problems.length === 0) {
+      for (const entry of report.entries) {
+        for (const time of [entry.beginsAt, entry.congregationAt]) {
+          if (!time) continue;
+          const resolved = wallTimeToInstant(entry.date, time, configuration.timezone, "reject");
+          if (!resolved.ok) {
+            problems.push(
+              `${entry.date}: ${entry.prayer} ${time} is ${resolved.reason} in ${configuration.timezone} (clock change).`,
+            );
+          }
+        }
+      }
+    }
+    if (problems.length > 0) {
+      return {
+        status: "error",
+        message: `The file has ${problems.length} problem${problems.length === 1 ? "" : "s"}. Nothing was imported.`,
+        fieldErrors: { csv: problems.slice(0, 12) },
+      };
+    }
+
+    const summary = `${report.days} day${report.days === 1 ? "" : "s"} (${report.firstDate} to ${report.finalDate}), ${report.entries.length} dated entries`;
+    if (parsed.data.mode === "preview") {
+      return {
+        status: "success",
+        message: `Ready to import: ${summary}; no problems found. ${
+          parsed.data.replaceExisting
+            ? `All ${configuration.overrides.length} existing dated entries will be replaced.`
+            : "Entries for an existing date and prayer will be updated in place."
+        } Type the confirmation phrase and choose Import to write it.`,
+      };
+    }
+
+    if (formString(formData, "confirmation") !== "IMPORT TIMETABLE") {
+      return {
+        status: "error",
+        message: "Type “IMPORT TIMETABLE” exactly to write this file into the draft.",
+      };
+    }
+
+    const payload = report.entries.map((entry) => ({
+      prayer_date: entry.date,
+      prayer: entry.prayer,
+      begins_at: entry.beginsAt,
+      congregation_at: entry.congregationAt,
+      unavailable: false,
+      reason: `Imported committee timetable: ${parsed.data.sourceNote}`,
+    })) as Json;
+    const { data, error } = await context.supabase.rpc("import_prayer_overrides", {
+      p_settings_id: parsed.data.settingsId,
+      p_expected_version: parsed.data.expectedVersion,
+      p_overrides: payload,
+      p_replace_existing: parsed.data.replaceExisting,
+    });
+    if (error || !data?.[0]) prayerServiceError(error);
+    revalidatePrayerSurfaces(parsed.data.settingsId);
+    return {
+      status: "success",
+      message: `Imported ${summary} in one transaction. Review the preview and publish when the committee approves.`,
     };
   } catch (error) {
     return safeActionError(error);

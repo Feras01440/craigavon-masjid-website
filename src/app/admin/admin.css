@@ -370,6 +370,28 @@
   color: #982323;
   font-weight: 700;
 }
+.admin-field-errors {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+  color: #982323;
+  font-weight: 600;
+}
+.admin-field-errors li + li {
+  margin-top: 0.25rem;
+}
+.admin-code-sample {
+  overflow-x: auto;
+  margin: 0;
+  border: 1px solid var(--admin-line, #d8d3c6);
+  padding: 0.65rem 0.8rem;
+  background: #f6f4ee;
+  font-size: 0.85rem;
+}
+.admin-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
 .admin-checkbox {
   display: flex;
   align-items: center;

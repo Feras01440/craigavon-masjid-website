@@ -2,6 +2,7 @@ import Link from "next/link";
 import { z } from "zod";
 
 import { ConfirmedActionButton } from "@/components/admin/confirmed-action-button";
+import { PrayerImportForm } from "@/components/admin/prayer-import-form";
 import { PrayerOverrideForm } from "@/components/admin/prayer-override-form";
 import { PrayerPreview } from "@/components/admin/prayer-preview";
 import { PrayerPublishForm } from "@/components/admin/prayer-publish-form";
@@ -380,6 +381,11 @@ export default async function PrayerSettingsDetailPage({
         {isDraft && canWrite && (
           <div className="admin-section">
             <PrayerOverrideForm settingsId={configuration.id} version={configuration.version} />
+          </div>
+        )}
+        {isDraft && canWrite && (
+          <div className="admin-section">
+            <PrayerImportForm settingsId={configuration.id} version={configuration.version} />
           </div>
         )}
       </section>

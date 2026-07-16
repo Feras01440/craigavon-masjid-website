@@ -538,6 +538,15 @@ export type Database = {
         Args: { p_settings_id: string; p_expected_version: number; p_payload: Json };
         Returns: { override_id: string; settings_version: number }[];
       };
+      import_prayer_overrides: {
+        Args: {
+          p_settings_id: string;
+          p_expected_version: number;
+          p_overrides: Json;
+          p_replace_existing?: boolean;
+        };
+        Returns: { settings_version: number; imported_count: number }[];
+      };
       delete_prayer_override: {
         Args: { p_settings_id: string; p_expected_version: number; p_override_id: string };
         Returns: number;
