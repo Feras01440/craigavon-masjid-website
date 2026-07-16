@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
+  // sharp's native binaries live in optional @img/* packages that the
+  // standalone file trace misses under pnpm's layout on Linux; without them
+  // the media action's module fails to load at runtime and every upload dies
+  // in the admin error boundary. Copy them into the standalone output.
+  outputFileTracingIncludes: {
+    "/admin/**": [
+      "./node_modules/.pnpm/**/node_modules/sharp/**",
+      "./node_modules/.pnpm/**/node_modules/@img/**",
+    ],
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: "11mb",
