@@ -9,7 +9,7 @@ import {
   PublishedContentOmissionNotice,
   PublishedContentUnavailable,
 } from "@/components/site";
-import { HomePrayerSummary } from "@/components/prayer/home-prayer-summary";
+import { HomePrayerToday } from "@/components/prayer/home-prayer-today";
 import { publicJourneys, SITE_DESCRIPTION } from "@/content/public-copy";
 import { dateKeyInZone } from "@/lib/prayer/timezone";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
@@ -25,11 +25,18 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const now = new Date();
+  const todayKey = dateKeyInZone(now, "Europe/London");
+  // Eight days always reaches the next Friday, so the standing Jumuʿah row
+  // can be sourced from published data on any weekday.
   const [prayerBundle, updates, homepage] = await Promise.all([
-    getPublishedPrayerBundle(dateKeyInZone(now, "Europe/London"), 2),
+    getPublishedPrayerBundle(todayKey, 8),
     getPublishedContent(["news", "event"], { limit: 3 }),
     getPublicHomepageContent(),
   ]);
+  const todaySchedule =
+    prayerBundle.status === "available"
+      ? (prayerBundle.schedules.find((schedule) => schedule.date === todayKey) ?? null)
+      : null;
   return (
     <PublicShell>
       <section className="home-hero">
@@ -77,8 +84,8 @@ export default async function HomePage() {
               active, the website does not estimate congregation times.
             </p>
           </div>
-          {prayerBundle.status === "available" ? (
-            <HomePrayerSummary bundle={prayerBundle} now={now} />
+          {prayerBundle.status === "available" && todaySchedule ? (
+            <HomePrayerToday bundle={prayerBundle} today={todaySchedule} now={now} />
           ) : (
             <div className="approval-grid">
               <ApprovalCard

@@ -792,6 +792,145 @@ video {
   margin-bottom: 0;
 }
 
+.home-prayer {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+}
+
+.home-prayer__panel {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--copper);
+  background: var(--surface);
+}
+
+.home-prayer__table {
+  width: 100%;
+  min-width: 24rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-prayer__caption {
+  padding: 1.1rem 1.15rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--pine-deep);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.home-prayer__hijri {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.home-prayer__table th,
+.home-prayer__table td {
+  padding: 0.7rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.home-prayer__table thead th {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-prayer__table thead th:not(:first-child),
+.home-prayer__table td {
+  text-align: right;
+}
+
+.home-prayer__table tbody tr:last-child th,
+.home-prayer__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.home-prayer__table td {
+  color: var(--ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.home-prayer__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.home-prayer__arabic {
+  display: inline-block;
+  /* Physical margin: inline-start would resolve to the right edge of this
+     rtl span, leaving no gap after the preceding English name. */
+  margin-left: 0.55rem;
+  color: var(--ink-faint);
+  font-family: var(--font-arabic);
+  font-size: 1.05em;
+  font-weight: 400;
+}
+
+.home-prayer__next {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--pine);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-prayer__row--next th,
+.home-prayer__row--next td {
+  background: var(--pine-soft);
+}
+
+.home-prayer__row--jumuah th,
+.home-prayer__row--jumuah td {
+  border-top: 2px solid var(--line-strong);
+  background: var(--copper-soft);
+}
+
+.home-prayer__note {
+  display: block;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: normal;
+}
+
+.home-prayer__meta {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.home-prayer__meta .text-link {
+  margin-top: 0;
+}
+
+.home-prayer .next-prayer {
+  width: 100%;
+  margin-top: 0;
+}
+
 .public-form {
   display: grid;
   gap: 1.15rem;
@@ -1227,6 +1366,28 @@ video {
     grid-template-columns: 1fr;
   }
 
+  .home-prayer__table {
+    min-width: 0;
+  }
+
+  .home-prayer__table th,
+  .home-prayer__table td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .home-prayer__table td {
+    font-size: 1.05rem;
+  }
+
+  .home-prayer__caption {
+    font-size: 1.15rem;
+  }
+
+  .home-prayer__arabic {
+    display: block;
+    margin-left: 0;
+  }
+
   .published-content-card__dates {
     text-align: left;
   }
@@ -1299,7 +1460,8 @@ video {
   .published-content-warning,
   .published-faq-list > div,
   .status-panel,
-  .empty-state {
+  .empty-state,
+  .home-prayer__panel {
     border-width: 2px;
   }
 }
@@ -1343,7 +1505,9 @@ video {
   .public-form__field input,
   .public-form__field select,
   .public-form__field textarea,
-  .public-form__feedback {
+  .public-form__feedback,
+  .home-prayer__panel,
+  .home-prayer__next {
     border: 1px solid CanvasText;
     background: Canvas;
     color: CanvasText;
