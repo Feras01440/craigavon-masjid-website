@@ -115,6 +115,19 @@ export function validatePrayerSchedule(
 
     if (key === "sunrise") return;
     if (!prayer.congregationAt) {
+      if (prayer.joinedWith) {
+        // The joined partner's congregation is explicitly unavailable on this
+        // date; the joined prayer inherits that known state rather than
+        // blocking the whole timetable.
+        issues.push({
+          severity: "warning",
+          code: "joined-congregation-unavailable",
+          message: `${key} is prayed with ${prayer.joinedWith}, whose congregation is unavailable on this date.`,
+          date: schedule.date,
+          prayer: key,
+        });
+        return;
+      }
       issues.push({
         severity: "error",
         code: "missing-congregation",

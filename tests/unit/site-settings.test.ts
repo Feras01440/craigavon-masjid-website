@@ -6,20 +6,54 @@ import {
   validateManagedSettingValue,
 } from "@/lib/settings/site-settings";
 
+// Explicitly empty fixtures: the defaults now carry the owner-confirmed
+// public facts, so emptiness must be constructed rather than borrowed.
+const emptyIdentity = {
+  official_name: "",
+  public_masjid_name: "",
+  short_name: "",
+  default_meta_description: "",
+};
+const emptyContact = {
+  address_line_1: "",
+  address_line_2: "",
+  locality: "",
+  county: "",
+  postcode: "",
+  public_email: "",
+  public_phone: "",
+  public_whatsapp: "",
+  map_url: "",
+  directions: "",
+  access_information: "",
+  parking_information: "",
+  public_transport_information: "",
+};
+
 describe("managed site setting validation", () => {
   it("allows incomplete identity details to remain a private draft", () => {
+    expect(validateManagedSettingValue("site_identity", emptyIdentity, "draft").success).toBe(true);
+  });
+
+  it("publishes the owner-confirmed identity and contact defaults cleanly", () => {
     expect(
-      validateManagedSettingValue("site_identity", managedSettingDefaults.site_identity, "draft")
-        .success,
+      validateManagedSettingValue(
+        "site_identity",
+        managedSettingDefaults.site_identity,
+        "published",
+      ).success,
+    ).toBe(true);
+    expect(
+      validateManagedSettingValue(
+        "contact_information",
+        managedSettingDefaults.contact_information,
+        "published",
+      ).success,
     ).toBe(true);
   });
 
   it("prevents publishing identity details before both public names are confirmed", () => {
-    const result = validateManagedSettingValue(
-      "site_identity",
-      managedSettingDefaults.site_identity,
-      "published",
-    );
+    const result = validateManagedSettingValue("site_identity", emptyIdentity, "published");
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.issues.map((issue) => issue.path[0])).toEqual(
@@ -72,7 +106,7 @@ describe("managed site setting validation", () => {
     const result = validateManagedSettingValue(
       "contact_information",
       {
-        ...managedSettingDefaults.contact_information,
+        ...emptyContact,
         map_url: "http://example.org/map",
       },
       "draft",
@@ -82,14 +116,10 @@ describe("managed site setting validation", () => {
 
   it("publishes contact details only with a verified public route", () => {
     expect(
-      validateManagedSettingValue(
-        "contact_information",
-        managedSettingDefaults.contact_information,
-        "published",
-      ).success,
+      validateManagedSettingValue("contact_information", emptyContact, "published").success,
     ).toBe(false);
     const approved = {
-      ...managedSettingDefaults.contact_information,
+      ...emptyContact,
       public_email: "info@example.org",
       map_url: "https://example.org/map",
     };
@@ -103,7 +133,7 @@ describe("managed site setting validation", () => {
       validateManagedSettingValue(
         "site_identity",
         {
-          ...managedSettingDefaults.site_identity,
+          ...emptyIdentity,
           official_name: "Muslim Association of Craigavon",
         },
         "published",
@@ -113,7 +143,7 @@ describe("managed site setting validation", () => {
       validateManagedSettingValue(
         "site_identity",
         {
-          ...managedSettingDefaults.site_identity,
+          ...emptyIdentity,
           official_name: "Muslim Association of Craigavon",
           public_masjid_name: "Craigavon Masjid",
         },

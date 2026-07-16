@@ -56,7 +56,7 @@ export default async function HomePage() {
           </div>
 
           <aside className="publication-note" aria-labelledby="publication-standard">
-            <p className="publication-note__label">Information standard</p>
+            <p className="publication-note__label">Essentials</p>
             <h2 id="publication-standard">{homepage.information_heading}</h2>
             <ul>
               {homepage.information_points.filter(Boolean).map((point) => (

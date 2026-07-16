@@ -53,26 +53,28 @@ describe("prayer input hardening", () => {
       const configuration = prayerConfigurationFixture({
         effectiveFrom: firstDate,
         effectiveTo: finalDate,
-        latitude: 54.45,
-        longitude: -6.39,
-        calculationMethod: "umm_al_qura",
-        madhab: "hanafi",
-        highLatitudeRule: "middle_of_night",
+        // The demo timetable mirrors the masjid's real structural
+        // arrangement: Moonsighting Committee, standard Asr,
+        // seventh-of-the-night, Isha prayed jointly with Maghrib and a
+        // 13:00 Jumuah — so every year from 2020 to 2100 proves the
+        // production configuration shape publishes cleanly.
+        latitude: 54.4478,
+        longitude: -6.3712,
+        calculationMethod: "moonsighting_committee",
+        madhab: "standard",
+        highLatitudeRule: "seventh_of_night",
         congregationRules: {
-          fajr: { type: "offset", minutes: 30, roundTo: 5 },
-          dhuhr: { type: "offset", minutes: 20, roundTo: 5 },
-          asr: { type: "offset", minutes: 15, roundTo: 5 },
-          maghrib: { type: "offset", minutes: 10, roundTo: 5 },
-          // Thirty minutes is the largest Isha offset anywhere in the SQL
-          // seed, so applying it all year is stricter than its seasonal use.
-          isha: { type: "offset", minutes: 30, roundTo: 5 },
+          fajr: { type: "offset", minutes: 60, roundTo: 5 },
+          dhuhr: { type: "offset", minutes: 25, roundTo: 5 },
+          asr: { type: "offset", minutes: 5, roundTo: 1 },
+          maghrib: { type: "offset", minutes: 5, roundTo: 1 },
+          isha: { type: "joined", with: "maghrib" },
         },
         jumuahSessions: [
           {
             id: "33333333-3333-4333-8333-333333333333",
-            label: "[LOCAL DEMO] Friday session",
-            khutbahTime: "13:50",
-            prayerTime: "14:00",
+            label: "[LOCAL DEMO] Jumuʿah",
+            khutbahTime: "13:00",
             displayOrder: 1,
           },
         ],
@@ -98,14 +100,12 @@ describe("prayer input hardening", () => {
 
     expect(errors).toEqual([]);
     expect(completeWorkflowMigration).toContain(
-      "'Europe/London', 54.45, -6.39, 'umm_al_qura', 'hanafi', 'middle_of_night'",
+      "'Europe/London', 54.4478, -6.3712, 'moonsighting_committee', 'standard', 'seventh_of_night'",
     );
-    expect(completeWorkflowMigration).toContain("'[LOCAL DEMO] Friday session', '13:50', '14:00'");
+    expect(completeWorkflowMigration).toContain("'[LOCAL DEMO] Jumuʿah', '13:00', null");
     expect(completeWorkflowMigration).not.toContain("[LOCAL DEMO] Second Friday session");
     expect(completeWorkflowMigration).toContain("v_prayer_id, current_date + 1, 'maghrib', true");
-    expect(completeWorkflowMigration).toContain(
-      '"isha":{"type":"offset","minutes":30,"roundTo":5}',
-    );
+    expect(completeWorkflowMigration).toContain('"isha":{"type":"joined","with":"maghrib"}');
     expect(completeWorkflowMigration).not.toContain('"latest"');
   }, 30_000);
 

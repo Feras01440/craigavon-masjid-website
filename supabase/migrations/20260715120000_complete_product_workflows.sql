@@ -403,9 +403,14 @@ begin
     calculation_library_version, created_by, updated_by, demo_local_only
   ) values (
     '[LOCAL DEMO] Prayer calculation example', 'draft', current_date - 30, current_date + 334,
-    'Europe/London', 54.45, -6.39, 'umm_al_qura', 'hanafi', 'middle_of_night',
+    -- The structural arrangement mirrors the masjid's real practice
+    -- (Moonsighting Committee, standard Asr, seventh-of-the-night, Isha
+    -- prayed jointly with Maghrib, Jumuah 13:00) so local previews and the
+    -- acceptance suite exercise the configuration that production will use;
+    -- the values remain demo-marked and are not committee approvals.
+    'Europe/London', 54.4478, -6.3712, 'moonsighting_committee', 'standard', 'seventh_of_night',
     '{"fajr":0,"sunrise":0,"dhuhr":0,"asr":0,"maghrib":0,"isha":0}'::jsonb,
-    '{"fajr":{"type":"offset","minutes":30,"roundTo":5},"dhuhr":{"type":"offset","minutes":20,"roundTo":5},"asr":{"type":"offset","minutes":15,"roundTo":5},"maghrib":{"type":"offset","minutes":10,"roundTo":5},"isha":{"type":"offset","minutes":20,"roundTo":5}}'::jsonb,
+    '{"fajr":{"type":"offset","minutes":60,"roundTo":5},"dhuhr":{"type":"offset","minutes":25,"roundTo":5},"asr":{"type":"offset","minutes":5,"roundTo":1},"maghrib":{"type":"offset","minutes":5,"roundTo":1},"isha":{"type":"joined","with":"maghrib"}}'::jsonb,
     0, '[LOCAL DEMO] Calculated example — not approved prayer data',
     'Generated solely to exercise the local prayer engine.', 'adhan', '4.4.4', p_actor_id, p_actor_id, true
   ) returning id into v_prayer_id;
@@ -413,7 +418,7 @@ begin
   insert into public.jumuah_sessions (
     prayer_settings_id, label, khutbah_time, prayer_time, display_order, notes
   ) values
-    (v_prayer_id, '[LOCAL DEMO] Friday session', '13:50', '14:00', 1, 'Sample only; not a real Jumuah time.');
+    (v_prayer_id, '[LOCAL DEMO] Jumuʿah', '13:00', null, 1, 'Sample only; not a committee approval.');
 
   insert into public.prayer_overrides (
     prayer_settings_id, prayer_date, prayer, unavailable, reason, created_by

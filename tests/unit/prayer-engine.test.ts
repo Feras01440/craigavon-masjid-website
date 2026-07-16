@@ -179,14 +179,16 @@ describe("approved prayer schedule generation", () => {
       "2026-01-15",
     );
     expect(unavailable.prayers.isha.congregationAt).toBeNull();
-    expect(
-      validatePrayerSchedule(unavailable).some(
-        (issue) =>
-          issue.prayer === "isha" &&
-          issue.code === "missing-congregation" &&
-          issue.severity === "error",
-      ),
-    ).toBe(true);
+    // A joined prayer inherits its partner's explicit unavailability as a
+    // known state: surfaced as a warning, never invented, and never a
+    // publication blocker for the rest of the timetable.
+    const issues = validatePrayerSchedule(unavailable).filter((issue) => issue.prayer === "isha");
+    expect(issues).toEqual([
+      expect.objectContaining({
+        code: "joined-congregation-unavailable",
+        severity: "warning",
+      }),
+    ]);
   });
 
   it("marks a date-specific unavailable prayer without fabricating times", () => {

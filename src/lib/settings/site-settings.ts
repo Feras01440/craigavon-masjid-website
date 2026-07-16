@@ -161,40 +161,45 @@ export type ManagedSettingValue = ManagedSettingValueMap[ManagedSettingKey];
 
 export const managedSettingDefaults: ManagedSettingValueMap = {
   site_identity: {
-    official_name: "",
-    public_masjid_name: "",
-    short_name: "",
-    default_meta_description: "",
+    official_name: "Muslim Association of Craigavon",
+    public_masjid_name: "Craigavon Masjid",
+    short_name: "Craigavon Masjid",
+    default_meta_description:
+      "Craigavon Masjid — prayer times, Jumuʿah, education and community life with the Muslim Association of Craigavon, County Armagh. All are welcome.",
   },
   homepage_content: {
-    eyebrow: "Prayer and community information",
+    eyebrow: "As-salāmu ʿalaykum — welcome",
     heading: "Muslim Association of Craigavon",
     introduction:
-      "Find current prayer times, visiting information and Association notices in one place.",
+      "The masjid at the heart of County Armagh — daily prayers, Jumuʿah, education and community life for Craigavon, Portadown and Lurgan. Whether you pray with us five times a day or have never stepped inside a mosque, you are welcome here.",
     primary_cta_label: "View prayer times",
     primary_cta_route: "prayer-times",
-    secondary_cta_label: "About the Association",
-    secondary_cta_route: "about",
-    information_heading: "Clear, current information",
+    secondary_cta_label: "Plan your visit",
+    secondary_cta_route: "visit",
+    information_heading: "At a glance",
     information_points: [
-      "Prayer times include their source and last update.",
-      "Time-sensitive notices stop appearing after their expiry.",
-      "Contact and visit details are shown only when confirmed.",
+      "16 Legahory Centre, Craigavon BT65 5BE",
+      "Jumuʿah (Friday prayer): 13:00",
+      "Visitors of all faiths and none are welcome",
     ],
   },
+  /* Prefill for the committee's contact form; the public site serves these
+     only after the committee reviews and publishes the setting. */
   contact_information: {
-    address_line_1: "",
+    address_line_1: "16 Legahory Centre",
     address_line_2: "",
-    locality: "",
-    county: "",
-    postcode: "",
-    public_email: "",
-    public_phone: "",
-    public_whatsapp: "",
-    map_url: "",
-    directions: "",
-    access_information: "",
-    parking_information: "",
+    locality: "Craigavon",
+    county: "County Armagh",
+    postcode: "BT65 5BE",
+    public_email: "abuzid@gmail.com",
+    public_phone: "+44 7400 088823",
+    public_whatsapp: "+44 7400 088823",
+    map_url:
+      "https://www.google.com/maps/search/?api=1&query=Craigavon%20Masjid%2C%2016%20Legahory%20Centre%2C%20Craigavon%20BT65%205BE",
+    directions:
+      "The Legahory Centre is in the Brownlow area of central Craigavon, roughly midway between Portadown and Lurgan — about ten minutes by car from either town, and about thirty minutes from Belfast via the M1.",
+    access_information: "Step-free access to the prayer hall; a women's prayer space is available.",
+    parking_information: "Free parking is available at the Legahory Centre.",
     public_transport_information: "",
   },
   navigation_footer: {
