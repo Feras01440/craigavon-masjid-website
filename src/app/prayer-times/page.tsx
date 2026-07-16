@@ -20,9 +20,9 @@ const names = {
   fajr: ["Fajr", "الفجر"],
   sunrise: ["Sunrise", "الشروق"],
   dhuhr: ["Dhuhr", "الظهر"],
-  asr: ["Asr", "العصر"],
+  asr: ["ʿAsr", "العصر"],
   maghrib: ["Maghrib", "المغرب"],
-  isha: ["Isha", "العشاء"],
+  isha: ["ʿIshāʾ", "العشاء"],
 } as const;
 
 function monthParts(value: string | undefined): { year: number; month: number } {
@@ -75,7 +75,7 @@ function TodayCards({ schedule }: { schedule: PrayerSchedule }): React.ReactNode
       </div>
       {schedule.isFriday && schedule.jumuah.length > 0 ? (
         <section className={styles.jumuah} aria-labelledby="jumuah-heading">
-          <h2 id="jumuah-heading">Friday prayer (Jumu&apos;ah)</h2>
+          <h2 id="jumuah-heading">Friday prayer (Jumuʿah)</h2>
           <dl className={styles.jumuahList}>
             {schedule.jumuah.map((session) => (
               <div key={`${session.label}-${session.khutbahAt}`}>

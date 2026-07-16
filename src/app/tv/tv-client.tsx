@@ -26,9 +26,9 @@ const names = {
   fajr: ["Fajr", "الفجر"],
   sunrise: ["Sunrise", "الشروق"],
   dhuhr: ["Dhuhr", "الظهر"],
-  asr: ["Asr", "العصر"],
+  asr: ["ʿAsr", "العصر"],
   maghrib: ["Maghrib", "المغرب"],
-  isha: ["Isha", "العشاء"],
+  isha: ["ʿIshāʾ", "العشاء"],
 } as const;
 
 const cacheKey = "mac-tv-last-known-good-v1";
