@@ -130,8 +130,13 @@ export async function confirmMfaAction(
     if (factorsError || !factors) {
       throw new AdminAccessError("service", "Authenticator settings could not be loaded.");
     }
+    // A factor that is still being enrolled is "unverified", and listFactors()
+    // exposes unverified factors only through `all` (`totp` lists verified
+    // ones), so the first-time confirmation must search `all`.
     const requestedFactor = parsed.data.factorId
-      ? factors.totp.find((factor) => factor.id === parsed.data.factorId)
+      ? factors.all.find(
+          (factor) => factor.factor_type === "totp" && factor.id === parsed.data.factorId,
+        )
       : factors.totp.find((factor) => factor.status === "verified");
     if (!requestedFactor) {
       throw new AdminAccessError("validation", "Set up an authenticator before confirming a code.");
