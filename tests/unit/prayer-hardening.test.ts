@@ -223,7 +223,10 @@ describe("bounded publication horizon", () => {
     ).toBe(false);
   });
 
-  it("fails closed when any requested date lacks published coverage", () => {
+  it("serves the covered prefix and stops at the first uncovered date", () => {
+    // Valid published days must remain available right up to a timetable's
+    // end date; only the uncovered tail is withheld. The bundle's coverage
+    // descriptor tells callers the window is incomplete.
     const first = prayerConfigurationFixture({
       id: "41111111-1111-4111-8111-111111111111",
       effectiveFrom: "2026-01-01",
@@ -234,7 +237,20 @@ describe("bounded publication horizon", () => {
       effectiveFrom: "2026-01-04",
       effectiveTo: "2026-01-05",
     });
-    expect(buildContiguousPublishedSchedules([first, gappedSecond], "2026-01-01", 5)).toBeNull();
+    expect(
+      buildContiguousPublishedSchedules([first, gappedSecond], "2026-01-01", 5).map(
+        (schedule) => schedule.date,
+      ),
+    ).toEqual(["2026-01-01", "2026-01-02"]);
+  });
+
+  it("returns nothing when the first requested date is uncovered", () => {
+    const future = prayerConfigurationFixture({
+      id: "81111111-1111-4111-8111-111111111111",
+      effectiveFrom: "2026-01-04",
+      effectiveTo: "2026-01-05",
+    });
+    expect(buildContiguousPublishedSchedules([future], "2026-01-01", 5)).toEqual([]);
   });
 
   it("returns the exact requested sequence across adjacent approved configurations", () => {

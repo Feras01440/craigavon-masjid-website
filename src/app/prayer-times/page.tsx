@@ -193,6 +193,17 @@ export default async function PrayerTimesPage({
               </div>
             </div>
 
+            {monthBundle.status === "available" &&
+            monthBundle.coverage &&
+            !monthBundle.coverage.complete ? (
+              <p className={styles.source} role="note">
+                The approved timetable for this month currently ends on{" "}
+                <time dateTime={monthBundle.coverage.endsOn}>{monthBundle.coverage.endsOn}</time>.
+                Later dates will appear here as soon as the next committee-approved timetable is
+                published.
+              </p>
+            ) : null}
+
             {schedules.length > 0 ? (
               <div
                 className={styles.tableRegion}

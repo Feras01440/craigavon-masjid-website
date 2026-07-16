@@ -261,7 +261,9 @@ export function TvClient({
             }).format(now)}
           </time>
           {display.show_hijri_date ? (
-            <span>{today?.hijriLabel ?? formatHijriDate(dateKey, 0)}</span>
+            <span>
+              {today?.hijriLabel ?? formatHijriDate(dateKey, schedules[0]?.hijriAdjustment ?? 0)}
+            </span>
           ) : null}
         </div>
       </header>

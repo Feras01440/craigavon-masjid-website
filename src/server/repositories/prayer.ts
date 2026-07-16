@@ -128,7 +128,11 @@ export function buildContiguousPublishedSchedules(
   configurations: PrayerConfiguration[],
   firstDate: string,
   days: number,
-): PrayerSchedule[] | null {
+): PrayerSchedule[] {
+  // Return the contiguous covered prefix of the requested window. Valid
+  // published days must never disappear merely because a timetable is
+  // approaching its end date; callers surface the shortfall through the
+  // bundle's coverage descriptor instead of failing the whole window.
   const schedules: PrayerSchedule[] = [];
   for (let index = 0; index < days; index += 1) {
     const date = addDaysToDateKey(firstDate, index);
@@ -137,12 +141,12 @@ export function buildContiguousPublishedSchedules(
       .find(
         (item) => item.effectiveFrom <= date && (!item.effectiveTo || item.effectiveTo >= date),
       );
-    if (!configuration) return null;
+    if (!configuration) break;
     const schedule = buildPrayerSchedule(configuration, date);
-    if (schedule.date !== date) return null;
+    if (schedule.date !== date) break;
     schedules.push(schedule);
   }
-  return schedules.length === days ? schedules : null;
+  return schedules;
 }
 
 export async function getPublishedPrayerBundle(
@@ -209,10 +213,10 @@ export async function getPublishedPrayerBundle(
     });
 
     const schedules = buildContiguousPublishedSchedules(configurations, firstDate, days);
-    if (!schedules) {
+    if (schedules.length === 0) {
       return unavailable(
         "not_approved",
-        "A complete committee-approved prayer timetable is not published for every requested date.",
+        "No committee-approved prayer timetable is published for this period.",
       );
     }
 
@@ -249,6 +253,12 @@ export async function getPublishedPrayerBundle(
       lastUpdatedAt,
       schedules,
       issues,
+      coverage: {
+        requestedDays: days,
+        coveredDays: schedules.length,
+        endsOn: schedules[schedules.length - 1]!.date,
+        complete: schedules.length === days,
+      },
     };
   } catch (error) {
     if (error instanceof SupabaseConfigurationError) {

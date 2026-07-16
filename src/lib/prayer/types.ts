@@ -338,12 +338,25 @@ export type PrayerIssue = {
   prayer?: PrayerKey;
 };
 
+export type PrayerCoverage = {
+  requestedDays: number;
+  coveredDays: number;
+  /** Final date (YYYY-MM-DD) with published coverage in this bundle. */
+  endsOn: string;
+  complete: boolean;
+};
+
 export type PrayerBundle = {
   status: "available";
   generatedAt: string;
   lastUpdatedAt: string;
   schedules: PrayerSchedule[];
   issues: PrayerIssue[];
+  /**
+   * Optional so that cached last-known-good payloads written before this
+   * field existed (e.g. the TV display's browser store) remain readable.
+   */
+  coverage?: PrayerCoverage;
 };
 
 export type PrayerUnavailable = {

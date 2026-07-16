@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { roleHasPermission, ROLE_LABELS, type Permission } from "@/lib/permissions";
 import { requireAdmin } from "@/lib/auth/session";
+import { coverageOutlook } from "@/lib/prayer/coverage";
+import { dateKeyInZone } from "@/lib/prayer/timezone";
 
 type Summary = {
   label: string;
@@ -66,6 +68,35 @@ export default async function AdminDashboardPage() {
       href: "/admin/prayer-times",
       permission: "prayer:read",
       detail: "Configurations awaiting review or publication",
+    });
+
+    const { data: publishedRanges, error: rangesError } = await context.supabase
+      .from("prayer_settings")
+      .select("effective_from, effective_to")
+      .eq("status", "published");
+    const outlook = rangesError
+      ? null
+      : coverageOutlook(
+          (publishedRanges ?? []).map((row) => ({
+            effectiveFrom: String(row.effective_from),
+            effectiveTo: row.effective_to === null ? null : String(row.effective_to),
+          })),
+          dateKeyInZone(new Date(), "Europe/London"),
+        );
+    summaries.push({
+      label: "Published prayer coverage",
+      value: outlook ? outlook.daysCovered : null,
+      href: "/admin/prayer-times",
+      permission: "prayer:read",
+      detail: !outlook
+        ? "Coverage could not be checked"
+        : outlook.daysCovered === 0
+          ? "No approved timetable covers today — the public site and TV show unavailable"
+          : outlook.openEnded
+            ? `Days covered; approved times continue beyond ${outlook.coveredThrough}`
+            : outlook.daysCovered <= 14
+              ? `Days left — approved times end on ${outlook.coveredThrough}; publish the next timetable soon`
+              : `Days covered; approved times published up to ${outlook.coveredThrough}`,
     });
   }
   if (roleHasPermission(context.role, "enquiries:read")) {
