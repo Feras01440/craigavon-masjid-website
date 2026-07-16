@@ -306,11 +306,17 @@ test.describe("clean local demonstration acceptance", () => {
       await expect(page.getByText(/Changes saved as version/)).toBeVisible();
       await page.reload();
       await page.getByRole("button", { name: "Restore as draft" }).first().click();
+      // Wait for the server action's re-render before reloading: an immediate
+      // reload aborts the in-flight action POST and the restore never commits.
+      await expect(page.locator("#content-title")).toHaveValue(initialTitle);
       await page.reload();
       await expect(page.locator("#content-title")).toHaveValue(initialTitle);
 
       await page.getByRole("button", { name: "Archive item" }).click();
       await page.getByRole("button", { name: "Yes, archive it" }).click();
+      await expect(
+        page.getByRole("heading", { name: "This item is not public or editable" }),
+      ).toBeVisible();
       await page.reload();
       await expect(
         page.getByRole("heading", { name: "This item is not public or editable" }),
@@ -319,6 +325,7 @@ test.describe("clean local demonstration acceptance", () => {
       const row = page.getByRole("row").filter({ hasText: initialTitle });
       await row.getByRole("link", { name: /Review or restore/ }).click();
       await page.getByRole("button", { name: "Restore as draft" }).click();
+      await expect(page.locator("#content-status")).toHaveValue("draft");
       await page.reload();
       await expect(page.locator("#content-status")).toHaveValue("draft");
     });
