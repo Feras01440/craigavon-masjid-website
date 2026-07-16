@@ -11,19 +11,23 @@ checks below.
 
 ## Keep this private contact sheet outside Git
 
-| Responsibility             | Primary        | Backup         | Approved contact route |
-| -------------------------- | -------------- | -------------- | ---------------------- |
-| Incident/release decision  | To be assigned | To be assigned | Private                |
-| Technical/Vercel           | To be assigned | To be assigned | Private                |
-| Supabase/database/Auth     | To be assigned | To be assigned | Private                |
-| Prayer approval            | To be assigned | To be assigned | Private                |
-| Emergency-message approval | To be assigned | To be assigned | Private                |
-| Privacy/safeguarding       | To be assigned | To be assigned | Private                |
-| DNS/email                  | To be assigned | To be assigned | Private                |
-| Mosque TV/device           | To be assigned | To be assigned | Private                |
+The platform is sized for a small volunteer team. Two people carry every technical duty between
+them; the rest is ordinary committee work done through the dashboard. One person may hold several
+duties.
 
-Unassigned or unmonitored roles are launch blockers. Do not commit names, phone numbers, recovery
-codes, or provider credentials to this file.
+| Duty                       | Held by                                 | Covers                                                                   |
+| -------------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| Technical owner — primary  | To be assigned                          | Vercel, Supabase, Auth, DNS/email, releases, backups, incident decisions |
+| Technical owner — backup   | To be assigned                          | The same duties whenever the primary is unavailable                      |
+| Prayer editor(s)           | To be assigned                          | Timetable drafts, overrides, Jumuʿah changes, prayer publication         |
+| Content editor(s)          | To be assigned                          | Announcements, events, pages, media                                      |
+| Enquiries access           | To be assigned                          | The private enquiry queue (authenticator-confirmed accounts only)        |
+| Emergency-message approval | Any committee officer + technical owner | Urgent public and TV notices                                             |
+| TV/device caretaker        | To be assigned                          | The screen inside the masjid (power, browser, network)                   |
+
+Launch requires the two technical-owner slots and at least one prayer editor to be filled and
+reachable; the remaining duties may be shared or assigned later. Do not commit names, phone numbers,
+recovery codes, or provider credentials to this file.
 
 ## Severity and first response
 

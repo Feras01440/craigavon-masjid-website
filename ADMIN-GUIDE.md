@@ -1,5 +1,27 @@
 # Committee administration guide
 
+## One-page quick reference
+
+| I want to…                      | Do this                                                                                                                                 |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Sign in                         | Go to `/admin/sign-in`, enter your committee email, open the emailed link on the same device                                            |
+| Unlock protected actions        | **Security** → enter your authenticator's six-digit code (needed once per session)                                                      |
+| Post an announcement            | **Content** → _Create content_ → type “announcement” → title + text → _Published now_ → _Create content_                                |
+| Add an event                    | Same as above with type “event”; give the date, time and location — it disappears from the site after it ends                           |
+| Post an urgent notice (also TV) | **Content** → type “emergency notice” → publish; remove it the same way when over                                                       |
+| Change the Jumuʿah time         | **Prayer timetable** → open the current configuration → _Jumuʿah sessions_ → edit the time → save draft → publish with the typed phrase |
+| Change an iqāmah rule           | **Prayer timetable** → _Congregation rules_ → adjust (fixed time, minutes after start, or joined) → save draft → preview → publish      |
+| Fix one day's times             | **Prayer timetable** → _Dated overrides_ → add the date, prayer and corrected time with a short reason                                  |
+| Import a year's timetable       | **Prayer timetable** → _Import a committee timetable_ → paste the rows → _Check the file_ → type `IMPORT TIMETABLE` → import → publish  |
+| Undo a content mistake          | Open the item → _Revisions_ → _Restore as draft_ on the version you want back                                                           |
+| Answer enquiries                | **Enquiries** (authenticator confirmation required — the queue holds personal data)                                                     |
+| Add or remove an administrator  | **People and access** (super administrators only)                                                                                       |
+
+Publishing prayer timetables always asks for a typed confirmation phrase and an approval note — that
+friction is deliberate. Everything else is a normal save.
+
+---
+
 This guide describes the complete dashboard. The clean local product environment supplies safe
 passwordless role accounts and labelled demonstration data; a hosted production environment still
 requires the approved launch configuration.

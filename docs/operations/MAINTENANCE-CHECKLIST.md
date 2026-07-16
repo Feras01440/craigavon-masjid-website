@@ -6,21 +6,24 @@ magic links, or recovery codes in the record.
 
 ## Every operating day
 
-- [ ] Visually compare today's prayer and congregation/Jumu'ah information with the
-      committee-approved source.
-- [ ] Check `/api/prayer?days=1`, `/api/display`, `/prayer-times`, and `/tv` for availability,
-      matching date, correct Europe/London times, and recent update timestamp.
-- [ ] Check `/api/health` for application configuration/database reachability; investigate `503`
-      without treating a `200` as proof that prayer or public content is correct.
-- [ ] Check the mosque TV's network/cache label, device clock, full-screen state, and readability
-      from the prayer hall.
-- [ ] Review active emergency and temporary notices; remove or correct anything no longer current.
-- [ ] Review provider/service alerts and sustained public/admin errors through the approved
-      privacy-safe route.
-- [ ] Confirm the duty and backup contacts are reachable for prayer, technical, and emergency
-      decisions.
+No daily engineering ritual is required: expired notices remove themselves, prayer surfaces fail
+closed rather than show unapproved data, the dashboard warns when published prayer coverage runs
+low, and `/api/health` reports configuration and database reachability. The one daily item is a
+two-minute human glance that anyone attending the masjid can do:
+
+- [ ] Glance at the mosque TV (or `/tv` on a phone): today's date is shown, the times match the
+      approved source, and no stale emergency notice is displayed. Report anything wrong to the
+      technical owner.
+
+Everything formerly listed here daily is covered by the weekly checks below or by the platform's
+fail-closed behaviour in between.
 
 ## Every week
+
+- [ ] From a clean browser session, check `/`, `/prayer-times`, `/api/health`, and `/tv` for
+      availability, matching Europe/London date and times, and a recent update timestamp.
+- [ ] Review active emergency and temporary notices; remove or correct anything no longer current,
+      and confirm the duty contacts for prayer, technical, and emergency decisions remain reachable.
 
 - [ ] Review planned and expiring content for the next four weeks. Scheduled records become public
       through their validated publication window without a status-promotion job; verify the exact
