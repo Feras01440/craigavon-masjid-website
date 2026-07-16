@@ -338,8 +338,12 @@ test.describe("clean local demonstration acceptance", () => {
       await page.locator("#media-file").setInputFiles({
         name: "local-acceptance.png",
         mimeType: "image/png",
+        // A sharp-generated 8x8 PNG proven to survive the exact upload
+        // pipeline (failOn:"error" metadata + re-encode). The previous 1x1
+        // fixture had a corrupt IDAT that browsers tolerate but libpng
+        // rejects, so every upload failed inside the pipeline.
         buffer: Buffer.from(
-          "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Z2S8AAAAASUVORK5CYII=",
+          "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAEUlEQVQImWMQtzLEihiGlgQArPwggSZMKfcAAAAASUVORK5CYII=",
           "base64",
         ),
       });
