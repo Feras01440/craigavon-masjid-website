@@ -324,6 +324,9 @@ test.describe("clean local demonstration acceptance", () => {
       await page.goto("/admin/content?view=archive");
       const row = page.getByRole("row").filter({ hasText: initialTitle });
       await row.getByRole("link", { name: /Review or restore/ }).click();
+      // This restore confirms through a native window.confirm dialog, which
+      // Playwright dismisses (cancelling the submit) unless accepted.
+      page.once("dialog", (dialog) => void dialog.accept());
       await page.getByRole("button", { name: "Restore as draft" }).click();
       await expect(page.locator("#content-status")).toHaveValue("draft");
       await page.reload();
