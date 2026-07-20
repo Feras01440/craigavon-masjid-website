@@ -17,7 +17,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!validMonth(month)) return new NextResponse("Invalid month.", { status: 400 });
   const [year, monthNumber] = month.split("-").map(Number) as [number, number];
   const days = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
-  const bundle = await getPublishedPrayerBundle(`${month}-01`, days);
+  const bundle = await getPublishedPrayerBundle(`${month}-01`, days, { allowLeadingGap: true });
   if (bundle.status !== "available") {
     return new NextResponse(bundle.message, {
       status: 503,

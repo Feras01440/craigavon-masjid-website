@@ -253,6 +253,21 @@ describe("bounded publication horizon", () => {
     expect(buildContiguousPublishedSchedules([future], "2026-01-01", 5)).toEqual([]);
   });
 
+  it("renders a timetable that begins mid-window when a leading gap is allowed", () => {
+    // Month views pass allowLeadingGap so a timetable published from the 17th
+    // still shows 17th-onward instead of failing the whole month closed.
+    const future = prayerConfigurationFixture({
+      id: "91111111-1111-4111-8111-111111111111",
+      effectiveFrom: "2026-01-04",
+      effectiveTo: "2026-01-05",
+    });
+    expect(
+      buildContiguousPublishedSchedules([future], "2026-01-01", 6, { allowLeadingGap: true }).map(
+        (schedule) => schedule.date,
+      ),
+    ).toEqual(["2026-01-04", "2026-01-05"]);
+  });
+
   it("returns the exact requested sequence across adjacent approved configurations", () => {
     const first = prayerConfigurationFixture({
       id: "61111111-1111-4111-8111-111111111111",

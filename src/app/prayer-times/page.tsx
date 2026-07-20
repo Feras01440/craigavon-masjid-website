@@ -111,7 +111,8 @@ export default async function PrayerTimesPage({
   const firstDate = `${monthKey(year, month)}-01`;
   const count = daysInMonth(year, month);
   const [monthBundle, todayBundle] = await Promise.all([
-    getPublishedPrayerBundle(firstDate, count),
+    // A timetable that begins mid-month still renders from its first day.
+    getPublishedPrayerBundle(firstDate, count, { allowLeadingGap: true }),
     getPublishedPrayerBundle(dateKeyInZone(new Date(), "Europe/London"), 2),
   ]);
   const monthLabel = new Intl.DateTimeFormat("en-GB", {
@@ -180,9 +181,18 @@ export default async function PrayerTimesPage({
               </div>
             </div>
 
+            {schedules.length > 0 && schedules[0]!.date !== firstDate ? (
+              <p className={styles.source} role="note">
+                This month&apos;s timetable begins on{" "}
+                <time dateTime={schedules[0]!.date}>{schedules[0]!.gregorianLabel}</time>.
+              </p>
+            ) : null}
             {monthBundle.status === "available" &&
             monthBundle.coverage &&
-            !monthBundle.coverage.complete ? (
+            !monthBundle.coverage.complete &&
+            schedules.length > 0 &&
+            schedules[schedules.length - 1]!.date !==
+              `${monthKey(year, month)}-${String(count).padStart(2, "0")}` ? (
               <p className={styles.source} role="note">
                 This month&apos;s timetable currently ends on{" "}
                 <time dateTime={monthBundle.coverage.endsOn}>{monthBundle.coverage.endsOn}</time>.

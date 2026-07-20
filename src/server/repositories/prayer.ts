@@ -128,12 +128,16 @@ export function buildContiguousPublishedSchedules(
   configurations: PrayerConfiguration[],
   firstDate: string,
   days: number,
+  options: { allowLeadingGap?: boolean } = {},
 ): PrayerSchedule[] {
-  // Return the contiguous covered prefix of the requested window. Valid
+  // Return the contiguous covered run inside the requested window. Valid
   // published days must never disappear merely because a timetable is
   // approaching its end date; callers surface the shortfall through the
   // bundle's coverage descriptor instead of failing the whole window.
+  // With allowLeadingGap (used by month views), a timetable that begins
+  // mid-window still renders from its first covered day.
   const schedules: PrayerSchedule[] = [];
+  let started = false;
   for (let index = 0; index < days; index += 1) {
     const date = addDaysToDateKey(firstDate, index);
     const configuration = [...configurations]
@@ -141,9 +145,16 @@ export function buildContiguousPublishedSchedules(
       .find(
         (item) => item.effectiveFrom <= date && (!item.effectiveTo || item.effectiveTo >= date),
       );
-    if (!configuration) break;
+    if (!configuration) {
+      if (!started && options.allowLeadingGap) continue;
+      break;
+    }
     const schedule = buildPrayerSchedule(configuration, date);
-    if (schedule.date !== date) break;
+    if (schedule.date !== date) {
+      if (!started && options.allowLeadingGap) continue;
+      break;
+    }
+    started = true;
     schedules.push(schedule);
   }
   return schedules;
@@ -152,6 +163,7 @@ export function buildContiguousPublishedSchedules(
 export async function getPublishedPrayerBundle(
   firstDate: string,
   days: number,
+  options: { allowLeadingGap?: boolean } = {},
 ): Promise<PrayerApiResponse> {
   const finalDate = addDaysToDateKey(firstDate, days - 1);
   try {
@@ -212,7 +224,7 @@ export async function getPublishedPrayerBundle(
       );
     });
 
-    const schedules = buildContiguousPublishedSchedules(configurations, firstDate, days);
+    const schedules = buildContiguousPublishedSchedules(configurations, firstDate, days, options);
     if (schedules.length === 0) {
       return unavailable(
         "not_approved",
