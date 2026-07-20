@@ -6,10 +6,10 @@ type StatusPanelProps = {
   children: ReactNode;
 };
 
-export function StatusPanel({ label = "Current status", title, children }: StatusPanelProps) {
+export function StatusPanel({ label, title, children }: StatusPanelProps) {
   return (
     <aside className="status-panel" aria-label={title}>
-      <p className="status-panel__label">{label}</p>
+      {label ? <p className="status-panel__label">{label}</p> : null}
       <p className="status-panel__title">{title}</p>
       <div className="status-panel__body">{children}</div>
     </aside>

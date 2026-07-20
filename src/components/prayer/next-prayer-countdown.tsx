@@ -34,9 +34,9 @@ export function NextPrayerCountdown({
   );
   return (
     <aside className="next-prayer" aria-labelledby="next-prayer-heading">
-      <p className="eyebrow">Next prayer start</p>
-      <h3 id="next-prayer-heading">{event?.label ?? "Checking the approved timetable"}</h3>
-      <p>{event && now ? `In ${remainingLabel(event.at, now)}` : "Times use Europe/London."}</p>
+      <p className="eyebrow">Next prayer</p>
+      <h3 id="next-prayer-heading">{event?.label ?? "Today's timetable is shown above"}</h3>
+      <p>{event && now ? `In ${remainingLabel(event.at, now)}` : "All times are local."}</p>
     </aside>
   );
 }

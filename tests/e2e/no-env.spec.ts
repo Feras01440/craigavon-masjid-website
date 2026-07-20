@@ -34,7 +34,7 @@ test.describe("safe fallbacks without Supabase configuration", () => {
         name: "Prayer information is not currently available online",
       }),
     ).toBeVisible();
-    await expect(page.getByText(/does not estimate a congregation time/i)).toBeVisible();
+    await expect(page.getByText(/never estimates an iqamah time/i)).toBeVisible();
     await expect(page.getByRole("table")).toHaveCount(0);
   });
 
@@ -52,9 +52,8 @@ test.describe("safe fallbacks without Supabase configuration", () => {
   test("contact route collects no data until its controls are configured", async ({ page }) => {
     await gotoReady(page, "/contact");
 
-    await expect(page.getByText("The public form is not active")).toBeVisible();
+    await expect(page.getByText(/online form isn't available right now/i)).toBeVisible();
     await expect(page.locator("form")).toHaveCount(0);
-    await expect(page.getByText(/No information is collected on this page/i)).toBeVisible();
   });
 
   test("public data APIs fail closed and are never cached", async ({ request }) => {

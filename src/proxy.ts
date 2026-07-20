@@ -30,6 +30,8 @@ function contentSecurityPolicy(nonce: string, upgradeInsecureRequests: boolean):
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
+    // Owner-approved exception: the embedded Google map on /contact.
+    "frame-src 'self' https://www.google.com",
   ];
 
   if (upgradeInsecureRequests) {

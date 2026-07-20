@@ -27,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const headers = [
     "Date",
     ...prayerKeys.flatMap((key) =>
-      key === "sunrise" ? [`${key} start`] : [`${key} start`, `${key} congregation`],
+      key === "sunrise" ? [`${key} begins`] : [`${key} begins`, `${key} iqamah`],
     ),
   ];
   const rows = bundle.schedules.map((schedule) => [

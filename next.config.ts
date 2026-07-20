@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Retired routes from the 2026 public redesign.
+      { source: "/visit", destination: "/contact", permanent: true },
+      { source: "/new-muslims", destination: "/services", permanent: true },
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/prayer-times.html", destination: "/prayer-times", permanent: true },
       { source: "/about.html", destination: "/about", permanent: true },

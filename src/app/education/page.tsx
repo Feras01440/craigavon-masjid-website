@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import {
   EmptyState,
@@ -7,14 +8,12 @@ import {
   PublishedContentList,
   PublishedContentOmissionNotice,
   PublishedContentUnavailable,
-  StatusPanel,
 } from "@/components/site";
 import { getPublishedContent } from "@/server/repositories/public-content";
 
 export const metadata: Metadata = {
-  title: "Learning",
-  description:
-    "Publication status for education and learning information from the Muslim Association of Craigavon.",
+  title: "Education",
+  description: "Qur'an and Islamic education for children and adults at Craigavon Masjid.",
 };
 
 export const dynamic = "force-dynamic";
@@ -23,41 +22,37 @@ export const revalidate = 0;
 export default async function EducationPage() {
   const content = await getPublishedContent(["education"], { limit: 100 });
   const programmes = content.status === "ready" ? content.items : [];
-  let introTitle = "Learning information";
-  let introDescription = "Current classes and recurring programmes are listed when available.";
-
-  if (content.status === "unavailable") {
-    introTitle = "Learning publication status is unavailable";
-    introDescription =
-      "The website cannot currently verify the approved learning register, so no fallback programme details are shown.";
-  } else if (programmes.length > 0) {
-    introTitle = "Learning and recurring programmes";
-    introDescription =
-      "Read the current audience, schedule and registration information for each listing.";
-  }
 
   return (
     <PublicShell>
       <PageIntro
-        eyebrow="Learning"
-        title={introTitle}
-        description={introDescription}
-        current="Learning"
+        eyebrow="Education"
+        title="Learning at the masjid"
+        description="Qur'an reading and memorisation, and Islamic education for children and adults."
+        current="Education"
       />
 
       <section className="section">
         <div className="site-container">
           {content.status === "unavailable" ? (
-            <PublishedContentUnavailable subject="Current learning information" />
+            <PublishedContentUnavailable subject="Class information" />
           ) : programmes.length === 0 ? (
-            <EmptyState title="No learning programmes are currently listed">
-              <p>Please check again later. Old timetables are not reused as current information.</p>
+            <EmptyState title="Class times will be announced here">
+              <p>
+                Details of current classes are being prepared. In the meantime, contact us and
+                we&apos;ll let you know what is running and how to join.
+              </p>
+              <p>
+                <Link className="text-link" href="/contact">
+                  Ask about classes
+                </Link>
+              </p>
             </EmptyState>
           ) : (
             <>
               <div className="section-heading">
-                <p className="eyebrow">Current approved information</p>
-                <h2>Published learning listings</h2>
+                <p className="eyebrow">Current programmes</p>
+                <h2>Classes and programmes</h2>
               </div>
               <PublishedContentList items={programmes} />
               {content.omittedCount > 0 && <PublishedContentOmissionNotice />}
@@ -66,25 +61,20 @@ export default async function EducationPage() {
         </div>
       </section>
 
-      <section className="section section--tinted" aria-labelledby="learning-details">
+      <section className="section section--tinted" aria-labelledby="education-enquire-heading">
         <div className="site-container content-grid">
           <div className="prose">
-            <p className="eyebrow">Listing information</p>
-            <h2 id="learning-details">What each programme listing explains</h2>
-            <ul className="plain-list">
-              <li>Audience, age range and any prerequisite</li>
-              <li>Day, time, term dates, capacity and cost</li>
-              <li>Venue and access arrangements</li>
-              <li>Registration process and responsible contact</li>
-              <li>Safeguarding and privacy information</li>
-            </ul>
-          </div>
-          <StatusPanel title="Children's data is not being collected">
+            <p className="eyebrow">Joining a class</p>
+            <h2 id="education-enquire-heading">Interested for yourself or your child?</h2>
             <p>
-              No public registration form is active. A safeguarding-compliant process must be
-              approved before the website requests information about a child.
+              Tell us who the learning is for and what you are looking for — Qur&apos;an reading,
+              memorisation or Islamic studies — and we&apos;ll come back to you with what is
+              available.
             </p>
-          </StatusPanel>
+            <Link className="text-link" href="/contact">
+              Contact us about learning
+            </Link>
+          </div>
         </div>
       </section>
     </PublicShell>

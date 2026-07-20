@@ -144,9 +144,7 @@ test.describe("clean local demonstration acceptance", () => {
 
     await test.step("homepage, authorised logo and mobile navigation", async () => {
       await page.goto("/");
-      await expect(page.getByRole("heading", { level: 1 })).toContainText(
-        "Muslim Association of Craigavon",
-      );
+      await expect(page.getByRole("heading", { level: 1 })).toContainText("Craigavon Masjid");
       await expect(
         page.getByRole("status").filter({
           hasText: /Local demonstration.*not committee approved/i,
@@ -192,10 +190,8 @@ test.describe("clean local demonstration acceptance", () => {
 
       for (const route of [
         "/",
-        "/visit",
         "/services",
         "/education",
-        "/new-muslims",
         "/about",
         "/contact",
         "/accessibility",
@@ -205,6 +201,12 @@ test.describe("clean local demonstration acceptance", () => {
         await page.goto(route);
         await expect(page.locator("h1").first()).toBeVisible();
       }
+
+      // Retired routes redirect to their new homes.
+      await page.goto("/visit");
+      await expect(page).toHaveURL(/\/contact$/);
+      await page.goto("/new-muslims");
+      await expect(page).toHaveURL(/\/services$/);
       await page.goto("/tv");
       await expect(page.getByText(/Local demonstration.*not committee approved/i)).toBeVisible();
 

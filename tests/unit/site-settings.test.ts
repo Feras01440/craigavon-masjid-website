@@ -91,6 +91,7 @@ describe("managed site setting validation", () => {
         heading: "",
         introduction: "",
         secondary_cta_label: "",
+        secondary_cta_route: "prayer-times",
       },
       "published",
     );

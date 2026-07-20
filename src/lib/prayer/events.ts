@@ -73,3 +73,36 @@ export function nextEvent(
     null
   );
 }
+
+export type NextPrayerDetail = {
+  key: Exclude<PrayerKey, "sunrise">;
+  date: string;
+  startsAt: string | null;
+  congregationAt: string | null;
+  joinedWith: PrayerSchedule["prayers"][PrayerKey]["joinedWith"];
+};
+
+/* The next congregational prayer (sunrise excluded), keyed on whichever of its
+   start or congregation instants is still ahead — shared by every "next
+   prayer" surface so they can never disagree. */
+export function nextPrayerDetail(schedules: PrayerSchedule[], now: Date): NextPrayerDetail | null {
+  const nowIso = now.toISOString();
+  for (const schedule of schedules) {
+    for (const key of prayerKeys) {
+      if (key === "sunrise") continue;
+      const prayer = schedule.prayers[key];
+      if (prayer.unavailable) continue;
+      const anchor = prayer.congregationAt ?? prayer.startsAt;
+      if (anchor && anchor > nowIso) {
+        return {
+          key,
+          date: schedule.date,
+          startsAt: prayer.startsAt,
+          congregationAt: prayer.congregationAt,
+          joinedWith: prayer.joinedWith,
+        };
+      }
+    }
+  }
+  return null;
+}

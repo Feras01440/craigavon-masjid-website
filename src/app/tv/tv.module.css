@@ -74,7 +74,9 @@
 
 .brand strong {
   display: block;
-  font-family: var(--font-display, serif);
+  /* Pinned to Marcellus so the TV keeps its pre-redesign appearance while the
+     public site's --font-display moved to Fraunces. */
+  font-family: var(--font-marcellus, serif);
   font-size: clamp(1.1rem, 2vw, 2.3rem);
   font-weight: 600;
 }

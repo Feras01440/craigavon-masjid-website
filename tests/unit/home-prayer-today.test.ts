@@ -69,7 +69,7 @@ describe("home page prayer table", () => {
       expect(markup).toContain(name);
     }
     expect(markup).toContain("Begins");
-    expect(markup).toContain("Iqāmah");
+    expect(markup).toContain("Iqamah");
     expect(rowContaining(markup, "Fajr")).toContain("04:15");
     expect(rowContaining(markup, "Dhuhr")).toContain("14:00");
     expect(rowContaining(markup, "Asr")).toContain("18:30");

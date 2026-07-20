@@ -98,11 +98,8 @@ export function PublishedFaqList({ items }: PublishedContentListProps) {
 
 export function PublishedContentUnavailable({ subject }: { subject: string }) {
   return (
-    <StatusPanel label="Publishing service" title={`${subject} could not be checked`}>
-      <p>
-        The website cannot confirm the current approved information right now. No cached, inherited
-        or unverified fallback is being shown. Please try again later.
-      </p>
+    <StatusPanel title={`${subject} could not be checked just now`}>
+      <p>Please try again shortly, or contact us if you need something urgently.</p>
     </StatusPanel>
   );
 }
@@ -110,10 +107,7 @@ export function PublishedContentUnavailable({ subject }: { subject: string }) {
 export function PublishedContentOmissionNotice() {
   return (
     <div className="published-content-warning">
-      <p>
-        Some approved entries could not be displayed because their stored structure did not pass the
-        public validation checks.
-      </p>
+      <p>Some items could not be displayed just now.</p>
     </div>
   );
 }

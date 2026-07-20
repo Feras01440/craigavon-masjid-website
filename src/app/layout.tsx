@@ -8,16 +8,23 @@ import { getSiteUrl } from "@/lib/site-url";
 
 import "./globals.css";
 
-// Self-hosted, SIL OFL-licensed faces (see src/fonts/README.md). Marcellus
-// carries display headings and prayer numerals, Inter (variable) the UI and
-// body text, and Amiri the Arabic prayer names and hold screens — restoring
-// the association's approved heritage identity without any third-party font
-// request at runtime.
+// Self-hosted, SIL OFL-licensed faces (see src/fonts/README.md). Fraunces
+// (variable, true weights) carries public display headings and prayer
+// numerals, Inter (variable) the UI and body text, and Amiri the Arabic
+// prayer names and hold screens. Marcellus stays loaded solely for the TV
+// display, which is pinned to its pre-redesign appearance.
 const displayFace = localFont({
+  src: "../fonts/fraunces-var-latin.woff2",
+  weight: "100 900",
+  display: "swap",
+  variable: "--font-display-face",
+  fallback: ["Georgia", "Times New Roman", "serif"],
+});
+const tvDisplayFace = localFont({
   src: "../fonts/marcellus-latin.woff2",
   weight: "400",
   display: "swap",
-  variable: "--font-display-face",
+  variable: "--font-marcellus-face",
   fallback: ["Georgia", "Times New Roman", "serif"],
 });
 const bodyFace = localFont({
@@ -99,7 +106,7 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
-      className={`${displayFace.variable} ${bodyFace.variable} ${arabicFace.variable}`}
+      className={`${displayFace.variable} ${tvDisplayFace.variable} ${bodyFace.variable} ${arabicFace.variable}`}
       lang="en"
     >
       <body>

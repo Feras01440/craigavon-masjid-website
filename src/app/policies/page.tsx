@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   EmptyState,
   PageIntro,
@@ -11,7 +12,7 @@ import { getPublishedContent } from "@/server/repositories/public-content";
 
 export const metadata: Metadata = {
   title: "Policies",
-  description: "Current policies published by the Muslim Association of Craigavon.",
+  description: "Policies published by the Muslim Association of Craigavon.",
 };
 
 export const dynamic = "force-dynamic";
@@ -25,11 +26,7 @@ export default async function PoliciesPage() {
       <PageIntro
         eyebrow="Policies"
         title="Policies"
-        description={
-          content.status === "unavailable"
-            ? "The website cannot currently verify the approved policy register, so it does not present a fallback document as current."
-            : "Only current documents published through the Association's approval workflow are listed."
-        }
+        description="The Association's published policies, including how personal information is handled."
         current="Policies"
       />
 
@@ -40,21 +37,24 @@ export default async function PoliciesPage() {
       >
         <div className="site-container">
           {content.status === "unavailable" ? (
-            <PublishedContentUnavailable subject="The current policy register" />
+            <PublishedContentUnavailable subject="The policy list" />
           ) : (
             <>
               {approvedPolicies.length > 0 ? (
                 <div className="policy-register-section">
                   <div className="section-heading">
-                    <p className="eyebrow">Current register</p>
-                    <h2 id="policy-list-heading">Approved public policies</h2>
+                    <p className="eyebrow">Published documents</p>
+                    <h2 id="policy-list-heading">Current policies</h2>
                   </div>
                   <PublishedContentList compact items={approvedPolicies} linkBase="/policies" />
                   {content.omittedCount > 0 && <PublishedContentOmissionNotice />}
                 </div>
               ) : (
-                <EmptyState title="No policies are currently published online">
-                  <p>Draft and withdrawn documents are not shown as adopted policy.</p>
+                <EmptyState title="No policies are published online yet">
+                  <p>
+                    Policies appear here once adopted. If you need a copy of a document in the
+                    meantime, <Link href="/contact">contact us</Link>.
+                  </p>
                 </EmptyState>
               )}
             </>

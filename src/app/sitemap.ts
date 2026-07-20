@@ -7,11 +7,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "/",
     "/prayer-times",
-    "/visit",
     "/services",
     "/education",
     "/news",
-    "/new-muslims",
     "/about",
     "/contact",
     "/policies",

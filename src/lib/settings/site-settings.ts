@@ -168,20 +168,16 @@ export const managedSettingDefaults: ManagedSettingValueMap = {
       "Craigavon Masjid — prayer times, Jumuʿah, education and community life with the Muslim Association of Craigavon, County Armagh. All are welcome.",
   },
   homepage_content: {
-    eyebrow: "As-salāmu ʿalaykum — welcome",
-    heading: "Muslim Association of Craigavon",
+    eyebrow: "As-salāmu ʿalaykum",
+    heading: "Craigavon Masjid",
     introduction:
-      "The masjid at the heart of County Armagh — daily prayers, Jumuʿah, education and community life for Craigavon, Portadown and Lurgan. Whether you pray with us five times a day or have never stepped inside a mosque, you are welcome here.",
+      "Daily prayers, Jumuʿah, education and community life with the Muslim Association of Craigavon — serving Craigavon, Portadown and Lurgan.",
     primary_cta_label: "View prayer times",
     primary_cta_route: "prayer-times",
-    secondary_cta_label: "Plan your visit",
-    secondary_cta_route: "visit",
-    information_heading: "At a glance",
-    information_points: [
-      "16 Legahory Centre, Craigavon BT65 5BE",
-      "Jumuʿah (Friday prayer): 13:00",
-      "Visitors of all faiths and none are welcome",
-    ],
+    secondary_cta_label: "",
+    secondary_cta_route: "",
+    information_heading: "",
+    information_points: [],
   },
   /* Prefill for the committee's contact form; the public site serves these
      only after the committee reviews and publishes the setting. */
@@ -203,17 +199,17 @@ export const managedSettingDefaults: ManagedSettingValueMap = {
     public_transport_information: "",
   },
   navigation_footer: {
-    primary_navigation: [
+    primary_navigation: ["prayer-times", "about", "services", "education", "news", "contact"],
+    footer_navigation: [
       "prayer-times",
-      "visit",
+      "about",
       "services",
       "education",
       "news",
-      "new-muslims",
-      "about",
+      "policies",
+      "accessibility",
       "contact",
     ],
-    footer_navigation: ["about", "policies", "news", "visit", "contact"],
     footer_note: "",
     footer_legal_note: "",
   },

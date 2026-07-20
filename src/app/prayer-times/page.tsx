@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PublicShell } from "@/components/site";
 import { NextPrayerCountdown } from "@/components/prayer/next-prayer-countdown";
+import { prayerDisplayNames } from "@/lib/prayer/names";
 import { prayerKeys, type PrayerSchedule } from "@/lib/prayer/types";
 import { dateKeyInZone, formatTime } from "@/lib/prayer/timezone";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
@@ -13,17 +14,8 @@ import { PrintButton } from "./print-button";
 export const metadata: Metadata = {
   title: "Prayer times",
   description:
-    "Committee-approved prayer starts, congregation times and Friday prayer information from the Muslim Association of Craigavon.",
+    "Daily prayer and Iqamah times, Jumuʿah and the monthly timetable at Craigavon Masjid.",
 };
-
-const names = {
-  fajr: ["Fajr", "الفجر"],
-  sunrise: ["Sunrise", "الشروق"],
-  dhuhr: ["Dhuhr", "الظهر"],
-  asr: ["ʿAsr", "العصر"],
-  maghrib: ["Maghrib", "المغرب"],
-  isha: ["ʿIshāʾ", "العشاء"],
-} as const;
 
 function monthParts(value: string | undefined): { year: number; month: number } {
   if (value && /^\d{4}-(?:0[1-9]|1[0-2])$/.test(value)) {
@@ -57,16 +49,16 @@ function TodayCards({ schedule }: { schedule: PrayerSchedule }): React.ReactNode
           return (
             <article className={styles.prayerCard} key={key}>
               <h3>
-                {names[key][0]}
+                {prayerDisplayNames[key][0]}
                 <span className={styles.arabic} lang="ar" dir="rtl">
-                  {names[key][1]}
+                  {prayerDisplayNames[key][1]}
                 </span>
               </h3>
               <p className={styles.time}>{formatTime(prayer.startsAt, schedule.timezone)}</p>
               {key !== "sunrise" ? (
                 <p className={styles.congregation}>
-                  Congregation: {formatTime(prayer.congregationAt, schedule.timezone)}
-                  {prayer.joinedWith ? ` (with ${names[prayer.joinedWith][0]})` : ""}
+                  Iqamah: {formatTime(prayer.congregationAt, schedule.timezone)}
+                  {prayer.joinedWith ? ` (with ${prayerDisplayNames[prayer.joinedWith][0]})` : ""}
                 </p>
               ) : null}
             </article>
@@ -136,11 +128,10 @@ export default async function PrayerTimesPage({
     <PublicShell>
       <div className={styles.page}>
         <header className={styles.intro}>
-          <p className={styles.eyebrow}>Worship information</p>
-          <h1>Prayer and congregation times</h1>
+          <p className={styles.eyebrow}>Craigavon Masjid</p>
+          <h1>Prayer times</h1>
           <p className={styles.lede}>
-            Start times and congregation times are different. This page publishes only a timetable
-            approved by the Association, with its source and last update shown alongside it.
+            Daily prayer and Iqamah times, Jumuʿah, and the monthly timetable.
           </p>
         </header>
 
@@ -152,11 +143,7 @@ export default async function PrayerTimesPage({
                   <div>
                     <p className={styles.eyebrow}>Today · {today.gregorianLabel}</p>
                     <h2 id="today-heading">Today&apos;s timetable</h2>
-                    <p>
-                      {today.hijriLabel} (local observed date may differ; adjustment{" "}
-                      {today.hijriAdjustment > 0 ? "+" : ""}
-                      {today.hijriAdjustment})
-                    </p>
+                    <p>{today.hijriLabel}</p>
                   </div>
                 </div>
                 <TodayCards schedule={today} />
@@ -167,10 +154,10 @@ export default async function PrayerTimesPage({
             <section className={styles.notice} aria-labelledby="prayer-unavailable">
               <h2 id="prayer-unavailable">Prayer information is not currently available online</h2>
               <p>
-                No approved timetable is active for today. The website does not estimate a
-                congregation time when configuration is missing.
+                No timetable is available for today, and this website never estimates an Iqamah
+                time.
               </p>
-              <p>Please contact the masjid through a confirmed channel before travelling.</p>
+              <p>Please check with the masjid directly before travelling.</p>
             </section>
           )}
 
@@ -197,10 +184,9 @@ export default async function PrayerTimesPage({
             monthBundle.coverage &&
             !monthBundle.coverage.complete ? (
               <p className={styles.source} role="note">
-                The approved timetable for this month currently ends on{" "}
+                This month&apos;s timetable currently ends on{" "}
                 <time dateTime={monthBundle.coverage.endsOn}>{monthBundle.coverage.endsOn}</time>.
-                Later dates will appear here as soon as the next committee-approved timetable is
-                published.
+                Later dates will appear as soon as the next timetable is published.
               </p>
             ) : null}
 
@@ -212,7 +198,7 @@ export default async function PrayerTimesPage({
                 tabIndex={0}
               >
                 <table className={styles.table}>
-                  <caption>{monthLabel}: starts and confirmed congregation times</caption>
+                  <caption>{monthLabel}: begins and Iqamah times</caption>
                   <thead>
                     <tr>
                       <th scope="col" rowSpan={2}>
@@ -220,7 +206,7 @@ export default async function PrayerTimesPage({
                       </th>
                       {prayerKeys.map((key) => (
                         <th scope="colgroup" colSpan={key === "sunrise" ? 1 : 2} key={key}>
-                          {names[key][0]}
+                          {prayerDisplayNames[key][0]}
                         </th>
                       ))}
                     </tr>
@@ -229,15 +215,15 @@ export default async function PrayerTimesPage({
                         key === "sunrise"
                           ? [
                               <th scope="col" key={`${key}-start`}>
-                                Start
+                                Begins
                               </th>,
                             ]
                           : [
                               <th scope="col" key={`${key}-start`}>
-                                Start
+                                Begins
                               </th>,
                               <th scope="col" key={`${key}-congregation`}>
-                                Cong.
+                                Iqamah
                               </th>,
                             ],
                       )}
@@ -279,27 +265,12 @@ export default async function PrayerTimesPage({
               <div className={styles.notice}>
                 <p>
                   {monthBundle.status === "unavailable"
-                    ? monthBundle.message
+                    ? "No timetable is available for this month yet."
                     : "No timetable is available."}
                 </p>
               </div>
             )}
           </section>
-
-          {today ? (
-            <p className={styles.source}>
-              Timezone: {today.timezone}. Source: {today.source.name}. Calculation software:{" "}
-              {today.source.calculationLibrary} {today.source.calculationLibraryVersion}.
-              Configuration version {today.source.configurationVersion}, published{" "}
-              {new Intl.DateTimeFormat("en-GB", {
-                dateStyle: "medium",
-                timeStyle: "short",
-                timeZone: today.timezone,
-              }).format(new Date(today.source.publishedAt))}
-              . Hijri date adjustment: {today.hijriAdjustment > 0 ? "+" : ""}
-              {today.hijriAdjustment}; the local observed date may differ.
-            </p>
-          ) : null}
         </div>
       </div>
     </PublicShell>

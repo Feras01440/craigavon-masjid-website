@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import {
-  EmptyState,
   PageIntro,
   PublicShell,
   PublishedContentList,
@@ -9,14 +9,14 @@ import {
   PublishedContentStructuredData,
   PublishedContentUnavailable,
   PublishedFaqList,
-  StatusPanel,
 } from "@/components/site";
+import { serviceCategories } from "@/content/public-copy";
 import { getPublishedContent } from "@/server/repositories/public-content";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Current publication status for services associated with the Muslim Association of Craigavon.",
+    "Shahada and new Muslim support, Islamic funerals, Nikah, speaking with the imam, education and visits at Craigavon Masjid.",
 };
 
 export const dynamic = "force-dynamic";
@@ -29,70 +29,78 @@ export default async function ServicesPage() {
   ]);
   const services = serviceContent.status === "ready" ? serviceContent.items : [];
   const faqs = faqContent.status === "ready" ? faqContent.items : [];
-  let introTitle = "Services";
-  let introDescription =
-    "Current service information is listed with its availability and next step.";
-
-  if (serviceContent.status === "unavailable") {
-    introTitle = "Service publication status is unavailable";
-    introDescription =
-      "The website cannot currently verify the approved service register, so no fallback listing is shown.";
-  } else if (services.length > 0) {
-    introTitle = "Current services";
-    introDescription = "Each listing states its scope, availability and practical next step.";
-  }
 
   return (
     <PublicShell>
       {faqContent.status === "ready" && <PublishedContentStructuredData items={faqs} />}
       <PageIntro
         eyebrow="Services"
-        title={introTitle}
-        description={introDescription}
+        title="How we can help"
+        description="From your first questions about Islam to weddings, funerals and learning — these are the ways the masjid serves the community."
         current="Services"
       />
 
-      <section className="section">
+      <section className="section" aria-label="Services offered by the masjid">
         <div className="site-container">
-          {serviceContent.status === "unavailable" ? (
-            <PublishedContentUnavailable subject="Current service information" />
-          ) : serviceContent.status === "ready" &&
-            services.length === 0 &&
-            serviceContent.omittedCount > 0 ? (
-            <PublishedContentOmissionNotice />
-          ) : services.length === 0 ? (
-            <EmptyState title="No services are currently listed online">
-              <p>
-                This does not necessarily mean that help is unavailable. No unconfirmed service or
-                contact promise is shown here.
-              </p>
-            </EmptyState>
-          ) : (
-            <>
-              <div className="section-heading">
-                <p className="eyebrow">Current approved information</p>
-                <h2>Published service listings</h2>
-              </div>
-              <PublishedContentList items={services} />
-            </>
-          )}
-          {serviceContent.status === "ready" &&
-            services.length > 0 &&
-            serviceContent.omittedCount > 0 && <PublishedContentOmissionNotice />}
+          <div className="service-list">
+            {serviceCategories.map((category) => (
+              <article
+                className="service-item"
+                id={category.id}
+                key={category.id}
+                aria-labelledby={`${category.id}-heading`}
+              >
+                <div className="service-item__body">
+                  <h2 id={`${category.id}-heading`}>{category.title}</h2>
+                  <p>{category.summary}</p>
+                  <ul className="plain-list">
+                    {category.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="service-item__action">
+                  <Link
+                    className="button button--primary"
+                    href={category.id === "education" ? "/education" : "/contact"}
+                  >
+                    {category.action}
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
+
+      {serviceContent.status === "unavailable" ? (
+        <section className="section section--tinted">
+          <div className="site-container">
+            <PublishedContentUnavailable subject="Service updates" />
+          </div>
+        </section>
+      ) : services.length > 0 ? (
+        <section className="section section--tinted" aria-labelledby="service-updates-heading">
+          <div className="site-container">
+            <div className="section-heading">
+              <p className="eyebrow">Current updates</p>
+              <h2 id="service-updates-heading">Service updates</h2>
+            </div>
+            <PublishedContentList items={services} />
+            {serviceContent.omittedCount > 0 && <PublishedContentOmissionNotice />}
+          </div>
+        </section>
+      ) : null}
 
       {faqContent.status !== "empty" && (
         <section className="section section--tinted" aria-labelledby="service-faq-heading">
           <div className="site-container">
             <div className="section-heading">
-              <p className="eyebrow">
-                {faqContent.status === "unavailable" ? "Publication status" : "Approved answers"}
-              </p>
+              <p className="eyebrow">Good to know</p>
               <h2 id="service-faq-heading">Frequently asked questions</h2>
             </div>
             {faqContent.status === "unavailable" ? (
-              <PublishedContentUnavailable subject="Current frequently asked questions" />
+              <PublishedContentUnavailable subject="Frequently asked questions" />
             ) : (
               <>
                 <PublishedFaqList items={faqs} />
@@ -103,25 +111,19 @@ export default async function ServicesPage() {
         </section>
       )}
 
-      <section className="section" aria-labelledby="service-standard">
+      <section className="section" aria-labelledby="services-contact-heading">
         <div className="site-container content-grid">
           <div className="prose">
-            <p className="eyebrow">Listing information</p>
-            <h2 id="service-standard">What each service listing explains</h2>
-            <ul className="plain-list">
-              <li>What the Association can and cannot provide</li>
-              <li>Who the service is for and what information is needed</li>
-              <li>Confirmed costs, venue and access details</li>
-              <li>A monitored next step and realistic response expectation</li>
-              <li>Clear urgent and emergency limitations</li>
-            </ul>
-          </div>
-          <StatusPanel label="Current status" title="Online enquiries">
+            <p className="eyebrow">Not sure where to start?</p>
+            <h2 id="services-contact-heading">Just get in touch</h2>
             <p>
-              The enquiry form is not active. This website is not monitored as an emergency service;
-              use the appropriate public emergency service when immediate help is needed.
+              If your question doesn&apos;t fit any of the services above, contact us anyway —
+              we&apos;ll point you to the right person. Conversations are always private.
             </p>
-          </StatusPanel>
+            <Link className="text-link" href="/contact">
+              Contact the masjid
+            </Link>
+          </div>
         </div>
       </section>
     </PublicShell>

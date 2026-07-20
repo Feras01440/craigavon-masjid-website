@@ -1,14 +1,12 @@
 import { expect, type Page } from "@playwright/test";
 
 export const publicRoutes = [
-  { path: "/", heading: "Muslim Association of Craigavon" },
-  { path: "/prayer-times", heading: "Prayer and congregation times" },
-  { path: "/visit", heading: "Visit information is not currently online" },
-  { path: "/services", heading: /service/i },
-  { path: "/education", heading: /learning|programme/i },
-  { path: "/news", heading: "Announcements and events" },
-  { path: "/new-muslims", heading: "Practical information for a first conversation" },
-  { path: "/contact", heading: "Contact the Association" },
+  { path: "/", heading: "Craigavon Masjid" },
+  { path: "/prayer-times", heading: "Prayer times" },
+  { path: "/services", heading: "How we can help" },
+  { path: "/education", heading: "Learning at the masjid" },
+  { path: "/news", heading: "News and events" },
+  { path: "/contact", heading: "Contact us" },
   { path: "/about", heading: "About the Association" },
   { path: "/accessibility", heading: "Using this website" },
   { path: "/policies", heading: "Policies" },

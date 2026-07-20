@@ -34,13 +34,12 @@ export default function AccessibilityPage() {
           </p>
           <h2>Known limits and help</h2>
           <p>
-            Third-party map or registration links may have different accessibility support. A
-            committee-approved assistance route will be shown on the contact page when available. If
-            no route is published, no unmonitored address is substituted.
+            The embedded map on the contact page is provided by Google and may behave differently
+            with assistive technology; the address is always available as text alongside it.
           </p>
           <p>
-            This information describes the implemented features; it is not a claim that every
-            assistive-technology combination has been formally certified.
+            If anything on this website is difficult for you to use, please tell us through the
+            contact page and we will do our best to fix it.
           </p>
         </div>
       </section>

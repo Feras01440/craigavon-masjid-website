@@ -17,7 +17,11 @@ export async function PublicShell({ children }: PublicShellProps) {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <SiteHeader siteName={chrome.siteName} navigation={chrome.primaryNavigation} />
+      <SiteHeader
+        siteName={chrome.siteName}
+        masjidName={chrome.masjidName}
+        navigation={chrome.primaryNavigation}
+      />
       {demoMode && (
         <div className="demo-banner" role="status">
           Local demonstration — information on this copy is sample data and is not committee
@@ -29,9 +33,11 @@ export async function PublicShell({ children }: PublicShellProps) {
       </main>
       <SiteFooter
         siteName={chrome.siteName}
+        masjidName={chrome.masjidName}
         navigation={chrome.footerNavigation}
         note={chrome.footerNote}
         legalNote={chrome.footerLegalNote}
+        contact={chrome.contact}
       />
     </div>
   );
