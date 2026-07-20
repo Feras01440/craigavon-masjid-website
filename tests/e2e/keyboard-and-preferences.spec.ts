@@ -48,10 +48,14 @@ test("mobile navigation opens and remains keyboard operable", async ({ page }, t
   await expect(primaryNavigation).toBeVisible();
   await expect(primaryNavigation.getByRole("link", { name: "Prayer times" })).toBeVisible();
 
+  const homeLink = primaryNavigation.getByRole("link", { name: "Home" });
   const prayerTimesLink = primaryNavigation.getByRole("link", { name: "Prayer times" });
   if (testInfo.project.name.startsWith("webkit")) {
     await prayerTimesLink.focus();
   } else {
+    // The menu lists Home first, then the published destinations.
+    await page.keyboard.press("Tab");
+    await expect(homeLink).toBeFocused();
     await page.keyboard.press("Tab");
   }
   await expect(prayerTimesLink).toBeFocused();

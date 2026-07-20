@@ -79,7 +79,7 @@ export default async function HomePage() {
               <p className="hero-prayer__eyebrow">Prayer times</p>
               <p className="hero-prayer__name">Timetable</p>
               <p className="hero-prayer__unavailable">
-                Prayer times are not currently available online.
+                Today&apos;s timetable is not online right now.
               </p>
               <Link className="hero-prayer__link" href="/prayer-times" prefetch={false}>
                 Prayer times page

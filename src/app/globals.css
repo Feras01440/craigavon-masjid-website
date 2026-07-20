@@ -4,7 +4,8 @@
   --surface: #fffdf8;
   --ink: #17231e;
   --ink-soft: #4d5d55;
-  --ink-faint: #68766f;
+  /* Keeps ≥4.5:1 on both paper tones at small sizes (WCAG AA). */
+  --ink-faint: #57655e;
   --pine: #173a31;
   --pine-deep: #0d2821;
   --pine-soft: #dbe7e1;
@@ -665,6 +666,13 @@ video {
 
 .section--pine h2 {
   color: #fffdf8;
+}
+
+/* The shared .eyebrow rule paints copper later in the file; on dark pine that
+   fails contrast, so re-assert the gold tone with higher specificity. */
+.section--pine .eyebrow,
+.home-hero .eyebrow {
+  color: #f0c99b;
 }
 
 .section--pine a {
