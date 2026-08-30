@@ -1,8 +1,11 @@
 packages:
   - "."
 
+# Security floors for Next's internal pins (GHSA-f88m-g3jw-g9cj and the
+# postcss advisories); revisit when Next bumps them itself.
 overrides:
-  "next>postcss": 8.5.17
+  "next>postcss": 8.5.26
+  "next>sharp": 0.35.3
 
 allowBuilds:
   sharp: true
