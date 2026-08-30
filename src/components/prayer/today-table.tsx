@@ -71,7 +71,7 @@ export function TodayTable({
                   <td>{formatTime(prayer.startsAt, today.timezone)}</td>
                   <td>
                     {formatTime(prayer.congregationAt, today.timezone)}
-                    {prayer.joinedWith && <span aria-hidden="true"> †</span>}
+                    {prayer.joinedWith && <span aria-hidden="true"> *</span>}
                   </td>
                 </tr>
               );
@@ -97,7 +97,7 @@ export function TodayTable({
           <p className="home-prayer__legend">
             {joinedPairs.map((pair) => (
               <span key={pair.key}>
-                † {prayerDisplayNames[pair.key][0]} is prayed together with{" "}
+                * {prayerDisplayNames[pair.key][0]} is prayed together with{" "}
                 {prayerDisplayNames[pair.partner][0]}.
               </span>
             ))}

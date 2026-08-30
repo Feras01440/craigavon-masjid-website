@@ -23,12 +23,7 @@ export default async function PoliciesPage() {
   const approvedPolicies = content.status === "ready" ? content.items : [];
   return (
     <PublicShell>
-      <PageIntro
-        eyebrow="Policies"
-        title="Policies"
-        description="The Association's published policies."
-        current="Policies"
-      />
+      <PageIntro eyebrow="Policies" title="Policies" current="Policies" />
 
       <section
         className="section"

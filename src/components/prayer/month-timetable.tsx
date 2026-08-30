@@ -42,7 +42,7 @@ export function MonthTimetable({
       if (prayer.joinedWith) {
         joinedPairs.set(
           `${prayer.key}`,
-          `† ${prayerDisplayNames[prayer.key][0]} is prayed together with ${prayerDisplayNames[prayer.joinedWith][0]}.`,
+          `* ${prayerDisplayNames[prayer.key][0]} is prayed together with ${prayerDisplayNames[prayer.joinedWith][0]}.`,
         );
       }
     }
@@ -139,7 +139,7 @@ export function MonthTimetable({
                             {key !== "sunrise" ? (
                               <span className={styles.iqamah}>
                                 {formatTime(prayer.congregationAt, schedule.timezone)}
-                                {prayer.joinedWith ? <span aria-hidden="true"> †</span> : null}
+                                {prayer.joinedWith ? <span aria-hidden="true"> *</span> : null}
                               </span>
                             ) : null}
                           </td>

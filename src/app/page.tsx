@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 // the reader. See docs/architecture/ADR-003-public-caching.md.
 export const revalidate = 60;
 
-const featuredServiceIds = ["new-to-islam", "funerals", "imam"] as const;
+const featuredServiceIds = ["new-to-islam", "funerals", "education"] as const;
 
 export default async function HomePage() {
   const now = new Date();
@@ -112,7 +112,7 @@ export default async function HomePage() {
           ) : (
             <ApprovalCard
               title="Daily prayer times"
-              description="Prayer times are not currently available online. Please use a confirmed local source before travelling. Friday prayer information is not currently available online either."
+              description="Prayer times are not currently available online — please check with the masjid."
             />
           )}
         </div>
@@ -176,9 +176,6 @@ export default async function HomePage() {
           <div>
             <p className="eyebrow eyebrow--hero">Find us</p>
             <h2 id="find-us-heading">Find us at the Legahory Centre</h2>
-            <p className="home-find__lead">
-              Open for the five daily prayers and Jumuʿah — everyone is welcome.
-            </p>
             <div className="button-row">
               <Link className="button button--primary" href="/contact">
                 Contact us

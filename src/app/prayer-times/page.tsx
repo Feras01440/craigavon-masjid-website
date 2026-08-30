@@ -45,12 +45,7 @@ export default async function PrayerTimesPage(): Promise<React.ReactNode> {
 
   return (
     <PublicShell>
-      <PageIntro
-        eyebrow="Craigavon Masjid"
-        title="Prayer times"
-        description="Daily and monthly times at Craigavon Masjid."
-        current="Prayer times"
-      />
+      <PageIntro eyebrow="Craigavon Masjid" title="Prayer times" current="Prayer times" />
 
       <div className={styles.content}>
         {today ? (

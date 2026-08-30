@@ -58,16 +58,6 @@ export const serviceCategories: readonly ServiceCategory[] = [
     action: "Ask about a Nikah",
   },
   {
-    id: "imam",
-    title: "Speak with the imam",
-    summary: "Religious questions or a sensitive matter — ask for a private conversation.",
-    points: [
-      "Religious rulings and everyday practice",
-      "Family and personal matters, in confidence",
-    ],
-    action: "Request a conversation",
-  },
-  {
     id: "education",
     title: "Education and Qur'an learning",
     summary: "Qur'an reading, memorisation and Islamic studies for children and adults.",

@@ -25,12 +25,7 @@ export default async function EducationPage() {
 
   return (
     <PublicShell>
-      <PageIntro
-        eyebrow="Education"
-        title="Learning at the masjid"
-        description="Qur'an and Islamic learning for all ages."
-        current="Education"
-      />
+      <PageIntro eyebrow="Education" title="Learning at the masjid" current="Education" />
 
       <section className="section">
         <div className="site-container">

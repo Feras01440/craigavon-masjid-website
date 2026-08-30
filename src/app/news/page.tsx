@@ -25,12 +25,7 @@ export default async function NewsPage() {
   return (
     <PublicShell>
       {content.status === "ready" && <PublishedContentStructuredData items={content.items} />}
-      <PageIntro
-        eyebrow="News"
-        title="News and events"
-        description="What's happening at the masjid."
-        current="News"
-      />
+      <PageIntro eyebrow="News" title="News and events" current="News" />
 
       <section className="section">
         <div className="site-container">

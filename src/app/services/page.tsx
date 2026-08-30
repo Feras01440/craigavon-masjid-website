@@ -33,12 +33,7 @@ export default async function ServicesPage() {
   return (
     <PublicShell>
       {faqContent.status === "ready" && <PublishedContentStructuredData items={faqs} />}
-      <PageIntro
-        eyebrow="Services"
-        title="How we can help"
-        description="From Shahada to funerals — how the masjid can help."
-        current="Services"
-      />
+      <PageIntro eyebrow="Services" title="How we can help" current="Services" />
 
       <section className="section" aria-label="Services offered by the masjid">
         <div className="site-container">
@@ -110,17 +105,6 @@ export default async function ServicesPage() {
           </div>
         </section>
       )}
-
-      <section className="section section--compact" aria-label="General enquiries">
-        <div className="site-container">
-          <p className="service-footnote">
-            Not sure where to start? Contact us — we&apos;ll point you to the right person.{" "}
-            <Link className="text-link" href="/contact">
-              Contact the masjid
-            </Link>
-          </p>
-        </div>
-      </section>
     </PublicShell>
   );
 }
