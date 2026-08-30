@@ -31,14 +31,17 @@ documents separate [environment variable scopes](https://vercel.com/docs/environ
 
 As of 15 July 2026, the following repository-controlled evidence exists:
 
-- the current local Vitest run passed 129 tests in 17 files, including administrator lifecycle,
-  content scheduling/expiry/revision restoration and fail-closed public projections;
-- the production build, strict typecheck and zero-warning lint passed locally;
+- CI passed 132 Vitest tests in 17 files with 91.22% statement, 83.54% branch, 94.64% function and
+  92.79% line coverage, including administrator lifecycle, content scheduling/expiry/revision
+  restoration and fail-closed public projections;
+- the locked install, formatting, production build, strict typecheck and zero-warning lint passed;
 - the registry-backed dependency audit passed with zero findings across 568 dependencies after the
   vulnerable transitive PostCSS version was replaced by 8.5.17; and
-- clean PostgreSQL 17.10 compatibility environments replayed the baseline migration and seed from
-  zero twice and passed all 84 baseline database/RLS assertions on each run; the completed suite now
-  contains 91 assertions for release-commit Supabase CI;
+- a disposable local Supabase stack replayed both migrations and the seed from zero twice, passed
+  schema lint and all 91 database/RLS assertions after each reset, then passed Auth lifecycle and
+  realistic logical backup/restore;
+- clean authenticated product acceptance passed the public product plus TOTP, content, media,
+  prayer, reviewer-denial, audit and sign-out dashboard workflows;
 - the accelerated TV test passed 10/10 clock/network scenarios; and
 - 30 Lighthouse runs against an external ephemeral HTTPS production preview met the application
   performance budgets, with the TV Best Practices score recorded at 92 because the intentionally
@@ -46,13 +49,15 @@ As of 15 July 2026, the following repository-controlled evidence exists:
 
 The detailed boundaries are recorded in the [QA report](../quality/QA-REPORT.md),
 [database P1 validation](../quality/DATABASE-P1-VALIDATION.md) and
-[operational workflow validation](../quality/OPERATIONAL-WORKFLOW-VALIDATION.md). The full local
-Supabase/Auth/recovery GitHub Actions job and the release-commit CI suite must still pass before
-technical release-candidate approval. The completed browser selection passed all 370 applicable
-checks out of 385 selected, with 15 intentional local-demo or viewport-inapplicable skips. None of
-this local evidence substitutes for fixed-origin permanent staging, real SMTP/TOTP, manual
-authenticated accessibility review, production-provider backup/Storage recovery, physical-TV
-acceptance or committee approval.
+[operational workflow validation](../quality/OPERATIONAL-WORKFLOW-VALIDATION.md). The authoritative
+[CI run](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018) and
+[CodeQL run](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441498715) passed
+at application commit `fd97cc64e1fe5d92247bf2035bad30748498581d`, establishing technical
+release-candidate status. The completed browser selection passed all 370 applicable checks out of
+385 selected, with 15 intentional local-demo or viewport-inapplicable skips. None of this local
+evidence substitutes for fixed-origin permanent staging, real SMTP/TOTP, manual authenticated
+accessibility review, production-provider backup/Storage recovery, physical-TV acceptance or
+committee approval.
 
 ## Credential-dependent work remaining
 

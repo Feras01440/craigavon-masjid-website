@@ -28,12 +28,17 @@ the database and backup reports.
 ## Execution record
 
 - Date: 15 July 2026
-- Commit: draft pull-request working tree; final release commit pending
-- Unit result: **Pass - 17 files, 129 tests, 0 failures; configured coverage thresholds passed**
-- Clean database baseline: **Pass - migration and seed replayed from zero twice; 84/84 then-current
-  pgTAP assertions passed on both PostgreSQL 17.10 runs**
-- Completed release database suite: **91 pgTAP assertions; release-commit Supabase CI pending**
-- Full local Supabase/Auth/recovery result: **Awaiting GitHub Actions at the release commit**
+- Application commit: `fd97cc64e1fe5d92247bf2035bad30748498581d`
+- Authoritative run:
+  [CI 29441499018](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018)
+- Unit result: **Pass - 17 files, 132 tests, 0 failures; 91.22% statements, 83.54% branches, 94.64%
+  functions and 92.79% lines**
+- Clean database result: **Pass - both migrations and the deterministic seed replayed from zero
+  twice; 91/91 pgTAP assertions passed after each reset; schema lint passed**
+- Full local Supabase/Auth/recovery result: **Pass - invitation, disable, recovery, global session
+  revocation and revoked-invite lifecycle plus realistic logical backup/restore all passed**
+- Clean local product acceptance: **Pass - two serial end-to-end journeys covered the complete
+  public product and authenticated administrator/reviewer workflows**
 
 The 91 committed database assertions form the release suite for populated-row allow and deny cases
 across anonymous, authenticated non-admin, website editor, prayer editor, enquiries manager and
@@ -42,7 +47,7 @@ profiles, AAL1 denials, publication/revision boundaries, append-only audit data 
 anonymous grants on all application tables. See `DATABASE-P1-VALIDATION.md` for the exact policy and
 table inventory.
 
-## Auth lifecycle integration prepared for CI
+## Auth lifecycle integration result
 
 The disposable-Supabase workflow now exercises more than mocked server actions. Its checked-in Auth
 script verifies:
@@ -55,30 +60,30 @@ script verifies:
 6. successful password sign-in after revocation, proving session revocation does not silently
    destroy the account.
 
-Unexpected success statuses and non-JSON error bodies fail the script. Because this workstation did
-not provide the complete Docker/Supabase runtime, these are **implemented CI assertions, not a
-claimed local provider pass**. GitHub Actions at the final commit is authoritative.
+Unexpected success statuses and non-JSON error bodies fail the script. The complete lifecycle passed
+against the disposable Supabase Auth service in the authoritative CI run. This is local-service
+evidence, not proof of production SMTP delivery, provider configuration or named committee accounts.
 
 ## Public privacy evidence
 
-Repository and database tests prove that public content and notice repositories expose only their
-explicit presentation fields and approved, in-window rows. Drafts, future schedules, expired or
-archived records, revision internals, private enquiries, administrator profiles/invitations,
-permissions and audit details are excluded. Anonymous SQL roles have no direct application-table
-grants. A credentialed PostgREST/cache repetition remains required in isolated staging.
+Repository, database and clean product-acceptance tests prove that public content and notice
+repositories expose only their explicit presentation fields and approved, in-window rows. Drafts,
+future schedules, expired or archived records, revision internals, private enquiries, administrator
+profiles/invitations, permissions and audit details are excluded. Anonymous SQL roles have no direct
+application-table grants. Production repetition uses the approved Supabase credentials and content.
 
 ## Authenticated local product acceptance
 
-The clean local product job creates local-only Auth identities for every role, enrolls TOTP, signs
-in through a hashed magic link, creates/previews/publishes/edits/archives content, restores a
-revision, uploads validated media, clones and edits prayer configuration, creates a dated override,
-proves reviewer mutation denial at both RLS and UI boundaries, checks attributed audit entries and
-signs out. Its demonstration rows are visibly labelled and cannot be selected publicly outside
-explicit loopback demo mode.
+The clean local product job passed. It creates local-only Auth identities for every role, enrolls
+TOTP, signs in through a hashed magic link, creates/previews/publishes/edits/archives content,
+restores a revision, uploads validated media, clones and edits prayer configuration, creates a dated
+override, proves reviewer mutation denial at both RLS and UI boundaries, checks attributed audit
+entries and signs out. Its demonstration rows are visibly labelled and cannot be selected publicly
+outside explicit loopback demo mode.
 
 ## Final production repetition
 
-The following must not be inferred from unit tests or the pending disposable-stack CI job:
+The following production repetitions must not be inferred from the disposable-stack result:
 
 1. invitation email delivery, exact redirect allowlist and successful first activation in the
    selected Supabase Auth project;

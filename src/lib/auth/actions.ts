@@ -88,6 +88,7 @@ export async function beginMfaEnrollmentAction(
       friendlyName: "MAC committee administration",
     });
     if (error || !data?.totp) {
+      if (error) console.warn("MFA enrollment was rejected", error.code);
       throw new AdminAccessError("service", "A new authenticator could not be enrolled.");
     }
     return {

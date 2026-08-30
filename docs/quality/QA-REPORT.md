@@ -4,10 +4,12 @@
 
 **Evidence date:** 15 July 2026
 
-**Decision at this working tree:** **Local technical acceptance passes.** The release commit still
-needs green GitHub Actions, including the clean local Supabase and authenticated product-acceptance
-jobs. The nine real-world configuration and committee approvals remain launch inputs, not unfinished
-software. Nothing in this report authorises a production launch.
+**Decision:** **Technical release candidate PASS** at application commit `fd97cc6`. The complete
+[CI run](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018) and
+[CodeQL run](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441498715) are
+the authoritative repository-controlled evidence. The nine real-world configuration and committee
+approvals remain launch inputs, not unfinished software. Nothing in this report authorises a
+production launch.
 
 ## Result discipline
 
@@ -18,21 +20,21 @@ to a complete matrix pass.
 
 ## Executed release-candidate evidence
 
-| Area                                    | Result                                           | Actual evidence                                                                                                                                                                                                                                                                       |
-| --------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dependency audit                        | Pass                                             | Registry-backed audit covered 568 dependencies and returned 0 info, low, moderate, high or critical vulnerabilities after PostCSS was updated to 8.5.17                                                                                                                               |
-| Dependency Graph prerequisite           | Pass                                             | GitHub Dependency Graph was enabled and the repository saved the setting; dependency review still has to pass at the release commit                                                                                                                                                   |
-| Static application gates                | Pass on current tested worktree                  | Zero-warning lint, strict TypeScript check and the Next.js production build completed                                                                                                                                                                                                 |
-| Unit/deterministic integration suite    | Pass                                             | 129 tests in 17 files, 0 failures; 89.34% statements, 81.90% branches, 90.17% functions and 91.25% lines                                                                                                                                                                              |
-| Auth callback boundary                  | Pass                                             | 16 focused tests accept only one nonblank PKCE code or the exact hashed-OTP flow and reject mixed, duplicate, empty and unsupported input before client creation                                                                                                                      |
-| Clean migration and seed replay         | Pass                                             | The production migration and seed replayed from zero on clean PostgreSQL 17.10 twice                                                                                                                                                                                                  |
-| Database roles/RLS/constraints/indexes  | Pass on prior clean baseline; current CI pending | All 84 baseline pgTAP assertions passed on both clean PostgreSQL replays. The completed product migration expands the committed suite to 91 assertions; authoritative zero-state Supabase execution is the release-commit CI gate.                                                    |
-| Public privacy boundary                 | Pass in repository tests                         | Public mappers and database grants exclude drafts, scheduled/expired/deleted content, private enquiries, administrator/profile/invitation data, audit internals and unapproved prayer data                                                                                            |
-| Publication and administrator workflows | Pass in repository tests                         | Invitation compensation, disable/self-disable denial, recovery non-enumeration, session boundaries, draft/preview/schedule/expiry/archive/revision restoration and audit behavior passed deterministic unit/database checks                                                           |
-| TV accelerated soak                     | Pass                                             | 10 of 10 scenarios passed with two workers in 8.9 seconds, covering fit, midnight/Friday, both UK DST changes, multi-day outage, stale-data fail-closed behavior, recovery, notice expiry and offline state                                                                           |
-| Cross-engine browser execution          | Pass                                             | The completed selection contains 385 checks: 360 non-TV checks passed across Chromium, Firefox and WebKit; the final TV project passed 10/10; 15 local-demo or viewport-inapplicable checks were intentionally skipped; no product assertion remains failing                          |
-| External production-preview performance | Pass with recorded TV environment limitation     | 30 Lighthouse cold runs through an external ephemeral HTTPS preview: public routes 99-100 Performance, 100 Accessibility and 100 Best Practices; TV 99-100 Performance, 100 Accessibility and 92 Best Practices because the no-Supabase preview correctly returned `/api/display` 503 |
-| Automated accessibility                 | Pass for tested scope                            | Axe A/AA scans, public skip-link/navigation checks, reduced motion, forced colours and reflow checks passed in the configured browser projects; automation is not a manual screen-reader sign-off                                                                                     |
+| Area                                    | Result                                       | Actual evidence                                                                                                                                                                                                                                                                       |
+| --------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency audit                        | Pass                                         | Registry-backed audit covered 568 dependencies and returned 0 info, low, moderate, high or critical vulnerabilities after PostCSS was updated to 8.5.17                                                                                                                               |
+| Dependency Graph and source security    | Pass                                         | Dependency review, full-history Gitleaks, CodeQL and repository-local link integrity completed successfully at the application commit                                                                                                                                                 |
+| Static application gates                | Pass                                         | Locked install, formatting, zero-warning lint, strict TypeScript check and the Next.js production build completed in CI                                                                                                                                                               |
+| Unit/deterministic integration suite    | Pass                                         | 132 tests in 17 files, 0 failures; 91.22% statements, 83.54% branches, 94.64% functions and 92.79% lines                                                                                                                                                                              |
+| Auth callback boundary                  | Pass                                         | 17 focused tests accept only one nonblank PKCE code or the exact hashed-OTP flow, preserve the authenticated callback client, and reject mixed, duplicate, empty and unsupported input                                                                                                |
+| Clean migration and seed replay         | Pass                                         | The production migration and seed replayed from zero on clean PostgreSQL 17.10 twice                                                                                                                                                                                                  |
+| Database roles/RLS/constraints/indexes  | Pass                                         | A disposable Supabase stack replayed both migrations and the deterministic seed from zero twice; schema lint passed and all 91 pgTAP assertions passed after each reset                                                                                                               |
+| Public privacy boundary                 | Pass in repository tests                     | Public mappers and database grants exclude drafts, scheduled/expired/deleted content, private enquiries, administrator/profile/invitation data, audit internals and unapproved prayer data                                                                                            |
+| Publication and administrator workflows | Pass                                         | Invitation, disable, recovery, multi-session revocation, TOTP, draft/preview/publish/edit/archive/revision restore, media, prayer, reviewer-denial and audit journeys passed deterministic and clean authenticated acceptance                                                         |
+| TV accelerated soak                     | Pass                                         | 10 of 10 scenarios passed with two workers in 8.9 seconds, covering fit, midnight/Friday, both UK DST changes, multi-day outage, stale-data fail-closed behavior, recovery, notice expiry and offline state                                                                           |
+| Cross-engine browser execution          | Pass                                         | The completed selection contains 385 checks: 360 non-TV checks passed across Chromium, Firefox and WebKit; the final TV project passed 10/10; 15 local-demo or viewport-inapplicable checks were intentionally skipped; no product assertion remains failing                          |
+| External production-preview performance | Pass with recorded TV environment limitation | 30 Lighthouse cold runs through an external ephemeral HTTPS preview: public routes 99-100 Performance, 100 Accessibility and 100 Best Practices; TV 99-100 Performance, 100 Accessibility and 92 Best Practices because the no-Supabase preview correctly returned `/api/display` 503 |
+| Automated accessibility                 | Pass for tested scope                        | Axe A/AA scans, public skip-link/navigation checks, reduced motion, forced colours and reflow checks passed in the configured browser projects; automation is not a manual screen-reader sign-off                                                                                     |
 
 Detailed evidence is in:
 
@@ -52,9 +54,11 @@ the 91 assertions twice, lints the database with warnings treated as failures, e
 invitation/ban/recovery/global-session-revocation, and restores a realistic custom-format logical
 backup into a separately migrated database.
 
-That provider-shaped workflow has not yet produced an authoritative result for the release commit.
-The workstation did not have the full Docker/Supabase runtime, so local PostgreSQL compatibility
-must not be presented as proof of GoTrue, PostgREST, Storage or provider backup behavior.
+That provider-shaped workflow passed at application commit `fd97cc6`: 91/91 pgTAP assertions passed
+after each of two clean resets; the Auth script proved signup denial, one-time invitation, disable,
+password recovery, global session revocation and revoked-invite denial; and the logical restore
+returned the expected non-zero data and relationship counts. This proves the disposable local
+Supabase boundary, not provider-managed PITR, Storage-object restore or production RPO/RTO.
 
 ## Browser and viewport evidence
 
@@ -79,22 +83,23 @@ is a documented platform limitation, not evidence of a hidden skip-link pass in 
 | P-01 | Public routes, 404, no-backend fail-closed state and public privacy | Pass in repository/browser coverage; repeat with approved staging data                                                                                         |
 | P-02 | Chromium, Firefox, WebKit and responsive navigation                 | Pass: 385 selected, 370 applicable checks passed, 15 local-demo or viewport-inapplicable checks intentionally skipped, 0 unresolved failures                   |
 | P-03 | TV midnight, Friday, DST, outage, stale data and recovery           | Pass, 10/10                                                                                                                                                    |
-| D-01 | Migration, seed, constraints, indexes and RLS from zero             | Prior clean baseline passed twice, 84/84; expanded 91-assertion release suite awaits release-commit Supabase CI                                                |
-| D-02 | Full local Supabase/Auth/restore workflow                           | Implemented; awaiting GitHub Actions at the release commit                                                                                                     |
-| A-01 | Invite, disable, revoke, recovery and multi-session boundaries      | Unit/database evidence passes; clean local Auth lifecycle and TOTP acceptance are implemented in CI; production email and named accounts remain launch inputs  |
-| C-01 | Draft, preview, schedule, expiry, revision restore and audit log    | Repository evidence passes; clean local authenticated dashboard acceptance is implemented in CI                                                                |
-| B-01 | Realistic logical backup and restore                                | Rehearsal is implemented in CI; authoritative Supabase-stack execution and provider/Storage drill remain                                                       |
+| D-01 | Migration, seed, constraints, indexes and RLS from zero             | Pass twice, 91/91 after each clean reset                                                                                                                       |
+| D-02 | Full local Supabase/Auth/restore workflow                           | Pass in the authoritative release-candidate CI run                                                                                                             |
+| A-01 | Invite, disable, revoke, recovery and multi-session boundaries      | Pass in unit/database/Auth/product acceptance; production email and named accounts remain launch inputs                                                        |
+| C-01 | Draft, preview, schedule, expiry, revision restore and audit log    | Pass in unit/database and clean authenticated dashboard acceptance                                                                                             |
+| B-01 | Realistic logical backup and restore                                | Pass for disposable-stack application data; provider PITR, Auth/configuration and independent Storage-object drills remain production operations               |
 | X-01 | Manual public keyboard and screen-reader-oriented review            | Source/DOM and automated keyboard evidence available; native manual keyboard sign-off across every public journey and actual NVDA/VoiceOver review remain open |
 | X-02 | Authenticated dashboard keyboard/screen-reader review               | Blocked on approved staging credentials and test identities                                                                                                    |
 | F-01 | External HTTPS performance measurement                              | Pass for ephemeral production preview; permanent hosting-provider preview and representative-data rerun remain credential-blocked                              |
 
-## Evidence still required at the release commit
+## Retained release evidence
 
-1. Push the release commit to the existing draft pull request and require green GitHub Actions,
-   including dependency review/audit, Gitleaks, CodeQL, link integrity and the complete disposable
-   Supabase migration/Auth/recovery/restore job.
-2. Review CI artifacts and rerun any flaky or failed job after correcting its cause; do not merge
-   the draft pull request as part of this validation.
+- CI run `29441499018` at `fd97cc64e1fe5d92247bf2035bad30748498581d` records dependency audit,
+  formatting, lint, typecheck, 132 tests and coverage, secret scan, link integrity, production
+  build, Chromium accessibility, two clean Supabase resets, 91/91 pgTAP passes twice, Auth
+  lifecycle, backup/restore and clean local product acceptance.
+- CodeQL run `29441498715` completed successfully at the same application commit.
+- The existing pull request remains a draft and must not be merged as part of technical validation.
 
 ## Final launch configuration
 
@@ -118,11 +123,15 @@ The completed software accepts these values without code changes:
   full-screen scaling and viewing-distance acceptance depend on the selected display.
 - Logical backup/restore is rehearsed in the disposable stack; provider-managed PITR and Storage
   restore measurements belong to production Supabase operations once its credentials exist.
+- PDF upload remains fail-closed until the committee approves a malware scanning and quarantine
+  design.
+- The TV external-preview Best Practices score is 92 because the deliberately unconfigured preview
+  returns the expected `/api/display` 503; its Performance score is 99-100 and Accessibility is 100.
 
 ## Release-candidate conclusion
 
-**Current result: PASS locally / PENDING release-commit CI.** The software-controlled application,
-browser, accessibility, security, TV and performance gates are green on the completed worktree.
-Technical RC status becomes final only when the pushed commit passes every GitHub Actions job. The
-nine real-world values and committee sign-off remain launch configuration, and the draft pull
-request must remain unmerged.
+**Current result: TECHNICAL RELEASE CANDIDATE PASS.** The software-controlled application, database,
+Auth, browser, accessibility, security, recovery, TV and performance gates are green at the
+application commit. The nine real-world values and committee sign-off remain launch configuration,
+native assistive-technology/physical-TV and provider recovery checks remain documented limitations,
+and the draft pull request must remain unmerged.

@@ -10,19 +10,48 @@ recovery
 
 ## Decision
 
-The repository now contains executable P1 gates for the complete database and local Auth scope. A
-fresh PostgreSQL 17.10 compatibility baseline passed the migration, seed, and all 84 then-current
-database assertions twice, including the populated-row RLS matrix. The completed product migration
-expands the committed suite to 91 assertions. The authoritative current result is the
-`Local Supabase migration lint` GitHub Actions job, which starts a complete disposable Supabase
-stack, performs two clean resets, runs the pgTAP suite twice, exercises the real local Auth API, and
-restores a logical dump into a separate newly migrated database.
+**PASS.** The authoritative
+[`Local Supabase migration lint` job](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018)
+at application commit `fd97cc64e1fe5d92247bf2035bad30748498581d` started a complete disposable
+Supabase stack, performed two clean resets, passed schema lint, passed all 91 pgTAP assertions after
+each reset, exercised the real local Auth API, and restored a logical dump into a separate newly
+migrated database. The earlier PostgreSQL 17.10 compatibility baseline remains useful historical
+evidence but is not the authoritative result.
 
-Do not call this gate passed for a release commit until that GitHub Actions job is green at the same
-commit. The portable local run does not substitute for Supabase Auth, PostgREST, Storage, or the
-provider-specific recovery checks described below.
+## Executed evidence
 
-## Actual local evidence
+The authoritative CI record contains:
+
+```text
+Migration 20260713213000_initial_platform.sql applied.
+Migration 20260715120000_complete_product_workflows.sql applied.
+Seed supabase/seed.sql applied.
+First clean replay: Files=1, Tests=91, Result: PASS.
+Second clean replay: Files=1, Tests=91, Result: PASS.
+Local Supabase Auth lifecycle passed: signup denied; invite accepted and one-time; disable revoked
+refresh; recovery changed the password and enabled sign-in; global sign-out revoked all refresh
+sessions; revoked invite denied.
+Backup/restore rehearsal passed in isolated database mac_recovery_probe.
+```
+
+The restore verification returned:
+
+```json
+{
+  "database": "mac_recovery_probe",
+  "enquiries": 1,
+  "audit_rows": 13,
+  "prayer_rows": 1,
+  "content_rows": 1,
+  "seed_settings": 2,
+  "admin_profiles": 2,
+  "pending_invites": 1,
+  "prayer_revisions": 1,
+  "content_revisions": 1
+}
+```
+
+### Historical portable baseline
 
 The workstation did not have Docker, WSL, PostgreSQL, `psql`, or the Supabase CLI. A temporary,
 isolated PostgreSQL 17.10 cluster was therefore initialized on loopback port 55432. A minimal
@@ -44,7 +73,7 @@ The compatibility baseline executed the then-current production files. Release C
 - `supabase/seed.sql`; and
 - `supabase/tests/database_p1_release_gates.sql`.
 
-The test file now plans 91 assertions, including the original role/RLS/publication controls plus
+The test file plans 91 assertions, including the original role/RLS/publication controls plus
 read-only reviewer coverage, local-demo column/function ownership and denial boundaries. The
 transaction rolls back all synthetic identities and records.
 
@@ -158,7 +187,7 @@ application checks that current profile on every protected request, and the RLS 
 that a disabled identity immediately loses its role and database capabilities even if an old access
 JWT has not yet expired.
 
-Clean local product acceptance now includes TOTP enrollment and authenticated administrator and
+Clean local product acceptance passed with TOTP enrollment and authenticated administrator and
 reviewer journeys. Production email deliverability, safe-link/prefetch behavior, SMTP configuration
 and named administrator identities use the final email credentials and committee accounts.
 
@@ -190,9 +219,9 @@ SMTP, secrets, Edge Functions, DNS, hosting configuration, or Supabase-managed P
 credentials, an approved provider plan, an independent object backup, and the full procedure in
 `docs/security/BACKUP-AND-RESTORE.md`.
 
-## Release evidence to retain
+## Retained release evidence
 
-For the release commit, retain the GitHub Actions job URL and complete logs showing:
+The linked GitHub Actions job and complete logs retain:
 
 - both `supabase db reset` and `supabase test db` executions passing;
 - database lint at warning level passing;

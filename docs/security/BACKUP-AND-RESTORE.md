@@ -19,15 +19,18 @@ creates and validates a custom-format `pg_dump`; replays the production migratio
 `template0` database; restores the selected application tables; verifies exact relationships,
 privacy-safe audit snapshots, indexes, and constraints; and then destroys the temporary copy.
 
-The authoritative test command is owned by the `Local Supabase migration lint` GitHub Actions job.
-Its release-commit result is still pending; the workstation's clean PostgreSQL replay is not a
-substitute for this full-stack run. Detailed assertions and evidence boundaries are recorded in
-[`DATABASE-P1-VALIDATION.md`](../quality/DATABASE-P1-VALIDATION.md).
+The authoritative test command is owned by the
+[`Local Supabase migration lint` GitHub Actions job](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018).
+It passed at application commit `fd97cc64e1fe5d92247bf2035bad30748498581d`. The restore verification
+returned one enquiry, 13 audit rows, one prayer row and revision, one content row and revision, two
+seed settings, two administrator profiles and one pending invitation in the separately migrated
+recovery database, then destroyed the temporary copy. Detailed assertions and evidence boundaries
+are recorded in [`DATABASE-P1-VALIDATION.md`](../quality/DATABASE-P1-VALIDATION.md).
 
-When that job is green, it proves migration-backed logical recovery of representative application
-data within the disposable stack. It is not a provider backup, PITR test, Storage-object restore,
-Auth/configuration restore, or production RPO/RTO measurement. Those remain part of the credentialed
-quarterly drill below.
+This proves migration-backed logical recovery of representative application data within the
+disposable stack. It is not a provider backup, PITR test, Storage-object restore, Auth/configuration
+restore, or production RPO/RTO measurement. Those remain part of the credentialed quarterly drill
+below.
 
 ## Recovery objectives
 

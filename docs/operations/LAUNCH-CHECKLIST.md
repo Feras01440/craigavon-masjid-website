@@ -9,15 +9,15 @@ dashboard screenshot alone is not proof that an end-to-end control works.
 This section records executed technical evidence as of 15 July 2026; it does **not** check any
 production launch item below.
 
-| Gate                                   | Current evidence                                                                                                                                                                                                                                                                                                    | What remains before the item can be checked                                                                                        |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Local application quality              | Formatting, zero-warning lint, strict typecheck, 129 Vitest tests in 17 files, coverage at 89.34% statements/81.90% branches/90.17% functions/91.25% lines and the production build passed on the final worktree                                                                                                    | Complete GitHub Actions results at the release commit                                                                              |
-| Dependency security                    | Registry-backed audit passed across 568 dependencies with zero findings after PostCSS was updated to 8.5.17; GitHub Dependency Graph is enabled                                                                                                                                                                     | Green dependency-review, Gitleaks and CodeQL jobs at the release commit                                                            |
-| Clean database and RLS                 | PostgreSQL 17.10 replayed the baseline migration and seed from zero twice; all 84 baseline assertions passed. The completed migration set contains 91 assertions for anonymous, non-admin, every role, disabled identity, constraints, indexes, revisions, expiry, audit and prayer publication                     | Green disposable full-Supabase/Auth/recovery CI job at the release commit                                                          |
-| Administrator/content workflows        | Unit tests pass invite, disable, revoke, recovery-response, sign-out, schedule, expiry, archive, revision restore and public-projection boundaries; clean local authenticated product acceptance is committed in CI                                                                                                 | Green release-commit local-product-acceptance job, then enter real email credentials and committee accounts                        |
-| Backup and restore                     | A realistic logical database recovery rehearsal and verification are checked in                                                                                                                                                                                                                                     | Successful authoritative CI rehearsal, then provider backup/PITR, independent Storage-object, Auth/configuration and RPO/RTO drill |
-| Browser, accessibility and performance | The completed 385-check Chromium/Firefox/WebKit/TV selection passed all 370 applicable checks with 15 intentional local-demo/viewport skips; the 10/10 TV soak and 30 external HTTPS Lighthouse runs passed their budgets; public DOM/screen-reader-oriented and 200%-equivalent/320px reflow reviews were recorded | Native assistive-technology and physical-TV checks remain device limitations; permanent hosting uses the final domain/credentials  |
-| Launch authority                       | No technical test supplies factual prayer, identity, privacy, brand, people or operating authority                                                                                                                                                                                                                  | Committee register, named owners, approved credentials/domain/email/provider plans and go/no-go signatures                         |
+| Gate                                   | Current evidence                                                                                                                                                                                                                                                                                                    | What remains before the item can be checked                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Local application quality              | Locked install, formatting, zero-warning lint, strict typecheck, production build and 132 Vitest tests in 17 files passed in CI; coverage is 91.22% statements/83.54% branches/94.64% functions/92.79% lines                                                                                                        | No repository-controlled P1 work; retain the green release evidence                                                               |
+| Dependency security                    | Registry audit found zero vulnerabilities across 568 dependencies; Dependency Graph/review, full-history Gitleaks, CodeQL and link integrity are green                                                                                                                                                              | Approved provider owners/access and ongoing dependency response                                                                   |
+| Clean database and RLS                 | Disposable Supabase replayed migrations/seeds from zero twice; schema lint and 91/91 assertions passed twice across anonymous, non-admin, every role, disabled identity, constraints, indexes, revisions, expiry, audit and prayer publication                                                                      | Repeat in production with the supplied Supabase credentials                                                                       |
+| Administrator/content workflows        | Auth invitation/disable/recovery/session revocation passed; clean product acceptance passed public plus TOTP, draft/preview/publish/edit/archive/revision, media, prayer, reviewer denial, audit and sign-out journeys                                                                                              | Production email credentials, exact domain and real committee accounts                                                            |
+| Backup and restore                     | Authoritative realistic logical database backup/restore passed in a separately migrated disposable database with non-empty sample data, relationships, indexes and constraints                                                                                                                                      | Provider PITR, independent Storage-object, Auth/configuration and measured production RPO/RTO drill                               |
+| Browser, accessibility and performance | The completed 385-check Chromium/Firefox/WebKit/TV selection passed all 370 applicable checks with 15 intentional local-demo/viewport skips; the 10/10 TV soak and 30 external HTTPS Lighthouse runs passed their budgets; public DOM/screen-reader-oriented and 200%-equivalent/320px reflow reviews were recorded | Native assistive-technology and physical-TV checks remain device limitations; permanent hosting uses the final domain/credentials |
+| Launch authority                       | No technical test supplies factual prayer, identity, privacy, brand, people or operating authority                                                                                                                                                                                                                  | Committee register, named owners, approved credentials/domain/email/provider plans and go/no-go signatures                        |
 
 Detailed evidence and limitations are in the [QA report](../quality/QA-REPORT.md),
 [database P1 validation](../quality/DATABASE-P1-VALIDATION.md),
@@ -26,28 +26,25 @@ Detailed evidence and limitations are in the [QA report](../quality/QA-REPORT.md
 [accessibility report](../quality/ACCESSIBILITY-REPORT.md), and
 [performance budgets](../quality/PERFORMANCE-BUDGETS.md).
 
-## Current known no-go items
+## Final configuration still required
 
-- [ ] Resolve every launch-blocking item in
-      [COMMITTEE-CONFIRMATIONS.md](../COMMITTEE-CONFIRMATIONS.md), including formal logo
-      ownership/brand approval, identity/contact, prayer policy, public policies, and operational
-      owners.
-- [ ] Credential-test prayer/Jumu'ah preview, approval, publication, safe withdrawal/replacement,
-      per-date overrides and revision restoration in an isolated staging project.
-- [ ] Credential-test `/admin/settings`, `/admin/media`, `/admin/enquiries`, `/admin/audit`,
-      `/admin/users` and `/admin/prayer-times`, including every role's denial paths.
-- [ ] Test the checked-in `/admin/auth/callback` allow-list with local, staging and exact production
-      origins; keep wildcard previews excluded.
-- [ ] Prove scheduled content becomes effective and expires at its validated instants through the
-      server-mediated repository/publication-window path; no status-promotion scheduler is required.
-- [ ] Run the committed Playwright journeys on phone, tablet, desktop and TV projects and attach the
-      exact result.
-- [ ] Approve the production origin and identity, then enable and verify the environment-gated
-      robots, sitemap, canonical metadata and structured data.
-- [ ] Establish privacy-safe monitoring/alerting or an approved, staffed manual equivalent; no
-      integration is currently active.
-- [ ] Complete a credentialed staging deployment and capture the screenshot/testing evidence
-      required by the admin and QA guides.
+- [ ] Approved prayer and Jumu'ah values.
+- [ ] Approved contact information.
+- [ ] Production domain and DNS.
+- [ ] Production Supabase credentials.
+- [ ] Production Vercel credentials.
+- [ ] Production email credentials.
+- [ ] Real committee administrator accounts.
+- [ ] Approved policies and public content.
+- [ ] Committee sign-off.
+
+Repository-controlled acceptance is recorded in
+[CI run 29441499018](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441499018)
+and
+[CodeQL run 29441498715](https://github.com/Feras01440/craigavon-masjid-website/actions/runs/29441498715)
+at application commit `fd97cc64e1fe5d92247bf2035bad30748498581d`. The detailed production checklists
+below remain unchecked until those nine inputs are supplied and the checks execute in the exact
+production environment.
 
 ## Ownership and approvals
 

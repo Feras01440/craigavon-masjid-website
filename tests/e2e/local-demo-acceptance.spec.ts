@@ -87,7 +87,16 @@ async function hashedMagicToken(service: SupabaseClient, email: string): Promise
 async function enrolAuthenticator(page: Page): Promise<void> {
   await page.goto("/admin/security");
   await page.getByRole("button", { name: "Set up authenticator" }).click();
-  const secret = (await page.locator("details code").textContent())?.trim();
+  const secretCode = page.locator("details code");
+  const enrollmentError = page.locator(".admin-feedback--error");
+  await expect(
+    secretCode.or(enrollmentError),
+    "MFA enrollment should render a setup key or an explicit product error",
+  ).toBeVisible();
+  if (await enrollmentError.isVisible()) {
+    throw new Error(`MFA enrollment failed: ${(await enrollmentError.textContent())?.trim()}`);
+  }
+  const secret = (await secretCode.textContent())?.trim();
   if (!secret) throw new Error("The local authenticator setup key was not rendered.");
   const seconds = Math.floor(Date.now() / 1_000) % 30;
   if (seconds >= 27) await page.waitForTimeout((31 - seconds) * 1_000);
