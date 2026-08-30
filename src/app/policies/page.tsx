@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   description: "Policies published by the Muslim Association of Craigavon.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
 
 export default async function PoliciesPage() {
   const content = await getPublishedContent(["policy"], { limit: 100 });

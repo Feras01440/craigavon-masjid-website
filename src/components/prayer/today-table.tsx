@@ -1,23 +1,37 @@
+"use client";
+
 import Link from "next/link";
 
-import { nextEvent } from "@/lib/prayer/events";
+import { useNextPrayer } from "@/components/prayer/next-prayer-live";
 import { prayerDisplayNames } from "@/lib/prayer/names";
 import { formatTime } from "@/lib/prayer/timezone";
-import { prayerKeys, type PrayerBundle, type PrayerSchedule } from "@/lib/prayer/types";
+import { prayerKeys, type PrayerSchedule } from "@/lib/prayer/types";
 
-export function HomePrayerToday({
-  bundle,
+/*
+ * Today's timetable, shared by the homepage and /prayer-times. The "Next"
+ * highlight is client-derived on the shared clock, so it moves through the
+ * day without a reload and always agrees with the hero panel and the strip.
+ */
+export function TodayTable({
+  schedules,
   today,
-  now,
+  initialNowIso,
+  showLink = true,
 }: {
-  bundle: PrayerBundle;
+  schedules: PrayerSchedule[];
   today: PrayerSchedule;
-  now: Date;
+  initialNowIso: string;
+  showLink?: boolean;
 }): React.ReactNode {
-  const upcoming = nextEvent([today], now, ["prayer_start"]);
+  const { next } = useNextPrayer([today], initialNowIso);
+  const nextKey = next?.date === today.date ? next.key : null;
   // Jumuʿah sessions are only attached to Friday schedules, so the standing
-  // row is sourced from the first covered Friday rather than re-declared here.
-  const jumuahDay = bundle.schedules.find((schedule) => schedule.jumuah.length > 0) ?? null;
+  // row is sourced from the first covered Friday in the wider bundle.
+  const jumuahDay = schedules.find((schedule) => schedule.jumuah.length > 0) ?? null;
+  const joinedPairs = prayerKeys
+    .map((key) => today.prayers[key])
+    .filter((prayer) => prayer.joinedWith !== null)
+    .map((prayer) => ({ key: prayer.key, partner: prayer.joinedWith! }));
 
   return (
     <div className="home-prayer">
@@ -42,7 +56,7 @@ export function HomePrayerToday({
           <tbody>
             {prayerKeys.map((key) => {
               const prayer = today.prayers[key];
-              const isNext = upcoming?.key === key;
+              const isNext = nextKey === key;
               return (
                 <tr className={isNext ? "home-prayer__row--next" : undefined} key={key}>
                   <th scope="row">
@@ -57,11 +71,7 @@ export function HomePrayerToday({
                   <td>{formatTime(prayer.startsAt, today.timezone)}</td>
                   <td>
                     {formatTime(prayer.congregationAt, today.timezone)}
-                    {prayer.joinedWith && (
-                      <span className="home-prayer__note">
-                        with {prayerDisplayNames[prayer.joinedWith][0]}
-                      </span>
-                    )}
+                    {prayer.joinedWith && <span aria-hidden="true"> †</span>}
                   </td>
                 </tr>
               );
@@ -83,12 +93,24 @@ export function HomePrayerToday({
             ))}
           </tbody>
         </table>
+        {joinedPairs.length > 0 ? (
+          <p className="home-prayer__legend">
+            {joinedPairs.map((pair) => (
+              <span key={pair.key}>
+                † {prayerDisplayNames[pair.key][0]} is prayed together with{" "}
+                {prayerDisplayNames[pair.partner][0]}.
+              </span>
+            ))}
+          </p>
+        ) : null}
       </div>
-      <p className="home-prayer__more">
-        <Link className="text-link" href="/prayer-times">
-          Open the full timetable
-        </Link>
-      </p>
+      {showLink ? (
+        <p className="home-prayer__more">
+          <Link className="text-link" href="/prayer-times">
+            Open the full timetable
+          </Link>
+        </p>
+      ) : null}
     </div>
   );
 }

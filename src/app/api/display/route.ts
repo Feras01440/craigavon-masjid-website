@@ -20,7 +20,9 @@ export async function GET(): Promise<NextResponse> {
     {
       status: available ? 200 : 503,
       headers: {
-        "Cache-Control": available ? "public, max-age=30, stale-while-revalidate=120" : "no-store",
+        "Cache-Control": available
+          ? "public, max-age=30, s-maxage=30, stale-while-revalidate=120"
+          : "no-store",
         ...(available ? {} : { "Retry-After": "60" }),
       },
     },

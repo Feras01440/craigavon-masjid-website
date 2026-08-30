@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { prayerDisplayNames } from "@/lib/prayer/names";
 import { prayerKeys } from "@/lib/prayer/types";
 import { formatTime } from "@/lib/prayer/timezone";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
@@ -26,22 +27,33 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
   const headers = [
     "Date",
-    ...prayerKeys.flatMap((key) =>
-      key === "sunrise" ? [`${key} begins`] : [`${key} begins`, `${key} iqamah`],
-    ),
-  ];
-  const rows = bundle.schedules.map((schedule) => [
-    schedule.date,
     ...prayerKeys.flatMap((key) => {
-      const prayer = schedule.prayers[key];
-      return key === "sunrise"
-        ? [formatTime(prayer.startsAt, schedule.timezone)]
-        : [
-            formatTime(prayer.startsAt, schedule.timezone),
-            formatTime(prayer.congregationAt, schedule.timezone),
-          ];
+      const name = prayerDisplayNames[key][0];
+      return key === "sunrise" ? [`${name} begins`] : [`${name} begins`, `${name} Iqamah`];
     }),
-  ]);
+    "Jumuʿah khutbah",
+    "Jumuʿah prayer",
+  ];
+  const rows = bundle.schedules.map((schedule) => {
+    const jumuah = schedule.jumuah[0] ?? null;
+    return [
+      schedule.date,
+      ...prayerKeys.flatMap((key) => {
+        const prayer = schedule.prayers[key];
+        const begins = formatTime(prayer.startsAt, schedule.timezone);
+        if (key === "sunrise") return [begins];
+        const iqamah = formatTime(prayer.congregationAt, schedule.timezone);
+        return [
+          begins,
+          prayer.joinedWith
+            ? `${iqamah} (with ${prayerDisplayNames[prayer.joinedWith][0]})`
+            : iqamah,
+        ];
+      }),
+      jumuah ? formatTime(jumuah.khutbahAt, schedule.timezone) : "",
+      jumuah ? formatTime(jumuah.prayerAt ?? jumuah.khutbahAt, schedule.timezone) : "",
+    ];
+  });
   const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");
   return new NextResponse(`\uFEFF${csv}`, {
     headers: {

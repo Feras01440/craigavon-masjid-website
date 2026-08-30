@@ -88,10 +88,12 @@ test.describe("safe fallbacks without Supabase configuration", () => {
     expect(manifestResponse.status()).toBe(200);
     expect(await manifestResponse.json()).toMatchObject({
       name: "Muslim Association of Craigavon",
+      short_name: "Craigavon Masjid",
       start_url: "/",
       icons: [
         { sizes: "192x192", type: "image/png" },
         { sizes: "512x512", type: "image/png" },
+        { sizes: "512x512", type: "image/png", purpose: "maskable" },
       ],
     });
   });

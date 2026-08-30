@@ -30,7 +30,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     headers: {
       "Cache-Control":
         result.status === "available"
-          ? "public, max-age=60, stale-while-revalidate=300"
+          ? "public, max-age=60, s-maxage=60, stale-while-revalidate=300"
           : "no-store",
     },
   });

@@ -37,6 +37,13 @@ const nextConfig: NextConfig = {
       // Retired routes from the 2026 public redesign.
       { source: "/visit", destination: "/contact", permanent: true },
       { source: "/new-muslims", destination: "/services", permanent: true },
+      // Month browsing moved from a query parameter to a path segment.
+      {
+        source: "/prayer-times",
+        has: [{ type: "query", key: "month", value: "(?<month>\\d{4}-\\d{2})" }],
+        destination: "/prayer-times/:month",
+        permanent: true,
+      },
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/prayer-times.html", destination: "/prayer-times", permanent: true },
       { source: "/about.html", destination: "/about", permanent: true },

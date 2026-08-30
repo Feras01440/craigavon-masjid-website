@@ -16,11 +16,27 @@ function requestUsesHttps(request: NextRequest): boolean {
   return forwardedProtocol ? forwardedProtocol === "https" : request.nextUrl.protocol === "https:";
 }
 
-function contentSecurityPolicy(nonce: string, upgradeInsecureRequests: boolean): string {
+/*
+ * Two CSP modes (see docs/architecture/ADR-003-public-caching.md):
+ *
+ * - Admin and TV routes render per-request and get a fresh nonce with
+ *   strict-dynamic — the strongest policy, affordable because those routes
+ *   are never shared-cached.
+ * - Public routes are ISR-cached at the CDN. Cached HTML cannot carry a
+ *   per-request nonce (the middleware would stamp a fresh-nonce header onto
+ *   cached markup holding the old nonce, blocking every script), so they use
+ *   a static policy allowing the framework's inline bootstrap. All other
+ *   directives are identical, and the app itself never injects inline
+ *   event handlers or third-party scripts.
+ */
+function contentSecurityPolicy(nonce: string | null, upgradeInsecureRequests: boolean): string {
   const developmentScript = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
+  const scriptSource = nonce
+    ? `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScript}`
+    : `script-src 'self' 'unsafe-inline'${developmentScript}`;
   const directives = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScript}`,
+    scriptSource,
     "style-src 'self'",
     "img-src 'self' data: blob: https://*.supabase.co",
     "font-src 'self'",
@@ -63,20 +79,33 @@ function applyResponseSecurity(
   return response;
 }
 
+function usesPerRequestNonce(pathname: string): boolean {
+  return pathname.startsWith("/admin") || pathname.startsWith("/tv");
+}
+
+function hasSupabaseSession(request: NextRequest): boolean {
+  return request.cookies.getAll().some((cookie) => cookie.name.startsWith("sb-"));
+}
+
 export async function proxy(request: NextRequest): Promise<NextResponse> {
-  const nonce = createNonce();
   const secureTransport = requestUsesHttps(request);
+  const nonced = usesPerRequestNonce(request.nextUrl.pathname);
+  const nonce = nonced ? createNonce() : null;
   const policy = contentSecurityPolicy(nonce, secureTransport);
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", policy);
+  if (nonce) {
+    requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", policy);
+  }
 
   let response = NextResponse.next({ request: { headers: requestHeaders } });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   let refreshedCookies = false;
 
-  if (url && key) {
+  // Anonymous visitors never pay the auth round trip; session cookie
+  // validation and rotation only run when a Supabase session cookie exists.
+  if (url && key && hasSupabaseSession(request)) {
     const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {

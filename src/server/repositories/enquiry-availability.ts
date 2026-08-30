@@ -23,8 +23,11 @@ export async function getPublicEnquiryAvailability(): Promise<PublicEnquiryAvail
     return { enabled: false };
   }
   try {
+    // A 60-second bound keeps /contact eligible for ISR; form availability
+    // flips within a minute of the committee toggling it.
     const client = createSupabaseServiceClient({
-      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      fetch: (input, init) =>
+        fetch(input, { ...init, next: { revalidate: 60, tags: ["enquiry-availability"] } }),
     });
     const now = new Date().toISOString();
     const [flagsResult, configurationResult, privacyResult] = await Promise.all([

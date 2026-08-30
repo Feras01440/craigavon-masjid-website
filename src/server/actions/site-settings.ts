@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import type { ActionState } from "@/lib/auth/errors";
@@ -198,6 +198,8 @@ function settingDatabaseError(error: { code?: string } | null): never {
 }
 
 function revalidateSettingSurfaces(): void {
+  revalidateTag("public-site-settings", "max");
+  revalidateTag("enquiry-availability", "max");
   revalidatePath("/admin/settings");
   revalidatePath("/", "layout");
   revalidatePath("/contact");

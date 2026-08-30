@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   description: "Qur'an and Islamic education for children and adults at Craigavon Masjid.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
 
 export default async function EducationPage() {
   const content = await getPublishedContent(["education"], { limit: 100 });
@@ -41,11 +41,6 @@ export default async function EducationPage() {
               <p>
                 Details of current classes are being prepared. In the meantime, contact us and
                 we&apos;ll let you know what is running and how to join.
-              </p>
-              <p>
-                <Link className="text-link" href="/contact">
-                  Ask about classes
-                </Link>
               </p>
             </EmptyState>
           ) : (

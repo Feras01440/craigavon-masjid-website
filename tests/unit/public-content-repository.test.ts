@@ -29,10 +29,11 @@ afterEach(() => {
 describe("public content repository", () => {
   it("applies every approval and publication-window filter to the server-mediated query", async () => {
     let requestedUrl: URL | null = null;
-    let requestedCache: RequestCache | undefined;
+    let requestedNext: { revalidate?: number; tags?: string[] } | undefined;
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       requestedUrl = new URL(typeof input === "string" ? input : input.toString());
-      requestedCache = init?.cache;
+      requestedNext = (init as { next?: { revalidate?: number; tags?: string[] } } | undefined)
+        ?.next;
       return new Response(JSON.stringify([currentRow]), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -50,7 +51,7 @@ describe("public content repository", () => {
     expect(result.status).toBe("ready");
     expect(result.items).toHaveLength(1);
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(requestedCache).toBe("no-store");
+    expect(requestedNext).toEqual({ revalidate: 300, tags: ["public-content"] });
     expect(requestedUrl).not.toBeNull();
 
     const query = requestedUrl!.searchParams;

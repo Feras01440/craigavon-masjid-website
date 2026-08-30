@@ -163,12 +163,15 @@ export function buildContiguousPublishedSchedules(
 export async function getPublishedPrayerBundle(
   firstDate: string,
   days: number,
-  options: { allowLeadingGap?: boolean } = {},
+  options: { allowLeadingGap?: boolean; throwOnTransientError?: boolean } = {},
 ): Promise<PrayerApiResponse> {
   const finalDate = addDaysToDateKey(firstDate, days - 1);
   try {
+    // Cached for 60s and purged by revalidateTag("prayer-data") on publish,
+    // so ISR pages rebuild against fresh rows the moment the committee acts.
     const client = createSupabaseServiceClient({
-      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      fetch: (input, init) =>
+        fetch(input, { ...init, next: { revalidate: 60, tags: ["prayer-data"] } }),
     });
     let settingsRequest = client
       .from("prayer_settings")
@@ -280,6 +283,11 @@ export async function getPublishedPrayerBundle(
       );
     }
     console.error("Unable to load published prayer data", error);
+    // ISR callers rethrow transient fetch failures: a failed background
+    // regeneration then keeps serving the last good cached page instead of
+    // replacing it with an apology card. Direct responders (API, CSV) keep
+    // the graceful fallback.
+    if (options.throwOnTransientError) throw error;
     return unavailable(
       "temporarily_unavailable",
       "Prayer information is temporarily unavailable. Please contact the masjid before travelling.",

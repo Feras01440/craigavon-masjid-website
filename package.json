@@ -24,6 +24,7 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "deploy:prod": "npx -y vercel@56.3.0 deploy --prod --yes",
     "db:types": "supabase gen types typescript --local > src/types/database.generated.ts",
     "db:reset": "supabase db reset",
     "db:lint": "supabase db lint --local",

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import type { ActionState } from "@/lib/auth/errors";
@@ -452,6 +452,7 @@ export async function createContentAction(
 
     revalidatePath("/admin/content");
     revalidatePath("/", "layout");
+    revalidateTag("public-content", "max");
     return { status: "success", message: "Content created successfully." };
   } catch (error) {
     return safeActionError(error);
@@ -546,6 +547,7 @@ export async function updateContentAction(
     revalidatePath("/admin/content");
     revalidatePath(`/admin/content/${parsed.data.id}`);
     revalidatePath("/", "layout");
+    revalidateTag("public-content", "max");
     return { status: "success", message: `Changes saved as version ${data.version}.` };
   } catch (error) {
     return safeActionError(error);
@@ -578,6 +580,7 @@ export async function softDeleteContentAction(formData: FormData): Promise<void>
     throw new AdminAccessError("conflict", "This item changed. Reload before archiving it.");
   revalidatePath("/admin/content");
   revalidatePath("/", "layout");
+  revalidateTag("public-content", "max");
 }
 
 export async function restoreSoftDeletedContentAction(formData: FormData): Promise<void> {

@@ -9,7 +9,7 @@ import {
   PublishedContentUnavailable,
 } from "@/components/site";
 import { HomeNextPrayerPanel } from "@/components/prayer/home-next-prayer-panel";
-import { HomePrayerToday } from "@/components/prayer/home-prayer-today";
+import { TodayTable } from "@/components/prayer/today-table";
 import { serviceCategories, SITE_DESCRIPTION } from "@/content/public-copy";
 import { dateKeyInZone } from "@/lib/prayer/timezone";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
@@ -23,8 +23,11 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: the CDN serves this page and rebuilds it at most once a minute (and
+// immediately after any committee publish via revalidateTag/Path). Live
+// next-prayer behaviour is client-side, so cached HTML never goes stale for
+// the reader. See docs/architecture/ADR-003-public-caching.md.
+export const revalidate = 60;
 
 const featuredServiceIds = ["new-to-islam", "funerals", "imam"] as const;
 
@@ -34,7 +37,9 @@ export default async function HomePage() {
   // Eight days always reaches the next Friday, so the standing Jumuʿah row
   // can be sourced from published data on any weekday.
   const [prayerBundle, updates, homepage, contact] = await Promise.all([
-    getPublishedPrayerBundle(todayKey, 8),
+    // Transient fetch failures throw so a failed ISR regeneration keeps the
+    // last good page instead of caching an apology card.
+    getPublishedPrayerBundle(todayKey, 8, { throwOnTransientError: true }),
     getPublishedContent(["news", "event"], { limit: 3 }),
     getPublicHomepageContent(),
     getPublicContactInformation(),
@@ -73,7 +78,10 @@ export default async function HomePage() {
           </div>
 
           {prayerBundle.status === "available" && todaySchedule ? (
-            <HomeNextPrayerPanel bundle={prayerBundle} now={now} />
+            <HomeNextPrayerPanel
+              schedules={prayerBundle.schedules}
+              initialNowIso={now.toISOString()}
+            />
           ) : (
             <aside className="hero-prayer" aria-label="Prayer times">
               <p className="hero-prayer__eyebrow">Prayer times</p>
@@ -96,18 +104,16 @@ export default async function HomePage() {
             <h2 id="prayer-heading">Today&apos;s prayer times</h2>
           </div>
           {prayerBundle.status === "available" && todaySchedule ? (
-            <HomePrayerToday bundle={prayerBundle} today={todaySchedule} now={now} />
+            <TodayTable
+              schedules={prayerBundle.schedules}
+              today={todaySchedule}
+              initialNowIso={now.toISOString()}
+            />
           ) : (
-            <div className="approval-grid">
-              <ApprovalCard
-                title="Daily prayer times"
-                description="Prayer times are not currently available online. Please use a confirmed local source before travelling."
-              />
-              <ApprovalCard
-                title="Friday prayer"
-                description="Friday prayer information is not currently available online."
-              />
-            </div>
+            <ApprovalCard
+              title="Daily prayer times"
+              description="Prayer times are not currently available online. Please use a confirmed local source before travelling. Friday prayer information is not currently available online either."
+            />
           )}
         </div>
       </section>
@@ -175,7 +181,7 @@ export default async function HomePage() {
         <div className="site-container home-find__grid">
           <div>
             <p className="eyebrow eyebrow--hero">Find us</p>
-            <h2 id="find-us-heading">{address || "Craigavon Masjid"}</h2>
+            <h2 id="find-us-heading">Find us at the Legahory Centre</h2>
             <p className="home-find__lead">
               The masjid is open for the five daily prayers and Jumuʿah. New faces are always
               welcome — come as you are.
@@ -189,8 +195,15 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          {contact && (contact.public_phone || contact.public_email || contact.map_url) ? (
+          {contact &&
+          (address || contact.public_phone || contact.public_email || contact.map_url) ? (
             <div className="home-find__details">
+              {address ? (
+                <p>
+                  <span className="home-find__label">Address</span>
+                  <span className="home-find__address">{address}</span>
+                </p>
+              ) : null}
               {contact.public_phone ? (
                 <p>
                   <span className="home-find__label">Phone</span>

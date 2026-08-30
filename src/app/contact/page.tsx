@@ -11,7 +11,8 @@ export const metadata: Metadata = {
     "Contact Craigavon Masjid — phone, WhatsApp, email, enquiry form, visiting information and map.",
 };
 
-export const dynamic = "force-dynamic";
+// ISR: shared-cached for a minute so form availability flips promptly.
+export const revalidate = 60;
 
 function whatsappHref(value: string): string | null {
   const digits = value.replace(/\D/g, "");

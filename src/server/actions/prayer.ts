@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -73,8 +73,12 @@ function prayerServiceError(error: { code?: string; message?: string } | null): 
 }
 
 function revalidatePrayerSurfaces(id?: string): void {
+  // The tag purges the cached Supabase rows; the paths purge the rendered
+  // pages that consumed them. Both are needed for an instant public flip.
+  revalidateTag("prayer-data", "max");
   revalidatePath("/");
   revalidatePath("/prayer-times");
+  revalidatePath("/prayer-times/[month]", "page");
   revalidatePath("/tv");
   revalidatePath("/api/prayer");
   revalidatePath("/api/display");

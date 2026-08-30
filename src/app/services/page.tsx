@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     "Shahada and new Muslim support, Islamic funerals, Nikah, speaking with the imam, education and visits at Craigavon Masjid.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
 
 export default async function ServicesPage() {
   const [serviceContent, faqContent] = await Promise.all([
@@ -111,19 +111,15 @@ export default async function ServicesPage() {
         </section>
       )}
 
-      <section className="section" aria-labelledby="services-contact-heading">
-        <div className="site-container content-grid">
-          <div className="prose">
-            <p className="eyebrow">Not sure where to start?</p>
-            <h2 id="services-contact-heading">Just get in touch</h2>
-            <p>
-              If your question doesn&apos;t fit any of the services above, contact us anyway —
-              we&apos;ll point you to the right person. Conversations are always private.
-            </p>
+      <section className="section section--compact" aria-label="General enquiries">
+        <div className="site-container">
+          <p className="service-footnote">
+            Not sure where to start? Contact us anyway — we&apos;ll point you to the right person,
+            and conversations are always private.{" "}
             <Link className="text-link" href="/contact">
               Contact the masjid
             </Link>
-          </div>
+          </p>
         </div>
       </section>
     </PublicShell>

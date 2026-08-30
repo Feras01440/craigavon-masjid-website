@@ -1,23 +1,26 @@
+"use client";
+
 import Link from "next/link";
 
-import { NextPrayerTicker } from "@/components/prayer/next-prayer-ticker";
-import { nextPrayerDetail } from "@/lib/prayer/events";
+import { useNextPrayer } from "@/components/prayer/next-prayer-live";
 import { prayerDisplayNames } from "@/lib/prayer/names";
 import { formatTime } from "@/lib/prayer/timezone";
-import type { PrayerBundle } from "@/lib/prayer/types";
+import type { PrayerSchedule } from "@/lib/prayer/types";
 
-/* The hero's live panel: the next prayer with its start and Iqamah times,
-   plus the standing Jumuʿah time — all from published data. */
+/*
+ * The hero's live panel: next prayer with its Begins and Iqamah times, a
+ * live countdown, and the standing Jumuʿah time — derived on the shared
+ * client clock so it agrees with every other surface and rolls over live.
+ */
 export function HomeNextPrayerPanel({
-  bundle,
-  now,
+  schedules,
+  initialNowIso,
 }: {
-  bundle: PrayerBundle;
-  now: Date;
+  schedules: PrayerSchedule[];
+  initialNowIso: string;
 }): React.ReactNode {
-  const timezone = bundle.schedules[0]?.timezone ?? "Europe/London";
-  const next = nextPrayerDetail(bundle.schedules, now);
-  const jumuahDay = bundle.schedules.find((schedule) => schedule.jumuah.length > 0) ?? null;
+  const { timezone, next, remaining, anchorLabel } = useNextPrayer(schedules, initialNowIso);
+  const jumuahDay = schedules.find((schedule) => schedule.jumuah.length > 0) ?? null;
   const jumuah = jumuahDay?.jumuah[0] ?? null;
 
   return (
@@ -48,9 +51,9 @@ export function HomeNextPrayerPanel({
               </dd>
             </div>
           </dl>
-          {(next.congregationAt ?? next.startsAt) ? (
+          {remaining ? (
             <p className="hero-prayer__countdown">
-              <NextPrayerTicker targetIso={(next.congregationAt ?? next.startsAt)!} />
+              {anchorLabel} in {remaining}
             </p>
           ) : null}
         </>

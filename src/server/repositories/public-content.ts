@@ -15,7 +15,11 @@ import { createSupabaseServiceClient } from "@/lib/supabase/server";
 const PUBLIC_CONTENT_SELECT =
   "id,kind,slug,title,summary,seo_title,seo_description,body,category,status,featured,publish_at,expires_at,published_by,published_at,deleted_at,updated_at";
 
-const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store" });
+// Cached for five minutes and purged by revalidateTag("public-content") on
+// every publish/update/archive action, so edits appear immediately while
+// steady-state traffic never touches the database.
+const noStoreFetch: typeof fetch = (input, init) =>
+  fetch(input, { ...init, next: { revalidate: 300, tags: ["public-content"] } });
 
 type PublishedContentOptions = {
   limit?: number;

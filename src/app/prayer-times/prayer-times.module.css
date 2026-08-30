@@ -1,47 +1,36 @@
-.page {
-  padding-block: clamp(2.5rem, 6vw, 6rem);
-}
-
-.intro,
 .content {
-  width: min(100% - 2rem, 74rem);
-  margin-inline: auto;
+  padding-block-end: clamp(1.5rem, 3vw, 3rem);
 }
 
-.eyebrow {
-  margin: 0 0 0.75rem;
-  color: var(--accent-strong, #705927);
-  font-size: 0.78rem;
-  font-weight: 750;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.todayHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
-.intro h1 {
-  max-width: 14ch;
+.todayHeading h2 {
   margin: 0;
-  font-size: clamp(2.25rem, 7vw, 5.5rem);
-  line-height: 0.98;
-  text-wrap: balance;
 }
 
-.lede {
-  max-width: 62ch;
-  margin: 1.25rem 0 0;
-  color: var(--muted, #4b5550);
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
+.live {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .notice {
-  margin-top: 2rem;
-  border: 1px solid var(--line, #c9cec9);
-  border-left: 0.35rem solid var(--accent, #8a7138);
-  border-radius: 0.3rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  background: var(--surface, #fffdf8);
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
+  padding-top: 1.25rem;
 }
 
 .notice h2,
+.notice h3,
+.notice h4,
 .notice p {
   margin-top: 0;
 }
@@ -50,84 +39,13 @@
   margin-bottom: 0;
 }
 
-.today {
-  display: grid;
-  gap: 1rem;
-  margin-top: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-}
-
-.prayerCard {
-  border-top: 0.25rem solid var(--ink, #17231e);
-  padding: 1rem;
-  background: var(--surface, #fffdf8);
-  box-shadow: 0 0.5rem 1.5rem rgb(22 35 30 / 8%);
-}
-
-.prayerCard h3,
-.prayerCard p {
-  margin: 0;
-}
-
-.arabic {
-  display: block;
-  margin-top: 0.2rem;
-  color: var(--muted, #4b5550);
-  font-family: var(--font-arabic, serif);
-  font-size: 1.1rem;
-}
-
-.time {
-  margin-top: 1.25rem !important;
-  font-variant-numeric: tabular-nums;
-  font-size: 1.9rem;
-  font-weight: 760;
-}
-
-.congregation {
-  margin-top: 0.35rem !important;
-  color: var(--muted, #4b5550);
-  font-size: 0.9rem;
-}
-
-.jumuah {
-  margin-top: 2rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  color: #fffdf8;
-  background: var(--ink, #17231e);
-}
-
-.jumuah h2 {
-  margin-top: 0;
-}
-
-.jumuahList {
-  display: grid;
-  gap: 1rem;
-  margin: 0;
-}
-
-.jumuahList div {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5rem 2rem;
-  border-top: 1px solid rgb(255 255 255 / 25%);
-  padding-top: 0.8rem;
-}
-
-.jumuahList dt,
-.jumuahList dd {
-  margin: 0;
-}
-
 .controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 3.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .controls h2 {
@@ -143,106 +61,201 @@
 .controlLinks a,
 .controlLinks button {
   min-height: 2.75rem;
-  border: 1px solid currentcolor;
-  border-radius: 999px;
-  padding: 0.65rem 1rem;
-  color: var(--ink, #17231e);
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.9rem;
+  color: var(--pine-deep);
+  background: var(--surface);
   font: inherit;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 650;
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--motion-quick) var(--ease-standard),
+    border-color var(--motion-quick) var(--ease-standard);
+}
+
+.controlLinks a:hover,
+.controlLinks button:hover {
+  border-color: var(--copper);
+  background: var(--copper-soft);
+}
+
+.source {
+  max-width: 70ch;
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
 }
 
 .tableRegion {
   overflow-x: auto;
-  margin-top: 1.25rem;
-  border: 1px solid var(--line, #c9cec9);
-  background: var(--surface, #fffdf8);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--copper);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
 }
 
 .table {
   width: 100%;
-  min-width: 70rem;
+  min-width: 44rem;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
 }
 
-.table caption {
-  padding: 0.9rem;
-  font-weight: 700;
-  text-align: left;
+.tableCaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .table th,
 .table td {
-  border-bottom: 1px solid var(--line, #d7dbd7);
-  padding: 0.7rem 0.65rem;
+  border-bottom: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
   text-align: center;
-  white-space: nowrap;
 }
 
 .table thead th {
-  background: var(--soft, #eef0eb);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.columnHint {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 0.66rem;
+  font-weight: 550;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
 .table tbody th {
   position: sticky;
   left: 0;
+  z-index: 1;
+  min-width: 5.5rem;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
   text-align: left;
-  background: var(--surface, #fffdf8);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.begins {
+  display: block;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.iqamah {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.jumuahChip {
+  display: block;
+  margin-top: 0.15rem;
+  color: #6d3a16;
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.fridayRow th,
+.fridayRow td {
+  background: var(--copper-soft);
+}
+
+.fridayRow th {
+  background: var(--copper-soft);
 }
 
 .todayRow th,
 .todayRow td {
-  background: var(--highlight, #f3ead4);
+  background: var(--pine-soft);
 }
 
 .todayRow th {
-  background: var(--highlight, #f3ead4) !important;
+  background: var(--pine-soft);
 }
 
-.source {
-  max-width: 70ch;
-  margin-top: 2rem;
-  color: var(--muted, #4b5550);
-  font-size: 0.9rem;
+.table tbody tr {
+  scroll-margin-top: 6.5rem;
 }
 
 @media print {
-  .intro,
+  .todayHeading,
+  .live,
   .controls,
-  .notice,
-  .jumuah,
-  .source {
+  .notice {
     display: none !important;
   }
 
-  .page,
-  .content {
-    width: 100%;
-    padding: 0;
+  .content::before {
+    content: "Craigavon Masjid — monthly prayer timetable";
+    display: block;
+    margin-bottom: 8pt;
+    font-size: 14pt;
+    font-weight: 600;
   }
 
   .tableRegion {
     overflow: visible;
     border: 0;
+    box-shadow: none;
   }
 
   .table {
     min-width: 0;
-    font-size: 8pt;
+    font-size: 8.5pt;
+  }
+
+  .table thead th,
+  .table tbody th {
+    position: static;
+  }
+
+  .table tbody tr {
+    break-inside: avoid;
   }
 }
 
+@page {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
 @media (forced-colors: active) {
-  .notice,
-  .prayerCard,
-  .jumuah,
   .tableRegion {
     border: 2px solid CanvasText;
+  }
+
+  .controlLinks a,
+  .controlLinks button {
+    border: 1px solid CanvasText;
   }
 }

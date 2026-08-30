@@ -37,35 +37,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section section--tinted" aria-labelledby="about-links-heading">
-        <div className="site-container">
-          <div className="section-heading">
-            <p className="eyebrow">Get to know us</p>
-            <h2 id="about-links-heading">Start here</h2>
-          </div>
-          <div className="journey-grid journey-grid--three">
-            <article className="journey-card">
-              <h3>Prayer times</h3>
-              <p>Today&apos;s times, Jumuʿah and the monthly timetable.</p>
-              <Link className="text-link" href="/prayer-times">
-                View prayer times
-              </Link>
-            </article>
-            <article className="journey-card">
-              <h3>Services</h3>
-              <p>Shahada support, funerals, Nikah, education and speaking with the imam.</p>
-              <Link className="text-link" href="/services">
-                See our services
-              </Link>
-            </article>
-            <article className="journey-card">
-              <h3>Visit or contact us</h3>
-              <p>Where to find us, visiting information and how to get in touch.</p>
-              <Link className="text-link" href="/contact">
-                Contact the masjid
-              </Link>
-            </article>
-          </div>
+      <section
+        className="section section--tinted section--compact"
+        aria-labelledby="about-next-heading"
+      >
+        <div className="site-container prose prose--wide">
+          <p className="eyebrow">Get to know us</p>
+          <h2 id="about-next-heading">Come and see for yourself</h2>
+          <p>
+            The best introduction is a visit. Check the{" "}
+            <Link href="/prayer-times">prayer times</Link>, see{" "}
+            <Link href="/services">how we can help</Link>, or{" "}
+            <Link href="/contact">get in touch</Link> — we are always glad to hear from you.
+          </p>
         </div>
       </section>
     </PublicShell>

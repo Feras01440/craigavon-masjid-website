@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   description: "News, announcements and events from Craigavon Masjid.",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
 
 export default async function NewsPage() {
   const content = await getPublishedContent(["news", "event"], { limit: 100 });

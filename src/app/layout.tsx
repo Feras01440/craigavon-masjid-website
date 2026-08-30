@@ -26,6 +26,8 @@ const tvDisplayFace = localFont({
   display: "swap",
   variable: "--font-marcellus-face",
   fallback: ["Georgia", "Times New Roman", "serif"],
+  // Used only by the TV display; phones should not preload it.
+  preload: false,
 });
 const bodyFace = localFont({
   src: "../fonts/inter-var-latin.woff2",
@@ -42,6 +44,8 @@ const arabicFace = localFont({
   display: "swap",
   variable: "--font-arabic-face",
   fallback: ["serif"],
+  // Small decorative Arabic strings; swap-in without blocking first paint.
+  preload: false,
 });
 
 const siteUrl = getSiteUrl();
@@ -88,6 +92,11 @@ export const metadata: Metadata = {
     email: false,
     telephone: false,
   },
+  appleWebApp: {
+    capable: true,
+    title: "Craigavon Masjid",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
@@ -95,9 +104,10 @@ export const viewport: Viewport = {
   themeColor: "#173a31",
 };
 
-// A fresh CSP nonce is generated for every HTML request in proxy.ts. Static HTML would be
-// generated before that nonce exists, so all pages must render in the request context.
-export const dynamic = "force-dynamic";
+// Public routes render through ISR and are shared-cached at the CDN; only
+// /admin and /tv opt into per-request rendering (their own segment configs)
+// and receive the per-request CSP nonce from proxy.ts. See
+// docs/architecture/ADR-003-public-caching.md.
 
 type RootLayoutProps = Readonly<{
   children: ReactNode;

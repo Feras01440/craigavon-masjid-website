@@ -6,6 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     name: SITE_NAME,
+    short_name: "Craigavon Masjid",
     description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
@@ -22,6 +23,13 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "512x512",
         type: "image/png",
       },
+      {
+        src: "/brand/maskable-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
     ],
+    shortcuts: [{ name: "Prayer times", url: "/prayer-times" }],
   };
 }

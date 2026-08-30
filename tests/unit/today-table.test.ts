@@ -2,7 +2,7 @@ import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-import { HomePrayerToday } from "@/components/prayer/home-prayer-today";
+import { TodayTable } from "@/components/prayer/today-table";
 import { buildScheduleRange } from "@/lib/prayer/engine";
 import type { PrayerBundle } from "@/lib/prayer/types";
 
@@ -48,7 +48,11 @@ function bundleFor(firstDate: string, days: number): PrayerBundle {
 
 function render(bundle: PrayerBundle, now: Date): string {
   return renderToStaticMarkup(
-    createElement(HomePrayerToday, { bundle, today: bundle.schedules[0]!, now }),
+    createElement(TodayTable, {
+      schedules: bundle.schedules,
+      today: bundle.schedules[0]!,
+      initialNowIso: now.toISOString(),
+    }),
   );
 }
 
@@ -74,7 +78,7 @@ describe("home page prayer table", () => {
     expect(rowContaining(markup, "Dhuhr")).toContain("14:00");
     expect(rowContaining(markup, "Asr")).toContain("18:30");
     expect(rowContaining(markup, "Sunrise")).toContain("—");
-    expect(rowContaining(markup, "with Maghrib")).toBeDefined();
+    expect(markup).toContain("prayed together with Maghrib");
     expect(markup).toContain(bundleFor("2026-07-22", 1).schedules[0]!.gregorianLabel);
     expect(markup).toContain(bundleFor("2026-07-22", 1).schedules[0]!.hijriLabel);
   });
@@ -129,16 +133,12 @@ describe("home page prayer table", () => {
       ],
     });
     const schedules = buildScheduleRange(withOverride, "2026-07-22", 2);
-    const bundle: PrayerBundle = {
-      status: "available",
-      generatedAt: "2026-07-22T09:00:00.000Z",
-      lastUpdatedAt: withOverride.updatedAt,
-      schedules,
-      issues: [],
-      coverage: { requestedDays: 2, coveredDays: 2, endsOn: schedules[1]!.date, complete: true },
-    };
     const markup = renderToStaticMarkup(
-      createElement(HomePrayerToday, { bundle, today: schedules[0]!, now: midweekNow }),
+      createElement(TodayTable, {
+        schedules,
+        today: schedules[0]!,
+        initialNowIso: midweekNow.toISOString(),
+      }),
     );
 
     const asrRow = rowContaining(markup, "Asr");
