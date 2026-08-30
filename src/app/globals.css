@@ -38,14 +38,24 @@
   --soft: var(--paper-deep);
   --highlight: var(--copper-soft);
   /* Depth, radius and motion tokens. */
-  --radius-sm: 6px;
-  --radius-md: 12px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
   --radius-pill: 999px;
   --shadow-1: 0 1px 2px rgb(13 40 33 / 5%), 0 8px 24px rgb(13 40 33 / 6%);
   --shadow-2: 0 2px 4px rgb(13 40 33 / 6%), 0 16px 40px rgb(13 40 33 / 10%);
   --motion-quick: 140ms;
   --motion-standard: 220ms;
   --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  /* Gold accents for dark pine surfaces. */
+  --gold: #d69766;
+  --gold-soft: #f0c99b;
+  /* Layered ground for the hero, pine bands and footer: a warm gold glow
+     over a deep pine gradient, with a faint eight-point star lattice. */
+  --pine-atmosphere:
+    radial-gradient(120% 150% at 85% -10%, rgb(214 151 102 / 14%), transparent 55%),
+    linear-gradient(160deg, #133a30 0%, #0d2821 55%, #0a1f1a 100%);
+  --khatam-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23f0c99b' stroke-width='1'%3E%3Crect x='24' y='24' width='48' height='48'/%3E%3Crect x='24' y='24' width='48' height='48' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 *,
@@ -398,9 +408,28 @@ video {
 }
 
 .home-hero {
+  position: relative;
   border-bottom: 1px solid #315249;
-  background: var(--pine-deep);
+  background: var(--pine-atmosphere);
   color: #edf4f0;
+}
+
+.home-hero::before,
+.section--pine::before,
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--khatam-lattice);
+  background-size: 96px 96px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.home-hero > *,
+.section--pine > *,
+.site-footer > * {
+  position: relative;
 }
 
 .home-hero__grid {
@@ -584,9 +613,9 @@ video {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.2rem;
+  padding: 0.75rem 1.4rem;
   border: 2px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   font-weight: 750;
   line-height: 1.2;
   text-decoration: none;
@@ -659,8 +688,9 @@ video {
 }
 
 .section--pine {
+  position: relative;
   border-block: 1px solid #315249;
-  background: var(--pine-deep);
+  background: var(--pine-atmosphere);
   color: #edf4f0;
 }
 
@@ -789,11 +819,16 @@ video {
 }
 
 .journey-card {
-  transition: border-color var(--motion-quick) var(--ease-standard);
+  transition:
+    border-color var(--motion-quick) var(--ease-standard),
+    box-shadow var(--motion-standard) var(--ease-standard),
+    transform var(--motion-standard) var(--ease-standard);
 }
 
 .journey-card:hover {
   border-color: var(--line-strong);
+  box-shadow: var(--shadow-1);
+  transform: translateY(-2px);
 }
 
 .journey-card h3:first-child {
@@ -1724,8 +1759,9 @@ a.contact-method:hover {
 }
 
 .site-footer {
+  position: relative;
   border-top: 3px solid var(--copper);
-  background: var(--pine-deep);
+  background: var(--pine-atmosphere);
   color: #dbe7e1;
 }
 
@@ -2123,6 +2159,12 @@ a.contact-method:hover {
     background: Canvas;
     color: CanvasText;
     forced-color-adjust: auto;
+  }
+
+  .home-hero::before,
+  .section--pine::before,
+  .site-footer::before {
+    background: none;
   }
 
   .hero-prayer__name,

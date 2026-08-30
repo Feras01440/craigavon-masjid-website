@@ -57,7 +57,7 @@ export default async function ContactPage() {
       <PageIntro
         eyebrow="Contact"
         title="Contact us"
-        description="Call, message or write to us — or send an enquiry with the form below. We're always glad to hear from you."
+        description="We're always glad to hear from you."
         current="Contact"
       />
 
@@ -118,9 +118,8 @@ export default async function ContactPage() {
             <p className="eyebrow">Your visit</p>
             <h2 id="visiting-heading">Visiting the masjid</h2>
             <p>
-              The masjid is open for the five daily prayers and Jumuʿah, and visitors are always
-              welcome. If it&apos;s your first time, just ask for help when you arrive — someone
-              will happily show you around.
+              Open for the five daily prayers and Jumuʿah. First time? Just ask when you arrive —
+              someone will happily show you around.
             </p>
             {visitingItems.length > 0 ? (
               <dl className="status-list">

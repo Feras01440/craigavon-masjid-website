@@ -28,7 +28,7 @@ export default async function EducationPage() {
       <PageIntro
         eyebrow="Education"
         title="Learning at the masjid"
-        description="Qur'an reading and memorisation, and Islamic education for children and adults."
+        description="Qur'an and Islamic learning for all ages."
         current="Education"
       />
 

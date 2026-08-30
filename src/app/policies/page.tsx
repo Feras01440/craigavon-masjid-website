@@ -26,7 +26,7 @@ export default async function PoliciesPage() {
       <PageIntro
         eyebrow="Policies"
         title="Policies"
-        description="The Association's published policies, including how personal information is handled."
+        description="The Association's published policies."
         current="Policies"
       />
 

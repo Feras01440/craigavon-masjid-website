@@ -120,15 +120,9 @@ export default async function HomePage() {
 
       <section className="section section--tinted" aria-labelledby="services-heading">
         <div className="site-container">
-          <div className="section-heading section-heading--split">
-            <div>
-              <p className="eyebrow">How we can help</p>
-              <h2 id="services-heading">Services</h2>
-            </div>
-            <p>
-              From your first questions about Islam to family occasions and difficult days — you can
-              always reach us.
-            </p>
+          <div className="section-heading">
+            <p className="eyebrow">How we can help</p>
+            <h2 id="services-heading">Services</h2>
           </div>
           <div className="journey-grid">
             {featuredServices.map((category) => (
@@ -183,8 +177,7 @@ export default async function HomePage() {
             <p className="eyebrow eyebrow--hero">Find us</p>
             <h2 id="find-us-heading">Find us at the Legahory Centre</h2>
             <p className="home-find__lead">
-              The masjid is open for the five daily prayers and Jumuʿah. New faces are always
-              welcome — come as you are.
+              Open for the five daily prayers and Jumuʿah — everyone is welcome.
             </p>
             <div className="button-row">
               <Link className="button button--primary" href="/contact">

@@ -101,8 +101,7 @@ export function PublicEnquiryForm() {
           aria-describedby="enquiry-message-hint enquiry-message-error"
         />
         <span className="public-form__hint" id="enquiry-message-hint">
-          Do not include passwords, payment details, medical records, immigration documents,
-          safeguarding disclosures or other highly sensitive information.
+          Please don&apos;t include sensitive personal information here.
         </span>
         <FieldError errors={state.fieldErrors?.message} id="enquiry-message-error" />
       </div>

@@ -28,7 +28,7 @@ export default async function NewsPage() {
       <PageIntro
         eyebrow="News"
         title="News and events"
-        description="Announcements, events and what's happening at the masjid."
+        description="What's happening at the masjid."
         current="News"
       />
 

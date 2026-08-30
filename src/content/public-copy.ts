@@ -29,7 +29,7 @@ export const serviceCategories: readonly ServiceCategory[] = [
     id: "new-to-islam",
     title: "Shahada and new Muslim support",
     summary:
-      "If you are exploring Islam, thinking about becoming Muslim, or have recently taken your Shahada, you can speak with us privately and at your own pace.",
+      "Exploring Islam or recently became Muslim? Speak with us privately, at your own pace.",
     points: [
       "A private, unhurried conversation — ask anything",
       "Support with taking the Shahada when you are ready",
@@ -42,7 +42,7 @@ export const serviceCategories: readonly ServiceCategory[] = [
     id: "funerals",
     title: "Islamic funerals (Janazah)",
     summary:
-      "We support families through bereavement: washing and shrouding, the Janazah prayer, and guidance on arranging an Islamic burial locally.",
+      "Support through bereavement — washing and shrouding, the Janazah prayer and burial guidance.",
     points: [
       "Contact us as soon as possible after a death",
       "Guidance through each step of the Islamic process",
@@ -53,16 +53,14 @@ export const serviceCategories: readonly ServiceCategory[] = [
   {
     id: "nikah",
     title: "Nikah (Islamic marriage)",
-    summary:
-      "Enquire about arranging a Nikah ceremony, what the ceremony involves, and what you will need to bring.",
+    summary: "Arrange a Nikah ceremony at the masjid.",
     points: ["Speak with us before setting a date", "Clear guidance on witnesses and requirements"],
     action: "Ask about a Nikah",
   },
   {
     id: "imam",
     title: "Speak with the imam",
-    summary:
-      "For religious questions, personal guidance or a sensitive matter, you can ask to speak with the imam or a suitable person privately.",
+    summary: "Religious questions or a sensitive matter — ask for a private conversation.",
     points: [
       "Religious rulings and everyday practice",
       "Family and personal matters, in confidence",
@@ -72,16 +70,14 @@ export const serviceCategories: readonly ServiceCategory[] = [
   {
     id: "education",
     title: "Education and Qur'an learning",
-    summary:
-      "Qur'an and Islamic education for children and adults. Current classes and times are listed on the Education page when enrolment is open.",
+    summary: "Qur'an reading, memorisation and Islamic studies for children and adults.",
     points: ["Qur'an reading and memorisation", "Islamic studies for children"],
     action: "See education",
   },
   {
     id: "visits",
     title: "Mosque visits and open days",
-    summary:
-      "Schools, groups and neighbours are welcome to visit the masjid and learn how it is used. Arrange a visit with us in advance.",
+    summary: "Schools, groups and neighbours are welcome — arrange a visit in advance.",
     points: ["School and community group visits", "A welcoming first visit for individuals"],
     action: "Arrange a visit",
   },

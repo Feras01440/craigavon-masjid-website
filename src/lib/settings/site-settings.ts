@@ -171,7 +171,7 @@ export const managedSettingDefaults: ManagedSettingValueMap = {
     eyebrow: "As-salāmu ʿalaykum",
     heading: "Craigavon Masjid",
     introduction:
-      "Daily prayers, Jumuʿah, education and community life with the Muslim Association of Craigavon — serving Craigavon, Portadown and Lurgan.",
+      "Prayer, learning and community for Craigavon, Portadown and Lurgan — everyone is welcome.",
     primary_cta_label: "View prayer times",
     primary_cta_route: "prayer-times",
     secondary_cta_label: "",

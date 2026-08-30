@@ -36,7 +36,7 @@ export default async function ServicesPage() {
       <PageIntro
         eyebrow="Services"
         title="How we can help"
-        description="From your first questions about Islam to weddings, funerals and learning — these are the ways the masjid serves the community."
+        description="From Shahada to funerals — how the masjid can help."
         current="Services"
       />
 
@@ -114,8 +114,7 @@ export default async function ServicesPage() {
       <section className="section section--compact" aria-label="General enquiries">
         <div className="site-container">
           <p className="service-footnote">
-            Not sure where to start? Contact us anyway — we&apos;ll point you to the right person,
-            and conversations are always private.{" "}
+            Not sure where to start? Contact us — we&apos;ll point you to the right person.{" "}
             <Link className="text-link" href="/contact">
               Contact the masjid
             </Link>

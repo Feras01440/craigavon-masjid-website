@@ -48,7 +48,7 @@ export default async function PrayerTimesPage(): Promise<React.ReactNode> {
       <PageIntro
         eyebrow="Craigavon Masjid"
         title="Prayer times"
-        description="Daily prayer and Iqamah times, Jumuʿah, and the monthly timetable."
+        description="Daily and monthly times at Craigavon Masjid."
         current="Prayer times"
       />
 
