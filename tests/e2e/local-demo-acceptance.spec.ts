@@ -166,7 +166,9 @@ test.describe("clean local demonstration acceptance", () => {
     await test.step("monthly timetable, CSV and print controls", async () => {
       await page.goto("/prayer-times");
       await expect(page.getByRole("heading", { name: "Today's timetable" })).toBeVisible();
-      await expect(page.getByRole("table")).toBeVisible();
+      // Two tables since the redesign: today's timetable and the month grid.
+      await expect(page.getByRole("table")).toHaveCount(2);
+      await expect(page.getByRole("table").first()).toBeVisible();
       const downloadPromise = page.waitForEvent("download");
       await page.getByRole("link", { name: "Download CSV" }).click();
       const download = await downloadPromise;
