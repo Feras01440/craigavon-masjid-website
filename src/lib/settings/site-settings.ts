@@ -170,8 +170,7 @@ export const managedSettingDefaults: ManagedSettingValueMap = {
   homepage_content: {
     eyebrow: "As-salāmu ʿalaykum",
     heading: "Craigavon Masjid",
-    introduction:
-      "Prayer, learning and community for Craigavon, Portadown and Lurgan — everyone is welcome.",
+    introduction: "",
     primary_cta_label: "View prayer times",
     primary_cta_route: "prayer-times",
     secondary_cta_label: "",
@@ -320,13 +319,8 @@ function publicationSchema(key: ManagedSettingKey, status: ManagedSettingStatus)
             message: "Add the public homepage heading before publishing.",
           });
         }
-        if (!value.introduction) {
-          context.addIssue({
-            code: "custom",
-            path: ["introduction"],
-            message: "Add a concise homepage introduction before publishing.",
-          });
-        }
+        // The introduction is optional: the hero renders nothing when the
+        // committee prefers the masjid name to stand alone.
       });
     case "contact_information":
       return contactInformationSchema.superRefine((value, context) => {

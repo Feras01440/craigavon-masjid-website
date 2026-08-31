@@ -54,12 +54,7 @@ export default async function ContactPage() {
 
   return (
     <PublicShell>
-      <PageIntro
-        eyebrow="Contact"
-        title="Contact us"
-        description="We're always glad to hear from you."
-        current="Contact"
-      />
+      <PageIntro eyebrow="Contact" title="Contact us" current="Contact" />
 
       <section className="section section--compact" aria-label="Contact details">
         <div className="site-container">
@@ -103,7 +98,6 @@ export default async function ContactPage() {
       <section className="section" aria-labelledby="contact-form-heading">
         <div className="site-container content-grid">
           <div>
-            <p className="eyebrow">Enquiries</p>
             <h2 id="contact-form-heading">Send us a message</h2>
             {availability.enabled ? (
               <PublicEnquiryForm />
@@ -115,11 +109,10 @@ export default async function ContactPage() {
             )}
           </div>
           <aside className="visiting" id="visiting" aria-labelledby="visiting-heading">
-            <p className="eyebrow">Your visit</p>
             <h2 id="visiting-heading">Visiting the masjid</h2>
             <p>
-              Open for the five daily prayers and Jumuʿah. First time? Just ask when you arrive —
-              someone will happily show you around.
+              Open for the five daily prayers and Jumuʿah — just ask when you arrive and someone
+              will show you around.
             </p>
             {visitingItems.length > 0 ? (
               <dl className="status-list">

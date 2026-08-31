@@ -97,9 +97,11 @@ describe("managed site setting validation", () => {
     );
     expect(missingLabelAndCopy.success).toBe(false);
     if (!missingLabelAndCopy.success) {
-      expect(missingLabelAndCopy.error.issues.map((issue) => issue.path[0])).toEqual(
-        expect.arrayContaining(["heading", "introduction", "secondary_cta_label"]),
-      );
+      const issuePaths = missingLabelAndCopy.error.issues.map((issue) => issue.path[0]);
+      // The introduction is deliberately optional: the hero can present the
+      // masjid name alone.
+      expect(issuePaths).toEqual(expect.arrayContaining(["heading", "secondary_cta_label"]));
+      expect(issuePaths).not.toContain("introduction");
     }
   });
 

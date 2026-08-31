@@ -34,16 +34,11 @@ export default async function EducationPage() {
           ) : programmes.length === 0 ? (
             <EmptyState title="Class times will be announced here">
               <p>
-                Details of current classes are being prepared. In the meantime, contact us and
-                we&apos;ll let you know what is running and how to join.
+                <Link href="/contact">Contact us</Link> to ask what is running.
               </p>
             </EmptyState>
           ) : (
             <>
-              <div className="section-heading">
-                <p className="eyebrow">Current programmes</p>
-                <h2>Classes and programmes</h2>
-              </div>
               <PublishedContentList items={programmes} />
               {content.omittedCount > 0 && <PublishedContentOmissionNotice />}
             </>
@@ -52,16 +47,10 @@ export default async function EducationPage() {
       </section>
 
       <section className="section section--tinted" aria-labelledby="education-enquire-heading">
-        <div className="site-container content-grid">
-          <div className="prose">
-            <p className="eyebrow">Joining a class</p>
-            <h2 id="education-enquire-heading">Interested for yourself or your child?</h2>
-            <p>
-              Tell us who the learning is for and what you are looking for — Qur&apos;an reading,
-              memorisation or Islamic studies — and we&apos;ll come back to you with what is
-              available.
-            </p>
-            <Link className="text-link" href="/contact">
+        <div className="site-container">
+          <h2 id="education-enquire-heading">Join a class</h2>
+          <div className="button-row">
+            <Link className="button button--primary" href="/contact">
               Contact us about learning
             </Link>
           </div>
