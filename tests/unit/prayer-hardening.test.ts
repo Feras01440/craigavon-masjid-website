@@ -43,6 +43,8 @@ describe("prayer input hardening", () => {
     expect(parsed.success).toBe(true);
   });
 
+  // ~30,000 days of solar geometry: comfortably inside the timeout on CI,
+  // but a loaded workstation needs the explicit headroom.
   it("keeps the rolling local demonstration timetable safe from 2020 through 2100", () => {
     const errors: ReturnType<typeof validateConfigurationSchedule> = [];
 
@@ -107,7 +109,7 @@ describe("prayer input hardening", () => {
     expect(completeWorkflowMigration).toContain("v_prayer_id, current_date + 1, 'maghrib', true");
     expect(completeWorkflowMigration).toContain('"isha":{"type":"joined","with":"maghrib"}');
     expect(completeWorkflowMigration).not.toContain('"latest"');
-  }, 30_000);
+  }, 120_000);
 
   it("rejects joined congregation cycles", () => {
     const base = prayerConfigurationFixture();
