@@ -80,8 +80,8 @@
 
 .controlLinks a:hover,
 .controlLinks button:hover {
-  border-color: var(--copper);
-  background: var(--copper-soft);
+  border-color: var(--berry);
+  background: var(--berry-soft);
 }
 
 .source {
@@ -94,7 +94,7 @@
 .tableRegion {
   overflow-x: auto;
   border: 1px solid var(--line);
-  border-top: 4px solid var(--copper);
+  border-top: 4px solid var(--berry);
   border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-1);
@@ -187,11 +187,11 @@
 
 .fridayRow th,
 .fridayRow td {
-  background: var(--copper-soft);
+  background: var(--berry-soft);
 }
 
 .fridayRow th {
-  background: var(--copper-soft);
+  background: var(--berry-soft);
 }
 
 .todayRow th,

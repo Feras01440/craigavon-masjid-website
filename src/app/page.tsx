@@ -7,6 +7,7 @@ import {
   PublishedContentList,
   PublishedContentOmissionNotice,
   PublishedContentUnavailable,
+  ServiceIcon,
 } from "@/components/site";
 import { HomeNextPrayerPanel } from "@/components/prayer/home-next-prayer-panel";
 import { TodayTable } from "@/components/prayer/today-table";
@@ -64,7 +65,7 @@ export default async function HomePage() {
           <div className="home-hero__copy">
             {homepage.eyebrow && <p className="eyebrow eyebrow--hero">{homepage.eyebrow}</p>}
             <h1>{homepage.heading}</h1>
-            <p className="home-hero__lead">{homepage.introduction}</p>
+            {homepage.introduction && <p className="home-hero__lead">{homepage.introduction}</p>}
             <div className="button-row">
               {homepage.primary_cta_label && homepage.primary_cta_route && (
                 <Link className="button button--primary" href={`/${homepage.primary_cta_route}`}>
@@ -100,7 +101,6 @@ export default async function HomePage() {
       <section className="section" aria-labelledby="prayer-heading">
         <div className="site-container">
           <div className="section-heading">
-            <p className="eyebrow">Prayer times</p>
             <h2 id="prayer-heading">Today&apos;s prayer times</h2>
           </div>
           {prayerBundle.status === "available" && todaySchedule ? (
@@ -121,12 +121,12 @@ export default async function HomePage() {
       <section className="section section--tinted" aria-labelledby="services-heading">
         <div className="site-container">
           <div className="section-heading">
-            <p className="eyebrow">How we can help</p>
-            <h2 id="services-heading">Services</h2>
+            <h2 id="services-heading">How we can help</h2>
           </div>
           <div className="journey-grid">
             {featuredServices.map((category) => (
               <article className="journey-card" key={category.id}>
+                <ServiceIcon serviceId={category.id} />
                 <h3>{category.title}</h3>
                 <p>{category.summary}</p>
                 <Link className="text-link journey-card__link" href={`/services#${category.id}`}>
@@ -155,7 +155,6 @@ export default async function HomePage() {
             ) : (
               <>
                 <div className="section-heading">
-                  <p className="eyebrow">What&apos;s on</p>
                   <h2 id="updates-heading">News and events</h2>
                 </div>
                 <PublishedContentList compact items={updates.items} />
@@ -171,10 +170,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="section section--pine" aria-labelledby="find-us-heading">
+      <section className="section section--pine section--photo" aria-labelledby="find-us-heading">
         <div className="site-container home-find__grid">
           <div>
-            <p className="eyebrow eyebrow--hero">Find us</p>
             <h2 id="find-us-heading">Find us at the Legahory Centre</h2>
             <div className="button-row">
               <Link className="button button--primary" href="/contact">

@@ -36,12 +36,12 @@ export function SiteFooter({
           <div className="site-footer__brand">
             <img
               className="site-footer__logo"
-              src="/brand/muslim-association-of-craigavon-logo-256.webp"
+              src="/brand/logo-mark-gold-512.png"
               alt=""
               aria-hidden="true"
-              width={256}
-              height={256}
-              loading="eager"
+              width={512}
+              height={512}
+              loading="lazy"
               decoding="async"
             />
             <p className="site-footer__name">

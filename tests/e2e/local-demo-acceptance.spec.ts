@@ -152,7 +152,8 @@ test.describe("clean local demonstration acceptance", () => {
       ).toBeVisible();
       await expect(
         page.locator('img[src="/brand/muslim-association-of-craigavon-logo-256.webp"]'),
-      ).toHaveCount(2);
+      ).toHaveCount(1);
+      await expect(page.locator('img[src="/brand/logo-mark-gold-512.png"]')).toHaveCount(1);
       await expect(page.getByRole("heading", { name: "Today's prayer times" })).toBeVisible();
       await page.screenshot({ path: testInfo.outputPath("public-homepage.png"), fullPage: true });
 

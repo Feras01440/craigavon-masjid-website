@@ -9,8 +9,10 @@
   --pine: #173a31;
   --pine-deep: #0d2821;
   --pine-soft: #dbe7e1;
-  --copper: #8b4f2a;
-  --copper-soft: #f2dfd0;
+  /* Berry and gold are sampled from the Association's own logo mark, so the
+     accents on the page match the crescent-and-book artwork exactly. */
+  --berry: #7d1c3b;
+  --berry-soft: #f4e0dd;
   --line: #cbc3b2;
   --line-strong: #968c79;
   --focus-dark: #00566d;
@@ -32,11 +34,11 @@
   --weight-display: 540;
   --weight-display-strong: 620;
   /* Aliases consumed by the prayer page module (kept on-brand). */
-  --accent: var(--copper);
-  --accent-strong: #6d3a16;
+  --accent: var(--berry);
+  --accent-strong: #5c1128;
   --muted: var(--ink-soft);
   --soft: var(--paper-deep);
-  --highlight: var(--copper-soft);
+  --highlight: var(--berry-soft);
   /* Depth, radius and motion tokens. */
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -48,14 +50,23 @@
   --motion-standard: 220ms;
   --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
   /* Gold accents for dark pine surfaces. */
-  --gold: #d69766;
-  --gold-soft: #f0c99b;
-  /* Layered ground for the hero, pine bands and footer: a warm gold glow
-     over a deep pine gradient, with a faint eight-point star lattice. */
+  --gold: #d3a84e;
+  --gold-soft: #ecd193;
+  /* Layered ground for the pine bands and footer: a warm gold glow over a
+     deep pine gradient, with a faint eight-point star lattice. */
   --pine-atmosphere:
-    radial-gradient(120% 150% at 85% -10%, rgb(214 151 102 / 14%), transparent 55%),
+    radial-gradient(120% 150% at 85% -10%, rgb(211 168 78 / 14%), transparent 55%),
     linear-gradient(160deg, #133a30 0%, #0d2821 55%, #0a1f1a 100%);
-  --khatam-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23f0c99b' stroke-width='1'%3E%3Crect x='24' y='24' width='48' height='48'/%3E%3Crect x='24' y='24' width='48' height='48' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
+  /* Photo grounds: licensed mosque photography under a deep pine wash (see
+     docs/operations/image-credits.md). The gradient carries text contrast, so
+     the artwork can stay legible without harming readability. */
+  --pine-photo-wash: linear-gradient(
+    168deg,
+    rgb(13 40 33 / 84%) 0%,
+    rgb(10 31 26 / 90%) 55%,
+    rgb(8 26 21 / 94%) 100%
+  );
+  --khatam-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23ecd193' stroke-width='1'%3E%3Crect x='24' y='24' width='48' height='48'/%3E%3Crect x='24' y='24' width='48' height='48' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 *,
@@ -99,7 +110,7 @@ video {
 }
 
 ::selection {
-  background: var(--copper-soft);
+  background: var(--berry-soft);
   color: var(--ink);
 }
 
@@ -168,7 +179,7 @@ video {
 }
 
 .public-shell a:hover {
-  color: var(--copper);
+  color: var(--berry);
 }
 
 .site-container {
@@ -249,18 +260,16 @@ video {
   text-decoration: none;
 }
 
+/* The mark is transparent artwork now — no white box, no border. */
 .wordmark__logo,
 .site-footer__logo {
   flex: 0 0 auto;
   object-fit: contain;
-  background: #fff;
 }
 
 .wordmark__logo {
-  width: 2.9rem;
-  height: 2.9rem;
-  border: 1px solid color-mix(in srgb, var(--copper) 42%, var(--line));
-  border-radius: var(--radius-sm);
+  width: 3.1rem;
+  height: 3.1rem;
 }
 
 .wordmark__text {
@@ -391,13 +400,13 @@ video {
 }
 
 .site-nav a:hover {
-  border-bottom-color: var(--copper);
+  border-bottom-color: var(--berry);
   background: var(--surface);
   color: var(--pine-deep);
 }
 
 .site-nav a[aria-current="page"] {
-  border-bottom-color: var(--copper);
+  border-bottom-color: var(--berry);
   color: var(--pine-deep);
   font-weight: 750;
 }
@@ -410,8 +419,32 @@ video {
 .home-hero {
   position: relative;
   border-bottom: 1px solid #315249;
-  background: var(--pine-atmosphere);
+  /* Real mosque artwork under a deep pine wash; the gradient guarantees text
+     contrast while the gilded dome pattern glows through. */
+  background:
+    var(--pine-photo-wash),
+    var(--pine-deep) url("/images/backdrop-gold-dome-1920.avif") center 30% / cover no-repeat;
   color: #edf4f0;
+}
+
+.section--pine.section--photo {
+  background:
+    var(--pine-photo-wash),
+    var(--pine-deep) url("/images/backdrop-green-ceiling-1920.avif") center 60% / cover no-repeat;
+}
+
+@media (max-width: 52rem) {
+  .home-hero {
+    background:
+      var(--pine-photo-wash),
+      var(--pine-deep) url("/images/backdrop-gold-dome-960.avif") center 30% / cover no-repeat;
+  }
+
+  .section--pine.section--photo {
+    background:
+      var(--pine-photo-wash),
+      var(--pine-deep) url("/images/backdrop-green-ceiling-960.avif") center 60% / cover no-repeat;
+  }
 }
 
 .home-hero::before,
@@ -442,7 +475,7 @@ video {
 
 .home-hero .eyebrow,
 .eyebrow--hero {
-  color: #f0c99b;
+  color: var(--gold-soft);
 }
 
 .home-hero h1 {
@@ -451,6 +484,8 @@ video {
   font-size: clamp(2.3rem, 1.6rem + 2.9vw, 3.9rem);
 }
 
+/* Optional dashboard-managed hero line; the hero renders nothing when the
+   committee leaves it empty. */
 .home-hero__lead {
   max-width: 36rem;
   margin-block: 1.25rem 0;
@@ -459,11 +494,51 @@ video {
   line-height: 1.7;
 }
 
+/* Meaningful icons on the journey and service cards, Belfast-style: a soft
+   tinted disc with a line-drawn symbol, one accent per card. */
+.icon-badge {
+  width: 3.1rem;
+  height: 3.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.icon-badge svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.icon-badge--berry {
+  background: var(--berry-soft);
+  color: var(--berry);
+}
+
+.icon-badge--gold {
+  background: #f2e6c4;
+  color: #6d5312;
+}
+
+.icon-badge--pine {
+  background: var(--pine-soft);
+  color: var(--pine);
+}
+
+.service-item__title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.service-item__title h2 {
+  margin: 0;
+}
+
 /* The hero's live prayer panel. */
 .hero-prayer {
   padding: clamp(1.4rem, 3.5vw, 2rem);
   border: 1px solid #315249;
-  border-top: 4px solid #d69766;
+  border-top: 4px solid var(--gold);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--pine-deep) 62%, #0a1f1a);
   color: #edf4f0;
@@ -472,7 +547,7 @@ video {
 
 .hero-prayer__eyebrow {
   margin: 0 0 0.6rem;
-  color: #f0c99b;
+  color: var(--gold-soft);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -536,7 +611,7 @@ video {
 .hero-prayer__countdown {
   min-height: 1.3rem;
   margin: 0.7rem 0 0;
-  color: #f0c99b;
+  color: var(--gold-soft);
   font-size: 0.95rem;
   font-weight: 650;
 }
@@ -563,13 +638,13 @@ video {
   min-height: 2.75rem;
   align-items: center;
   margin-top: 0.9rem;
-  color: #f0c99b !important;
+  color: var(--gold-soft) !important;
   font-weight: 750;
 }
 
 .publication-note {
   padding: clamp(1.5rem, 4vw, 2.4rem);
-  border-top: 4px solid #d69766;
+  border-top: 4px solid var(--gold);
   background: var(--surface);
   color: var(--ink);
 }
@@ -580,7 +655,7 @@ video {
 .empty-state__kicker,
 .journey-card__status {
   margin-bottom: 0.8rem;
-  color: var(--copper);
+  color: var(--berry);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -630,8 +705,8 @@ video {
 }
 
 .button--primary {
-  border-color: #f0c99b;
-  background: #f0c99b;
+  border-color: var(--gold-soft);
+  background: var(--gold-soft);
   color: var(--pine-deep) !important;
 }
 
@@ -652,8 +727,8 @@ video {
 }
 
 .section--pine .button--primary {
-  border-color: #f0c99b;
-  background: #f0c99b;
+  border-color: var(--gold-soft);
+  background: var(--gold-soft);
   color: var(--pine-deep) !important;
 }
 
@@ -702,7 +777,7 @@ video {
    fails contrast, so re-assert the gold tone with higher specificity. */
 .section--pine .eyebrow,
 .home-hero .eyebrow {
-  color: #f0c99b;
+  color: var(--gold-soft);
 }
 
 .section--pine a {
@@ -786,7 +861,7 @@ video {
 .section-heading--split > p {
   margin: 0;
   padding-left: 1.25rem;
-  border-left: 2px solid var(--copper);
+  border-left: 2px solid var(--berry);
 }
 
 .approval-grid,
@@ -814,7 +889,7 @@ video {
 }
 
 .published-content-card {
-  border-top: 4px solid var(--copper);
+  border-top: 4px solid var(--berry);
   box-shadow: var(--shadow-1);
 }
 
@@ -890,7 +965,7 @@ video {
 
 .published-content-card__category {
   margin: 1rem 0 0;
-  color: var(--copper);
+  color: var(--berry);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -955,8 +1030,8 @@ video {
 .published-content-warning {
   margin-top: 1.25rem;
   padding: 1rem 1.15rem;
-  border: 2px solid var(--copper);
-  background: var(--copper-soft);
+  border: 2px solid var(--berry);
+  background: var(--berry-soft);
   color: var(--ink);
 }
 
@@ -997,8 +1072,8 @@ video {
   width: fit-content;
   margin: 0;
   padding: 0.3rem 0.55rem;
-  border: 1px solid var(--copper);
-  background: var(--copper-soft);
+  border: 1px solid var(--berry);
+  background: var(--berry-soft);
   color: #6d3516;
   font-size: 0.78rem;
   font-weight: 800;
@@ -1075,7 +1150,7 @@ video {
   content: "";
   position: absolute;
   inset: clamp(2rem, 4vw, 3.25rem) auto clamp(2rem, 4vw, 3.25rem) 0;
-  border-left: 4px solid var(--copper);
+  border-left: 4px solid var(--berry);
 }
 
 .page-intro h1,
@@ -1144,7 +1219,7 @@ video {
   margin-top: 1.25rem;
   padding: 1.25rem;
   border: 1px solid var(--line-strong);
-  border-left: 0.3rem solid var(--copper);
+  border-left: 0.3rem solid var(--berry);
   background: var(--surface);
 }
 
@@ -1163,7 +1238,7 @@ video {
   width: 100%;
   overflow-x: auto;
   border: 1px solid var(--line);
-  border-top: 4px solid var(--copper);
+  border-top: 4px solid var(--berry);
   background: var(--surface);
 }
 
@@ -1265,7 +1340,7 @@ video {
 .home-prayer__row--jumuah th,
 .home-prayer__row--jumuah td {
   border-top: 2px solid var(--line-strong);
-  background: var(--copper-soft);
+  background: var(--berry-soft);
 }
 
 .home-prayer__note {
@@ -1330,7 +1405,7 @@ video {
 }
 
 .next-prayer-summary__remaining {
-  color: #f0c99b;
+  color: var(--gold-soft);
   font-weight: 650;
 }
 
@@ -1473,7 +1548,7 @@ video {
 }
 
 .plain-list li::marker {
-  color: var(--copper);
+  color: var(--berry);
 }
 
 .numbered-principles {
@@ -1500,7 +1575,7 @@ video {
 }
 
 .numbered-principles > li > span {
-  color: var(--copper);
+  color: var(--berry);
   font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 700;
@@ -1515,7 +1590,7 @@ video {
   max-width: 42rem;
   padding: clamp(1.25rem, 3vw, 1.75rem);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--copper);
+  border-left: 4px solid var(--berry);
   border-radius: var(--radius-sm);
   background: var(--surface);
   text-align: left;
@@ -1594,7 +1669,7 @@ video {
   align-items: center;
   padding: clamp(1.5rem, 4vw, 2.25rem);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--copper);
+  border-left: 4px solid var(--berry);
   border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-1);
@@ -1652,11 +1727,11 @@ video {
 }
 
 a.contact-method:hover {
-  border-color: var(--copper);
+  border-color: var(--berry);
 }
 
 .contact-method__label {
-  color: var(--copper);
+  color: var(--berry);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -1760,9 +1835,23 @@ a.contact-method:hover {
 
 .site-footer {
   position: relative;
-  border-top: 3px solid var(--copper);
+  overflow: hidden;
+  border-top: 3px solid var(--gold);
   background: var(--pine-atmosphere);
   color: #dbe7e1;
+}
+
+/* The Association's mark, embossed in gold behind the footer content. */
+.site-footer::after {
+  content: "";
+  position: absolute;
+  right: clamp(-7rem, -4vw, -3rem);
+  bottom: -7rem;
+  width: 28rem;
+  height: 28rem;
+  background: url("/brand/logo-mark-gold-512.png") center / contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
 }
 
 .site-footer__grid {
@@ -1794,7 +1883,7 @@ a.contact-method:hover {
 
 .site-footer__heading {
   margin: 0 0 0.6rem;
-  color: #f0c99b;
+  color: var(--gold-soft);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -1819,9 +1908,8 @@ a.contact-method:hover {
 }
 
 .site-footer__logo {
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgb(255 255 255 / 35%);
+  width: 3.4rem;
+  height: 3.4rem;
 }
 
 .site-footer__note {
@@ -1842,7 +1930,7 @@ a.contact-method:hover {
   min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
-  color: #f5ddbf;
+  color: var(--gold-soft);
   font-weight: 500;
 }
 
@@ -1925,7 +2013,7 @@ a.contact-method:hover {
   .site-nav a:hover,
   .site-nav a[aria-current="page"] {
     padding-inline: 0.75rem;
-    border-left-color: var(--copper);
+    border-left-color: var(--berry);
   }
 
   .home-hero__grid,
@@ -1947,7 +2035,7 @@ a.contact-method:hover {
   .section-heading--split > p {
     padding-top: 1rem;
     padding-left: 0;
-    border-top: 2px solid var(--copper);
+    border-top: 2px solid var(--berry);
     border-left: 0;
   }
 
@@ -2115,8 +2203,8 @@ a.contact-method:hover {
     --ink-faint: CanvasText;
     --pine: CanvasText;
     --pine-deep: CanvasText;
-    --copper: CanvasText;
-    --copper-soft: Canvas;
+    --berry: CanvasText;
+    --berry-soft: Canvas;
     --line: CanvasText;
     --line-strong: CanvasText;
   }
@@ -2150,6 +2238,8 @@ a.contact-method:hover {
   .hero-prayer,
   .home-find__details,
   .section--pine,
+  .section--pine.section--photo,
+  .icon-badge,
   .next-prayer-strip,
   .service-item,
   .contact-method,
@@ -2163,7 +2253,8 @@ a.contact-method:hover {
 
   .home-hero::before,
   .section--pine::before,
-  .site-footer::before {
+  .site-footer::before,
+  .site-footer::after {
     background: none;
   }
 

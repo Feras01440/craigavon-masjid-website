@@ -9,6 +9,7 @@ import {
   PublishedContentStructuredData,
   PublishedContentUnavailable,
   PublishedFaqList,
+  ServiceIcon,
 } from "@/components/site";
 import { serviceCategories } from "@/content/public-copy";
 import { getPublishedContent } from "@/server/repositories/public-content";
@@ -16,7 +17,7 @@ import { getPublishedContent } from "@/server/repositories/public-content";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Shahada and new Muslim support, Islamic funerals, Nikah, speaking with the imam, education and visits at Craigavon Masjid.",
+    "Shahada and new Muslim support, Islamic funerals, Nikah, education and mosque visits at Craigavon Masjid.",
 };
 
 // ISR: shared-cached for five minutes; purged instantly on publish.
@@ -46,7 +47,10 @@ export default async function ServicesPage() {
                 aria-labelledby={`${category.id}-heading`}
               >
                 <div className="service-item__body">
-                  <h2 id={`${category.id}-heading`}>{category.title}</h2>
+                  <div className="service-item__title">
+                    <ServiceIcon serviceId={category.id} />
+                    <h2 id={`${category.id}-heading`}>{category.title}</h2>
+                  </div>
                   <p>{category.summary}</p>
                   <ul className="plain-list">
                     {category.points.map((point) => (
@@ -78,7 +82,6 @@ export default async function ServicesPage() {
         <section className="section section--tinted" aria-labelledby="service-updates-heading">
           <div className="site-container">
             <div className="section-heading">
-              <p className="eyebrow">Current updates</p>
               <h2 id="service-updates-heading">Service updates</h2>
             </div>
             <PublishedContentList items={services} />
@@ -91,7 +94,6 @@ export default async function ServicesPage() {
         <section className="section section--tinted" aria-labelledby="service-faq-heading">
           <div className="site-container">
             <div className="section-heading">
-              <p className="eyebrow">Good to know</p>
               <h2 id="service-faq-heading">Frequently asked questions</h2>
             </div>
             {faqContent.status === "unavailable" ? (
