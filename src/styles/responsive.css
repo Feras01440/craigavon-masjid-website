@@ -1,0 +1,179 @@
+/* Width breakpoints, in descending order. */
+@media (max-width: 64rem) {
+  .journey-grid,
+  .published-content-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 52rem) {
+  .site-header__inner {
+    min-height: 4.5rem;
+  }
+
+  .site-nav--desktop {
+    display: none;
+  }
+
+  .nav-disclosure {
+    display: block;
+  }
+
+  .menu-button {
+    display: inline-flex;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    max-height: calc(100vh - 4.5rem);
+    max-height: calc(100dvh - 4.5rem);
+    display: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.75rem var(--gutter) 1.1rem;
+    border-block: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .nav-disclosure[open] .site-nav {
+    display: block;
+  }
+
+  .site-nav ul {
+    display: grid;
+    gap: 0;
+  }
+
+  .site-nav li + li {
+    border-top: 1px solid var(--line);
+  }
+
+  .site-nav a {
+    min-height: 3rem;
+    display: flex;
+    padding-inline: 0.25rem;
+    border-bottom: 0;
+    border-left: 3px solid transparent;
+    font-size: 1rem;
+    transition:
+      padding var(--motion-quick) var(--ease-standard),
+      border-color var(--motion-quick) var(--ease-standard);
+  }
+
+  .site-nav a:hover,
+  .site-nav a[aria-current="page"] {
+    padding-inline: 0.75rem;
+    border-left-color: var(--berry);
+  }
+
+  .home-hero__grid,
+  .home-find__grid,
+  .content-grid,
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero h1 {
+    max-width: 16ch;
+  }
+}
+
+@media (max-width: 36rem) {
+  .wordmark {
+    max-width: 15rem;
+  }
+
+  .wordmark__organisation {
+    display: none;
+  }
+
+  .wordmark__logo {
+    width: 2.625rem;
+    height: 2.625rem;
+  }
+
+  .hero-prayer__times dd {
+    font-size: 1.45rem;
+  }
+
+  .service-item {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .service-item__action .button {
+    width: 100%;
+  }
+
+  .journey-grid,
+  .published-content-grid,
+  .public-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-prayer__table {
+    min-width: 0;
+  }
+
+  .home-prayer__table th,
+  .home-prayer__table td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .home-prayer__table td {
+    font-size: 1.05rem;
+  }
+
+  .home-prayer__caption {
+    font-size: 1.15rem;
+  }
+
+  .home-prayer__arabic {
+    display: block;
+    margin-left: 0;
+  }
+
+  .published-content-card__dates {
+    text-align: left;
+  }
+
+  .published-content__details > div {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .status-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .status-list dd {
+    text-align: left;
+  }
+
+  .site-footer__nav ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 22rem) {
+  .site-header__inner {
+    gap: 0.5rem;
+  }
+
+  .wordmark {
+    max-width: 11rem;
+  }
+
+  .menu-button {
+    padding-inline: 0.55rem;
+  }
+
+  .button-row,
+  .button {
+    width: 100%;
+  }
+}

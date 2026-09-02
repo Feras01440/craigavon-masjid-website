@@ -1,0 +1,183 @@
+/* Reduced motion, increased contrast, forced colours, print. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ink-soft: #2e3934;
+    --ink-faint: #3c4943;
+    --line: #776f61;
+    --line-strong: #4d483f;
+  }
+
+  .approval-card,
+  .journey-card,
+  .published-content-card,
+  .published-content-warning,
+  .published-faq-list > div,
+  .status-panel,
+  .empty-state,
+  .home-prayer__panel,
+  .hero-prayer,
+  .home-find__details,
+  .service-item,
+  .contact-method,
+  .visiting {
+    border-width: 2px;
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --paper: Canvas;
+    --paper-deep: Canvas;
+    --surface: Canvas;
+    --ink: CanvasText;
+    --ink-soft: CanvasText;
+    --ink-faint: CanvasText;
+    --pine: CanvasText;
+    --pine-deep: CanvasText;
+    --berry: CanvasText;
+    --berry-soft: Canvas;
+    --line: CanvasText;
+    --line-strong: CanvasText;
+  }
+
+  :focus-visible {
+    outline: 3px solid Highlight;
+    box-shadow: none;
+  }
+
+  .home-hero,
+  .site-footer,
+  .button,
+  .status-badge,
+  .approval-card,
+  .journey-card,
+  .published-content-card,
+  .published-content-warning,
+  .published-faq-list > div,
+  .status-panel,
+  .empty-state,
+  .public-form,
+  .public-form__field input,
+  .public-form__field select,
+  .public-form__field textarea,
+  .public-form__feedback,
+  .home-prayer__panel,
+  .home-prayer__next,
+  .hero-prayer,
+  .home-find__details,
+  .section--pine,
+  .section--pine.section--photo,
+  .icon-badge,
+  .next-prayer-strip,
+  .service-item,
+  .contact-method,
+  .visiting,
+  .contact-map {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+
+  .home-hero::before,
+  .section--pine::before,
+  .site-footer::before,
+  .site-footer::after {
+    background: none;
+  }
+
+  .home-hero__backdrop {
+    display: none;
+  }
+
+  .hero-prayer__name,
+  .hero-prayer__times dd,
+  .hero-prayer__countdown,
+  .hero-prayer__jumuah,
+  .hero-prayer__link,
+  .section--pine h2,
+  .home-find__lead,
+  .home-find__details a {
+    color: CanvasText !important;
+  }
+
+  .home-hero h1,
+  .home-hero p,
+  .site-footer p,
+  .site-footer a,
+  .button,
+  .button--primary,
+  .button--secondary {
+    color: CanvasText !important;
+  }
+
+  .page-intro__inner::before {
+    border-color: CanvasText;
+  }
+}
+
+@media print {
+  :root {
+    --paper: #ffffff;
+    --paper-deep: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --ink-soft: #222222;
+    --ink-faint: #333333;
+    --pine: #000000;
+    --pine-deep: #000000;
+    --copper: #000000;
+    --line: #777777;
+    --line-strong: #333333;
+  }
+
+  .skip-link,
+  .nav-disclosure,
+  .site-footer,
+  .button-row {
+    display: none !important;
+  }
+
+  .site-header__inner {
+    min-height: 0;
+    padding-block: 1rem;
+  }
+
+  .home-hero,
+  .section--tinted,
+  .page-intro {
+    border-color: #777777;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .home-hero h1,
+  .home-hero p {
+    color: #000000;
+  }
+
+  .section,
+  .page-intro__inner,
+  .home-hero__grid {
+    padding-block: 2rem;
+  }
+
+  a {
+    color: #000000 !important;
+  }
+}

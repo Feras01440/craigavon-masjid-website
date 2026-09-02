@@ -1,0 +1,166 @@
+/* Reset, document defaults, public typography scale, container, skip link, demo banner. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+  font-synthesis: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: var(--berry-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-light);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--focus-dark);
+}
+
+.public-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.public-shell h1,
+.public-shell h2,
+.public-shell h3 {
+  margin-block: 0;
+  color: var(--pine-deep);
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-optical-sizing: auto;
+  /* Generous enough that g/y/j/p/q descenders never collide across lines. */
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+.public-shell h1 {
+  font-size: clamp(2.05rem, 1.4rem + 2.6vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.public-shell h2 {
+  font-size: clamp(1.55rem, 1.22rem + 1.45vw, 2.3rem);
+  line-height: 1.16;
+  letter-spacing: -0.008em;
+}
+
+.public-shell h3 {
+  font-size: clamp(1.18rem, 1.06rem + 0.55vw, 1.45rem);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.public-shell p,
+.public-shell ul,
+.public-shell ol,
+.public-shell dl {
+  margin-block-start: 0;
+}
+
+.public-shell p:last-child,
+.public-shell ul:last-child,
+.public-shell ol:last-child,
+.public-shell dl:last-child {
+  margin-block-end: 0;
+}
+
+.public-shell a {
+  color: var(--pine);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+}
+
+.public-shell a:hover {
+  color: var(--berry);
+}
+
+.site-container {
+  width: min(100%, calc(var(--measure) + (var(--gutter) * 2)));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  z-index: 1000;
+  border: 0;
+  background: var(--surface);
+  color: var(--pine-deep);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: auto;
+  height: auto;
+  padding: 0.85rem 1.1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  border: 2px solid currentColor;
+}
+
+.demo-banner {
+  background: #fff1c9;
+  border-block: 2px solid #8a5a00;
+  color: #3b2700;
+  font-weight: 700;
+  padding: 0.7rem max(1rem, calc((100% - 76rem) / 2));
+  text-align: center;
+}
+
+@media (forced-colors: active) {
+  .demo-banner {
+    border: 2px solid CanvasText;
+  }
+}
