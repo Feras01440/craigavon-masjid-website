@@ -54,7 +54,6 @@ export default async function PrayerMonthPage({
       <PageIntro
         eyebrow="Craigavon Masjid"
         title="Prayer times"
-        description={`The ${monthLabelOf(parts)} prayer and Iqamah timetable.`}
         current={monthLabelOf(parts)}
         parent={{ href: "/prayer-times", label: "Prayer times" }}
       />
