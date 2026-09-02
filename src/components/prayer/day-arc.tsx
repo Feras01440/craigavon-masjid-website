@@ -80,7 +80,7 @@ export function DayArc({
             marker.progress,
             RADIUS + (nearEnd ? LABEL_OFFSET + 18 : LABEL_OFFSET),
           );
-          const anchor = marker.progress < 0.2 ? "start" : marker.progress > 0.8 ? "end" : "middle";
+          const anchor = marker.progress < 0.2 ? "end" : marker.progress > 0.8 ? "start" : "middle";
           return (
             <g
               key={marker.key}

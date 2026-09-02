@@ -14,12 +14,25 @@ the masjid.
 
 ## Coverage today
 
-| Configuration              | Effective               | Notes                                        |
-| -------------------------- | ----------------------- | -------------------------------------------- |
-| MAWAQIT official timetable | 2026-08-31 → 2026-12-31 | Maghrib and ʿIshāʾ separate since 9 Aug 2026 |
+| Configuration              | Effective               | Notes                                                                               |
+| -------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
+| MAWAQIT official timetable | 2026-08-31 → 2026-09-30 | Maghrib and ʿIshāʾ separate since 9 Aug 2026; October–December withheld (see below) |
 
-**Before 31 December 2026, import the next period** (MAWAQIT publishes a full year, so January–June
-can be imported any time after the committee confirms next year's Iqamah pattern on MAWAQIT).
+## Known source defects (2 Sep 2026) — fix on MAWAQIT, then re-import
+
+The October–December 2026 import was withdrawn after verification against MAWAQIT:
+
+1. **October is an hour late on MAWAQIT.** Every October entry in the masjid's annual calendar is
+   shifted +1h (for example 18 Oct: Sunrise "08:56", Maghrib "19:21"; the true times are about 07:58
+   and 18:22). September and November are correct, so this is the uploaded October column, not the
+   clock change.
+2. **Winter ʿAsr Iqamah is after Maghrib.** From 1 November the iqama calendar keeps ʿAsr at 17:00
+   while Maghrib begins at 16:50 and earlier, which the website's safety checks refuse. The winter
+   ʿAsr (and Dhuhr) Iqamah times need entering for November–December.
+
+Once corrected on MAWAQIT, run the import for `--from 2026-10-01 --to 2026-12-31` (dry run first)
+and spot-check three dates. Until then the site shows September and says the next period is not yet
+published — it never shows the shifted times.
 
 ## Re-importing (about two minutes)
 
