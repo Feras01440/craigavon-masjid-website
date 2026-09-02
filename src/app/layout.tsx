@@ -84,7 +84,9 @@ export const metadata: Metadata = {
         type: "image/png",
       },
     ],
-    apple: "/brand/muslim-association-of-craigavon-logo-192.png",
+    // iOS composites transparent icons onto black, so the touch icon is the
+    // opaque variant from scripts/generate-brand-assets.mjs.
+    apple: "/brand/apple-touch-icon-180.png",
   },
   referrer: "strict-origin-when-cross-origin",
   formatDetection: {

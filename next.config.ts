@@ -57,6 +57,21 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      // Backdrop photography and brand marks change rarely and always under
+      // a new filename, so the CDN and browsers may keep them for a week and
+      // serve stale copies while revalidating.
+      {
+        source: "/images/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" },
+        ],
+      },
+      {
+        source: "/brand/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" },
+        ],
+      },
       {
         source: "/api/:path*",
         headers: [
