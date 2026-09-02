@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and releases will use
 semantic versioning once the production platform has a verified release process. Dates use ISO 8601.
 
+## [0.4.0] — 2026-08-31
+
+### Added
+
+- Brand marks traced from the Association's logo (transparent, gold and cream variants; opaque
+  touch, maskable and favicon variants; a new social card) with a reproducible pipeline in
+  `scripts/generate-brand-assets.mjs`.
+- Licensed backdrop photography behind the hero and the "find us" band, with credits.
+- Line-drawn service icons; a Qur'anic epigraph on the funerals category.
+- A living-content set published from the dashboard model: the Friday Qur'an class, six FAQs and a
+  launch notice; FAQs also surface on the homepage.
+- "Day arc" visual of today's prayers with a live sun marker; an Iqamah-window progress bar in the
+  hero panel; scroll reveals and a page-enter transition that collapse under reduced motion.
+- A subscribable iCalendar feed at `/prayer-times/calendar.ics`.
+- `scripts/import-mawaqit.mjs` plus `docs/operations/prayer-timetable.md`, `docs/EDITING-GUIDE.md`
+  and `docs/LAUNCH-PLAN.md`.
+
+### Changed
+
+- The palette now derives from the logo: berry and true gold replace the copper approximations
+  (tokens renamed `--berry`, `--berry-soft`).
+- The official MAWAQIT timetable is published 1:1 through 31 December 2026; Maghrib and ʿIshāʾ are
+  separate again from 9 August; the joined-prayer marker is a plain asterisk.
+- Filler copy removed across every public page; the homepage introduction is optional; the "speak
+  with the imam" category is withdrawn.
+- Stylesheets split by area under `src/styles/`; dead selectors removed.
+- Backdrops and brand assets are cached for a week with stale-while-revalidate; the hero artwork is
+  preloaded.
+
+### Fixed
+
+- The Apple touch icon is opaque again (iOS composites transparent icons onto black).
+
 ## [0.3.0] — 2026-08-30
 
 ### Performance

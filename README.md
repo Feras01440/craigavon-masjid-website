@@ -58,6 +58,9 @@ automatic previews per PR and production on merge.
 
 | Area                      | Start here                                                                           |
 | ------------------------- | ------------------------------------------------------------------------------------ |
+| Editing anything          | [docs/EDITING-GUIDE.md](docs/EDITING-GUIDE.md) — dashboard vs code, file map         |
+| Launching and running it  | [docs/LAUNCH-PLAN.md](docs/LAUNCH-PLAN.md)                                           |
+| Prayer timetable imports  | [docs/operations/prayer-timetable.md](docs/operations/prayer-timetable.md)           |
 | What is running right now | [docs/operations/DEPLOYED-ENVIRONMENT.md](docs/operations/DEPLOYED-ENVIRONMENT.md)   |
 | Architecture decisions    | [docs/architecture/](docs/architecture/) (ADR-001…003)                               |
 | Operations runbook        | [docs/operations/OPERATIONS-RUNBOOK.md](docs/operations/OPERATIONS-RUNBOOK.md)       |
