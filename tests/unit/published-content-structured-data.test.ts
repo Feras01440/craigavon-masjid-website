@@ -1,6 +1,6 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   buildPublishedContentStructuredData,
@@ -88,18 +88,26 @@ describe("published content structured data", () => {
   });
 
   it("emits no JSON-LD unless the site URL and indexing gates are both enabled", () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://example.org";
-    process.env.NEXT_PUBLIC_INDEXING_ENABLED = "false";
-    expect(
-      renderToStaticMarkup(createElement(PublishedContentStructuredData, { items: [item()] })),
-    ).toBe("");
+    // The component reads the real clock; pin it inside the fixture's
+    // published/expiry window so the test cannot age out.
+    vi.useFakeTimers();
+    vi.setSystemTime(now);
+    try {
+      process.env.NEXT_PUBLIC_SITE_URL = "https://example.org";
+      process.env.NEXT_PUBLIC_INDEXING_ENABLED = "false";
+      expect(
+        renderToStaticMarkup(createElement(PublishedContentStructuredData, { items: [item()] })),
+      ).toBe("");
 
-    process.env.NEXT_PUBLIC_INDEXING_ENABLED = "true";
-    const markup = renderToStaticMarkup(
-      createElement(PublishedContentStructuredData, { items: [item()] }),
-    );
-    expect(markup).toContain('type="application/ld+json"');
-    expect(markup).toContain("schema.org");
-    expect(markup).toContain("Approved event");
+      process.env.NEXT_PUBLIC_INDEXING_ENABLED = "true";
+      const markup = renderToStaticMarkup(
+        createElement(PublishedContentStructuredData, { items: [item()] }),
+      );
+      expect(markup).toContain('type="application/ld+json"');
+      expect(markup).toContain("schema.org");
+      expect(markup).toContain("Approved event");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
