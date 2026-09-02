@@ -1,0 +1,148 @@
+/* Homepage hero: photo backdrop layer, lattice, grid, headline, icon badges. */
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #315249;
+  background: var(--pine-deep);
+  color: #edf4f0;
+}
+
+/* Real mosque artwork under a deep pine wash on its own layer, so it can
+   drift very slowly behind the content; the gradient guarantees text
+   contrast while the gilded dome pattern glows through. */
+.home-hero .home-hero__backdrop {
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  background:
+    var(--pine-photo-wash),
+    var(--pine-deep) url("/images/backdrop-gold-dome-1920.avif") center 30% / cover no-repeat;
+  animation: hero-drift 48s ease-in-out infinite alternate;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.07) translate3d(-1.2%, -1%, 0);
+  }
+}
+
+.home-hero::before {
+  z-index: 1;
+}
+
+.home-hero__grid {
+  z-index: 2;
+}
+
+.section--pine.section--photo {
+  background:
+    var(--pine-photo-wash),
+    var(--pine-deep) url("/images/backdrop-green-ceiling-1920.avif") center 60% / cover no-repeat;
+}
+
+@media (max-width: 52rem) {
+  .home-hero .home-hero__backdrop {
+    background:
+      var(--pine-photo-wash),
+      var(--pine-deep) url("/images/backdrop-gold-dome-960.avif") center 30% / cover no-repeat;
+  }
+
+  .section--pine.section--photo {
+    background:
+      var(--pine-photo-wash),
+      var(--pine-deep) url("/images/backdrop-green-ceiling-960.avif") center 60% / cover no-repeat;
+  }
+}
+
+.home-hero::before,
+.section--pine::before,
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--khatam-lattice);
+  background-size: 96px 96px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.home-hero > *,
+.section--pine > *,
+.site-footer > * {
+  position: relative;
+}
+
+.home-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(19rem, 0.7fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+
+.home-hero .eyebrow,
+.eyebrow--hero {
+  color: var(--gold-soft);
+}
+
+.home-hero h1 {
+  max-width: 16ch;
+  color: #fffdf8;
+  font-size: clamp(2.3rem, 1.6rem + 2.9vw, 3.9rem);
+}
+
+/* Optional dashboard-managed hero line; the hero renders nothing when the
+   committee leaves it empty. */
+.home-hero__lead {
+  max-width: 36rem;
+  margin-block: 1.25rem 0;
+  color: #d8e3de;
+  font-size: clamp(1.08rem, 2vw, 1.25rem);
+  line-height: 1.7;
+}
+
+/* Meaningful icons on the journey and service cards, Belfast-style: a soft
+   tinted disc with a line-drawn symbol, one accent per card. */
+.icon-badge {
+  width: 3.1rem;
+  height: 3.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.icon-badge svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.icon-badge--berry {
+  background: var(--berry-soft);
+  color: var(--berry);
+}
+
+.icon-badge--gold {
+  background: #f2e6c4;
+  color: #6d5312;
+}
+
+.icon-badge--pine {
+  background: var(--pine-soft);
+  color: var(--pine);
+}
+
+.service-item__title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.service-item__title h2 {
+  margin: 0;
+}

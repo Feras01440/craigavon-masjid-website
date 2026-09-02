@@ -1,0 +1,14 @@
+# LAUNCH BLOCKER: replace the intentionally invalid placeholder below with one
+# or more Association-controlled GitHub users or teams before enabling required
+# CODEOWNERS review. No individual owner has been invented in this repository.
+# Example replacement format: @organisation/security-maintainers
+
+* @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+
+/.github/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/SECURITY.md @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/docs/security/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/supabase/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/src/server/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/src/lib/prayer/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER
+/tests/ @REPLACE_WITH_ASSOCIATION_GITHUB_OWNER

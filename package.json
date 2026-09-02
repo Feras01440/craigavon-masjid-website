@@ -1,0 +1,61 @@
+{
+  "name": "muslim-association-of-craigavon-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public website and committee administration platform for the Muslim Association of Craigavon.",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "setup:local": "supabase start && supabase db reset && node scripts/setup-local.mjs",
+    "local:link": "node scripts/local-auth-link.mjs",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "start:standalone": "node scripts/start-standalone.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc6 --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "deploy:prod": "npx -y vercel@56.3.0 deploy --prod --yes",
+    "db:types": "supabase gen types typescript --local > src/types/database.generated.ts",
+    "db:reset": "supabase db reset",
+    "db:lint": "supabase db lint --local",
+    "brand:assets": "node scripts/generate-brand-assets.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.1",
+    "@supabase/supabase-js": "2.110.3",
+    "adhan": "4.4.4",
+    "next": "16.2.11",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "sanitize-html": "2.17.6",
+    "server-only": "0.0.1",
+    "sharp": "0.35.3",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.61.1",
+    "@types/node": "26.1.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@types/sanitize-html": "2.16.1",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.2.11",
+    "jsdom": "29.1.1",
+    "prettier": "3.9.5",
+    "supabase": "2.101.0",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "vitest": "4.1.10"
+  }
+}

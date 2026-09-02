@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-07-14",
+  "tool": "Lighthouse 13.4.0",
+  "browser": "Microsoft Edge (Chromium)",
+  "target": {
+    "kind": "external ephemeral HTTPS tunnel to a local production build",
+    "origin": "https://borders-blonde-sublime-indiana.trycloudflare.com",
+    "permanentHostingPreview": false
+  },
+  "runsPerRouteProfile": 3,
+  "notes": [
+    "The TV route intentionally returned /api/display 503 because the preview had no Supabase credentials.",
+    "TV runs warn that continuous polling prevents Lighthouse from observing network quiet.",
+    "SEO 63 reflects intentional noindex before committee launch approval."
+  ],
+  "results": [
+    {
+      "route": "home",
+      "profile": "desktop",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 427,
+        "fcpMs": 269,
+        "speedIndexMs": 292,
+        "totalBlockingTimeMs": 0,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 71,
+        "transferBytes": 191676,
+        "scriptBytes": 150926,
+        "stylesheetBytes": 5016,
+        "requestCount": 22
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 405,
+          "transferBytes": 192352,
+          "scriptBytes": 151690,
+          "requestCount": 22
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 428,
+          "transferBytes": 191554,
+          "scriptBytes": 150836,
+          "requestCount": 22
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 427,
+          "transferBytes": 191676,
+          "scriptBytes": 150926,
+          "requestCount": 22
+        }
+      ]
+    },
+    {
+      "route": "home",
+      "profile": "mobile",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 1723,
+        "fcpMs": 903,
+        "speedIndexMs": 903,
+        "totalBlockingTimeMs": 20,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 78,
+        "transferBytes": 191779,
+        "scriptBytes": 151123,
+        "stylesheetBytes": 4954,
+        "requestCount": 22
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1723,
+          "transferBytes": 191744,
+          "scriptBytes": 151080,
+          "requestCount": 22
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1803,
+          "transferBytes": 191779,
+          "scriptBytes": 151123,
+          "requestCount": 22
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1694,
+          "transferBytes": 192087,
+          "scriptBytes": 151358,
+          "requestCount": 22
+        }
+      ]
+    },
+    {
+      "route": "news",
+      "profile": "desktop",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 430,
+        "fcpMs": 269,
+        "speedIndexMs": 284,
+        "totalBlockingTimeMs": 0,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 69,
+        "transferBytes": 186027,
+        "scriptBytes": 151213,
+        "stylesheetBytes": 5016,
+        "requestCount": 17
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 430,
+          "transferBytes": 186159,
+          "scriptBytes": 151349,
+          "requestCount": 17
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 405,
+          "transferBytes": 185732,
+          "scriptBytes": 150935,
+          "requestCount": 17
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 432,
+          "transferBytes": 186027,
+          "scriptBytes": 151213,
+          "requestCount": 17
+        }
+      ]
+    },
+    {
+      "route": "news",
+      "profile": "mobile",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 1701,
+        "fcpMs": 879,
+        "speedIndexMs": 879,
+        "totalBlockingTimeMs": 35,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 68,
+        "transferBytes": 186047,
+        "scriptBytes": 151259,
+        "stylesheetBytes": 4954,
+        "requestCount": 17
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1729,
+          "transferBytes": 186070,
+          "scriptBytes": 151259,
+          "requestCount": 17
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1321,
+          "transferBytes": 186047,
+          "scriptBytes": 151294,
+          "requestCount": 17
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1701,
+          "transferBytes": 185702,
+          "scriptBytes": 150966,
+          "requestCount": 17
+        }
+      ]
+    },
+    {
+      "route": "prayer-times",
+      "profile": "desktop",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 456,
+        "fcpMs": 269,
+        "speedIndexMs": 298,
+        "totalBlockingTimeMs": 0,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 72,
+        "transferBytes": 255940,
+        "scriptBytes": 218643,
+        "stylesheetBytes": 6348,
+        "requestCount": 21
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 491,
+          "transferBytes": 255940,
+          "scriptBytes": 218643,
+          "requestCount": 21
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 447,
+          "transferBytes": 256177,
+          "scriptBytes": 218778,
+          "requestCount": 21
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 456,
+          "transferBytes": 255808,
+          "scriptBytes": 218440,
+          "requestCount": 21
+        }
+      ]
+    },
+    {
+      "route": "prayer-times",
+      "profile": "mobile",
+      "median": {
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 1999,
+        "fcpMs": 872,
+        "speedIndexMs": 872,
+        "totalBlockingTimeMs": 21,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 71,
+        "transferBytes": 256205,
+        "scriptBytes": 218922,
+        "stylesheetBytes": 6348,
+        "requestCount": 21
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 99,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 2039,
+          "transferBytes": 256205,
+          "scriptBytes": 218922,
+          "requestCount": 21
+        },
+        {
+          "run": 2,
+          "performance": 99,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1999,
+          "transferBytes": 256137,
+          "scriptBytes": 218774,
+          "requestCount": 21
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1105,
+          "transferBytes": 256558,
+          "scriptBytes": 219215,
+          "requestCount": 21
+        }
+      ]
+    },
+    {
+      "route": "privacy",
+      "profile": "desktop",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 428,
+        "fcpMs": 270,
+        "speedIndexMs": 288,
+        "totalBlockingTimeMs": 0,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 68,
+        "transferBytes": 186609,
+        "scriptBytes": 150908,
+        "stylesheetBytes": 5007,
+        "requestCount": 19
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 428,
+          "transferBytes": 186609,
+          "scriptBytes": 150908,
+          "requestCount": 19
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 443,
+          "transferBytes": 186609,
+          "scriptBytes": 150899,
+          "requestCount": 19
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 420,
+          "transferBytes": 186691,
+          "scriptBytes": 150971,
+          "requestCount": 19
+        }
+      ]
+    },
+    {
+      "route": "privacy",
+      "profile": "mobile",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 63,
+        "lcpMs": 1723,
+        "fcpMs": 867,
+        "speedIndexMs": 867,
+        "totalBlockingTimeMs": 18,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 70,
+        "transferBytes": 186753,
+        "scriptBytes": 151092,
+        "stylesheetBytes": 4954,
+        "requestCount": 19
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1724,
+          "transferBytes": 186740,
+          "scriptBytes": 151025,
+          "requestCount": 19
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1723,
+          "transferBytes": 187127,
+          "scriptBytes": 151474,
+          "requestCount": 19
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "lcpMs": 1401,
+          "transferBytes": 186753,
+          "scriptBytes": 151092,
+          "requestCount": 19
+        }
+      ]
+    },
+    {
+      "route": "tv",
+      "profile": "desktop",
+      "median": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 92,
+        "seo": 63,
+        "lcpMs": 497,
+        "fcpMs": 270,
+        "speedIndexMs": 437,
+        "totalBlockingTimeMs": 0,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 70,
+        "transferBytes": 261910,
+        "scriptBytes": 222825,
+        "stylesheetBytes": 7014,
+        "requestCount": 20
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 494,
+          "transferBytes": 262091,
+          "scriptBytes": 223000,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        },
+        {
+          "run": 2,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 525,
+          "transferBytes": 261870,
+          "scriptBytes": 222771,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 497,
+          "transferBytes": 261910,
+          "scriptBytes": 222825,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        }
+      ]
+    },
+    {
+      "route": "tv",
+      "profile": "mobile",
+      "median": {
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 92,
+        "seo": 63,
+        "lcpMs": 1867,
+        "fcpMs": 866,
+        "speedIndexMs": 978,
+        "totalBlockingTimeMs": 101,
+        "cumulativeLayoutShift": 0,
+        "ttfbMs": 69,
+        "transferBytes": 262353,
+        "scriptBytes": 223319,
+        "stylesheetBytes": 7014,
+        "requestCount": 20
+      },
+      "runs": [
+        {
+          "run": 1,
+          "performance": 99,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 2018,
+          "transferBytes": 262353,
+          "scriptBytes": 223319,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        },
+        {
+          "run": 2,
+          "performance": 99,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 1867,
+          "transferBytes": 262099,
+          "scriptBytes": 223023,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        },
+        {
+          "run": 3,
+          "performance": 100,
+          "accessibility": 100,
+          "bestPractices": 92,
+          "lcpMs": 1401,
+          "transferBytes": 262446,
+          "scriptBytes": 223356,
+          "requestCount": 20,
+          "continuousPollingWarning": true
+        }
+      ]
+    }
+  ]
+}

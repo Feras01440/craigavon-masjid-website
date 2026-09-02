@@ -1,0 +1,21 @@
+packages:
+  - "."
+
+# Security floors for Next's internal pins (GHSA-f88m-g3jw-g9cj and the
+# postcss advisories); revisit when Next bumps them itself.
+overrides:
+  "next>postcss": 8.5.26
+  "next>sharp": 0.35.3
+
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - "@supabase/auth-js@2.110.3"
+  - "@supabase/functions-js@2.110.3"
+  - "@supabase/postgrest-js@2.110.3"
+  - "@supabase/realtime-js@2.110.3"
+  - "@supabase/ssr@0.12.1"
+  - "@supabase/storage-js@2.110.3"
+  - "@supabase/supabase-js@2.110.3"

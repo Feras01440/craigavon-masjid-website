@@ -1,0 +1,51 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import {
+  EmptyState,
+  PageIntro,
+  PublicShell,
+  PublishedContentList,
+  PublishedContentOmissionNotice,
+  PublishedContentStructuredData,
+  PublishedContentUnavailable,
+} from "@/components/site";
+import { getPublishedContent } from "@/server/repositories/public-content";
+
+export const metadata: Metadata = {
+  title: "News",
+  description: "News, announcements and events from Craigavon Masjid.",
+};
+
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
+
+export default async function NewsPage() {
+  const content = await getPublishedContent(["news", "event"], { limit: 100 });
+
+  return (
+    <PublicShell>
+      {content.status === "ready" && <PublishedContentStructuredData items={content.items} />}
+      <PageIntro eyebrow="News" title="News and events" current="News" />
+
+      <section className="section">
+        <div className="site-container">
+          {content.status === "unavailable" ? (
+            <PublishedContentUnavailable subject="News and events" />
+          ) : content.status === "empty" ? (
+            <EmptyState title="Nothing on the noticeboard yet">
+              <p>
+                <Link href="/prayer-times">Prayer times</Link> are always up to date.
+              </p>
+            </EmptyState>
+          ) : (
+            <>
+              <PublishedContentList items={content.items} />
+              {content.omittedCount > 0 && <PublishedContentOmissionNotice />}
+            </>
+          )}
+        </div>
+      </section>
+    </PublicShell>
+  );
+}

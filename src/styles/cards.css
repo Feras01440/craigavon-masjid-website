@@ -1,0 +1,228 @@
+/* Card surfaces, published content, FAQ list, status badge, text links. */
+/* Surface roles: the copper top bar marks LIVE published data only
+   (.published-content-card, .home-prayer__panel, .hero-prayer). Informational
+   tiles are quiet hairline cards; editorial asides sit on the page ground
+   with a single top rule. One recipe per role, not one recipe everywhere. */
+.approval-card,
+.journey-card,
+.published-content-card {
+  min-width: 0;
+  padding: clamp(1.4rem, 4vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.published-content-card {
+  border-top: 4px solid var(--berry);
+  box-shadow: var(--shadow-1);
+}
+
+.journey-card {
+  transition:
+    border-color var(--motion-quick) var(--ease-standard),
+    box-shadow var(--motion-standard) var(--ease-standard),
+    transform var(--motion-standard) var(--ease-standard);
+}
+
+.journey-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-1);
+  transform: translateY(-2px);
+}
+
+.journey-card h3:first-child {
+  margin-top: 0;
+}
+
+.approval-card h3,
+.journey-card h3,
+.published-content-card h3 {
+  margin-top: 1rem;
+}
+
+.approval-card h3 + p,
+.journey-card h3 + p,
+.published-content-card h3 + p {
+  margin-top: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.published-content-card--urgent {
+  border-color: #873b2e;
+  border-top-color: #873b2e;
+}
+
+.published-content-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink-faint);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.published-content-card__labels {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.published-content-card__dates {
+  display: grid;
+  gap: 0.15rem;
+  text-align: right;
+}
+
+.published-content-card__featured {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--pine);
+  background: var(--pine-soft);
+  color: var(--pine-deep);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.published-content-card__category {
+  margin: 1rem 0 0;
+  color: var(--berry);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.published-content-card__category + h3 {
+  margin-top: 0.35rem;
+}
+
+.published-content-card__summary {
+  color: var(--ink-soft);
+  font-size: 1.04rem;
+}
+
+.published-content__body {
+  margin-top: 1.25rem;
+  color: var(--ink-soft);
+}
+
+.published-content__body p {
+  white-space: pre-line;
+}
+
+.published-content__body p + p {
+  margin-top: 1rem;
+}
+
+.published-content__details {
+  display: grid;
+  gap: 0;
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.published-content__details > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 30%) minmax(0, 1fr);
+  gap: 0.75rem;
+  padding-block: 0.65rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.published-content__details dt {
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.published-content__details dd {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.published-content__action {
+  margin-bottom: 1.25rem;
+}
+
+.published-content__action .text-link {
+  margin-top: 0;
+}
+
+.published-content-warning {
+  margin-top: 1.25rem;
+  padding: 1rem 1.15rem;
+  border: 2px solid var(--berry);
+  background: var(--berry-soft);
+  color: var(--ink);
+}
+
+.published-faq-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.published-faq-list > div {
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.published-faq-list dt {
+  color: var(--pine-deep);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.published-faq-list dd {
+  margin: 0.8rem 0 0;
+  color: var(--ink-soft);
+}
+
+.published-faq-list dd p {
+  white-space: pre-line;
+}
+
+.published-faq-list dd p + p {
+  margin-top: 0.8rem;
+}
+
+.status-badge {
+  width: fit-content;
+  margin: 0;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--berry);
+  background: var(--berry-soft);
+  color: #6d3516;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.text-link {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  font-weight: 750;
+  transition: color var(--motion-quick) var(--ease-standard);
+}
+
+.text-link::after {
+  content: "→";
+  text-decoration: none;
+  transition: transform var(--motion-quick) var(--ease-standard);
+}
+
+.text-link:hover::after {
+  transform: translateX(0.2rem);
+}
+
+.journey-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}

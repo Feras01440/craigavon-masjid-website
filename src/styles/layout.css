@@ -1,0 +1,187 @@
+/* Eyebrows, buttons, section rhythm, pine bands, find-us grid, section headings. */
+.eyebrow,
+.status-panel__label,
+.empty-state__kicker {
+  margin-bottom: 0.8rem;
+  color: var(--berry);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.button {
+  min-height: 2.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.4rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  font-weight: 750;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background-color var(--motion-quick) var(--ease-standard),
+    border-color var(--motion-quick) var(--ease-standard),
+    color var(--motion-quick) var(--ease-standard);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button--primary {
+  border-color: var(--gold-soft);
+  background: var(--gold-soft);
+  color: var(--pine-deep) !important;
+}
+
+.button--primary:hover {
+  border-color: #fffdf8;
+  background: #fffdf8;
+}
+
+.section .button--primary {
+  border-color: var(--pine);
+  background: var(--pine);
+  color: var(--paper) !important;
+}
+
+.section .button--primary:hover {
+  border-color: var(--pine-deep);
+  background: var(--pine-deep);
+}
+
+.section--pine .button--primary {
+  border-color: var(--gold-soft);
+  background: var(--gold-soft);
+  color: var(--pine-deep) !important;
+}
+
+.section--pine .button--primary:hover {
+  border-color: #fffdf8;
+  background: #fffdf8;
+}
+
+.button--secondary {
+  border-color: currentColor;
+  background: transparent;
+  color: inherit !important;
+}
+
+.home-hero .button--secondary:hover,
+.section--pine .button--secondary:hover {
+  background: #fffdf8;
+  color: var(--pine-deep) !important;
+}
+
+.section {
+  padding-block: var(--section-space);
+}
+
+.section--compact {
+  padding-block: clamp(2rem, 5vw, 4rem);
+}
+
+.section--tinted {
+  border-block: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+
+.section--pine {
+  position: relative;
+  border-block: 1px solid #315249;
+  background: var(--pine-atmosphere);
+  color: #edf4f0;
+}
+
+.section--pine h2 {
+  color: #fffdf8;
+}
+
+/* The shared .eyebrow rule paints copper later in the file; on dark pine that
+   fails contrast, so re-assert the gold tone with higher specificity. */
+.section--pine .eyebrow,
+.home-hero .eyebrow {
+  color: var(--gold-soft);
+}
+
+.section--pine a {
+  color: inherit;
+}
+
+.section-more {
+  margin-top: 1.75rem;
+}
+
+.home-find__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.65fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.home-find__details {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.25rem, 3vw, 1.8rem);
+  border: 1px solid #315249;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--pine-deep) 62%, #0a1f1a);
+}
+
+.home-find__details p {
+  margin: 0;
+}
+
+.home-find__details a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: #fffdf8;
+  font-weight: 650;
+}
+
+.home-find__label {
+  display: block;
+  margin-bottom: 0.1rem;
+  color: #b9cec6;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-find__address {
+  color: #fffdf8;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.section-heading {
+  max-width: 46rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.section-heading h2 + p,
+.section-heading > p:last-child {
+  margin-top: 1rem;
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+}
+
+.journey-grid,
+.published-content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}

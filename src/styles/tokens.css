@@ -1,0 +1,71 @@
+/* Design tokens: palette (derived from the logo), type, spacing, motion, textures. */
+:root {
+  --paper: #f7f3e9;
+  --paper-deep: #e9e2d1;
+  --surface: #fffdf8;
+  --ink: #17231e;
+  --ink-soft: #4d5d55;
+  /* Keeps ≥4.5:1 on both paper tones at small sizes (WCAG AA). */
+  --ink-faint: #57655e;
+  --pine: #173a31;
+  --pine-deep: #0d2821;
+  --pine-soft: #dbe7e1;
+  /* Berry and gold are sampled from the Association's own logo mark, so the
+     accents on the page match the crescent-and-book artwork exactly. */
+  --berry: #7d1c3b;
+  --berry-soft: #f4e0dd;
+  --line: #cbc3b2;
+  --line-strong: #968c79;
+  --focus-dark: #00566d;
+  --focus-light: #ffffff;
+  --measure: 70rem;
+  --measure-narrow: 46rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --section-space: clamp(2.5rem, 2vw + 1.5rem, 4.5rem);
+  /* Self-hosted faces are injected by next/font in the root layout; the
+     bare-name fallbacks keep every surface readable if a face fails. */
+  --font-body:
+    var(--font-body-face, Inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face, Georgia), Georgia, "Times New Roman", serif;
+  --font-arabic: var(--font-arabic-face, serif), "Traditional Arabic", serif;
+  /* The TV display is pinned to Marcellus; the public site uses Fraunces. */
+  --font-marcellus: var(--font-marcellus-face, Georgia), Georgia, serif;
+  /* True variable weights for the Fraunces display face — no synthetic bold. */
+  --weight-display: 540;
+  --weight-display-strong: 620;
+  /* Aliases consumed by the prayer page module (kept on-brand). */
+  --accent: var(--berry);
+  --accent-strong: #5c1128;
+  --muted: var(--ink-soft);
+  --soft: var(--paper-deep);
+  --highlight: var(--berry-soft);
+  /* Depth, radius and motion tokens. */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgb(13 40 33 / 5%), 0 8px 24px rgb(13 40 33 / 6%);
+  --shadow-2: 0 2px 4px rgb(13 40 33 / 6%), 0 16px 40px rgb(13 40 33 / 10%);
+  --motion-quick: 140ms;
+  --motion-standard: 220ms;
+  --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  /* Gold accents for dark pine surfaces. */
+  --gold: #d3a84e;
+  --gold-soft: #ecd193;
+  /* Layered ground for the pine bands and footer: a warm gold glow over a
+     deep pine gradient, with a faint eight-point star lattice. */
+  --pine-atmosphere:
+    radial-gradient(120% 150% at 85% -10%, rgb(211 168 78 / 14%), transparent 55%),
+    linear-gradient(160deg, #133a30 0%, #0d2821 55%, #0a1f1a 100%);
+  /* Photo grounds: licensed mosque photography under a deep pine wash (see
+     docs/operations/image-credits.md). The gradient carries text contrast, so
+     the artwork can stay legible without harming readability. */
+  --pine-photo-wash: linear-gradient(
+    168deg,
+    rgb(13 40 33 / 84%) 0%,
+    rgb(10 31 26 / 90%) 55%,
+    rgb(8 26 21 / 94%) 100%
+  );
+  --khatam-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23ecd193' stroke-width='1'%3E%3Crect x='24' y='24' width='48' height='48'/%3E%3Crect x='24' y='24' width='48' height='48' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
+}

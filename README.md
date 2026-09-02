@@ -1,61 +1,79 @@
-# Craigavon Masjid — Community Website
+# Craigavon Masjid — public website and administration platform
 
-The official website of **Craigavon Masjid** (Muslim Association of Craigavon), 16 Legahory Centre, Craigavon BT65 5BE.
+The production platform of the **Muslim Association of Craigavon**: the public masjid website
+(prayer and Iqamah times, Jumuʿah, services, education, news, contact), a full-screen prayer display
+for the masjid TV, and an invite-only committee administration dashboard.
 
-A **zero-dependency static site**: pure HTML/CSS/JS, no frameworks, no database, no build step. Prayer times are computed in the browser with the vendored [adhan.js](https://github.com/batoulapps/adhan-js) library (MIT) — they can never go stale. See [docs/PLAN.md](docs/PLAN.md) for the full project plan and design rationale.
+**Live site:** <https://craigavon-masjid.vercel.app> · The deployed commit is visible in the Vercel
+dashboard under Deployments.
 
-## Pages
+## Stack
 
-| File | Page |
-|---|---|
-| `index.html` | Home — live next-prayer card, today's times, announcements, events |
-| `prayer-times.html` | Today + monthly timetable, jumuʿah, qibla, calculation method |
-| `display.html` | **Full-screen TV prayer board** for the screen inside the masjid |
-| `about.html` / `services.html` / `education.html` / `community.html` / `new-to-islam.html` / `contact.html` | Content pages |
-| `404.html` | Not-found page |
+- **Next.js 16** (App Router, React 19, strict TypeScript). The `typecheck` script calls `tsc6`, the
+  TypeScript 6 binary alias installed with the toolchain.
+- **Supabase** — Postgres (with RLS and pgTAP-tested policies), Auth (magic-link + TOTP two-step
+  verification), private Storage.
+- **Vercel** — hosting, CDN caching of the public pages (see
+  [ADR-003](docs/architecture/ADR-003-public-caching.md)), functions pinned to `lhr1`.
+- Self-hosted fonts (Fraunces, Inter, Amiri; Marcellus for the TV only); no third-party scripts;
+  strict CSP. The one external embed is the Google map on `/contact`.
 
-## Preview locally
+## Quickstart
 
-Either just double-click `index.html` (everything works from a folder), or run a proper local server:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File serve.ps1
-# then open http://localhost:8420
+```bash
+corepack enable
+pnpm install
+pnpm dev                 # runs env-less: every data surface shows its fail-closed state
+pnpm setup:local         # full local product: Supabase (Docker) + seeded demo data
 ```
 
-## Update content
+| Command                          | Purpose                                        |
+| -------------------------------- | ---------------------------------------------- |
+| `pnpm check`                     | format + lint + typecheck + unit tests + build |
+| `pnpm test` / `pnpm test:e2e`    | unit / Playwright suites                       |
+| `pnpm db:reset` · `pnpm db:lint` | local database lifecycle                       |
+| `pnpm deploy:prod`               | production deploy (after CI is green)          |
 
-Committee members only ever edit three files — see **[ADMIN-GUIDE.md](ADMIN-GUIDE.md)** for the plain-English manual:
+Environment variables are documented in [`.env.example`](.env.example) and, for the live values'
+set/unset matrix, in [DEPLOYED-ENVIRONMENT](docs/operations/DEPLOYED-ENVIRONMENT.md).
 
-- `content/config.js` — contact details, iqāmah rules, jumuʿah time, calculation method
-- `content/announcements.js` — announcements (auto-expire supported)
-- `content/events.js` — events (past events hide automatically) + weekly activities
+## How this deploys
 
-## Deploy (free, ~10 minutes)
+Every push runs the 10-job CI (format/lint/types, unit+integration coverage, env-less build +
+Chromium smoke + axe accessibility, internal links, dependency audit, secret scan, migration lint,
+and a full seeded product acceptance walkthrough). Production deploys happen from a green commit via
+`pnpm deploy:prod`; connecting the Vercel Git integration (one-time dashboard step) upgrades this to
+automatic previews per PR and production on merge.
 
-**Cloudflare Pages** (recommended — includes CDN, DDoS protection, automatic HTTPS):
+## Design and product principles
 
-1. Create a free account at [pages.cloudflare.com](https://pages.cloudflare.com).
-2. "Create a project" → "Direct upload" → drag this whole folder in.
-3. Done — you get `https://<name>.pages.dev`. The `_headers` file automatically applies the security headers (CSP, HSTS, etc.).
-4. To update later: upload the folder again (or connect a GitHub repository for automatic deploys).
+- **Fail closed, never invent**: prayer times and content render only from published,
+  committee-approved records; anything unpublished shows an honest unavailable state.
+- **Iqamah-first daily use**: one shared client clock drives every live next-prayer surface; public
+  pages are CDN-cached so the daily check is fast on any phone.
+- **Accessibility is a gate, not a goal**: WCAG AA (axe), keyboard, reduced-motion and
+  forced-colours checks run in CI on every push.
 
-**Custom domain:** in the Pages project → "Custom domains" → add e.g. `craigavonmasjid.io` or `craigavonmasjid.org.uk` and follow the DNS instructions. Update the `canonical`/`og:url` URLs in each page's `<head>` and in `sitemap.xml`/`robots.txt` if the domain differs from `craigavonmasjid.io`.
+## Documentation
 
-Netlify works identically (drag-and-drop at [app.netlify.com/drop](https://app.netlify.com/drop); `_headers` is supported there too).
+| Area                      | Start here                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------ |
+| Editing anything          | [docs/EDITING-GUIDE.md](docs/EDITING-GUIDE.md) — dashboard vs code, file map         |
+| Launching and running it  | [docs/LAUNCH-PLAN.md](docs/LAUNCH-PLAN.md)                                           |
+| Prayer timetable imports  | [docs/operations/prayer-timetable.md](docs/operations/prayer-timetable.md)           |
+| What is running right now | [docs/operations/DEPLOYED-ENVIRONMENT.md](docs/operations/DEPLOYED-ENVIRONMENT.md)   |
+| Architecture decisions    | [docs/architecture/](docs/architecture/) (ADR-001…003)                               |
+| Operations runbook        | [docs/operations/OPERATIONS-RUNBOOK.md](docs/operations/OPERATIONS-RUNBOOK.md)       |
+| Committee administration  | [ADMIN-GUIDE.md](ADMIN-GUIDE.md)                                                     |
+| Security model            | [SECURITY.md](SECURITY.md) + [docs/security/](docs/security/)                        |
+| Deployment detail         | [docs/deployment/PRODUCTION-DEPLOYMENT.md](docs/deployment/PRODUCTION-DEPLOYMENT.md) |
 
-## The TV display
+> Historical note: reports under `docs/quality/` and `docs/audits/` were captured against the
+> pre-redesign build (July 2026) and describe an earlier user interface; treat them as archives, not
+> current evidence.
 
-Point any device connected to the masjid television at `/display.html` and put the browser in full-screen (F11). It shows the live clock, all prayer/iqāmah times, next-prayer countdown, Hijri date, rotating announcements, and a calm "prayer in progress" screen after each iqāmah. Setup options are in [ADMIN-GUIDE.md](ADMIN-GUIDE.md).
+## Ownership
 
-## Security posture
-
-- No server-side code, no database, no logins, no cookies, no third-party requests at runtime (fonts and all scripts are self-hosted).
-- Strict security headers shipped via `_headers`: CSP `default-src 'self'`, HSTS, nosniff, frame-deny, referrer and permissions policies.
-- No forms; contact is via phone/WhatsApp/email links — no personal data is collected, so there is no GDPR processing surface.
-
-## Licences
-
-- Site code: © Muslim Association of Craigavon.
-- `assets/vendor/adhan.umd.min.js` — MIT (Batoul Apps), licence in `assets/vendor/ADHAN-LICENSE.txt`.
-- Fonts (Marcellus, Inter, Amiri, Reem Kufi) — SIL Open Font License, self-hosted subsets from Google Fonts.
+© Muslim Association of Craigavon — see [LICENSE](LICENSE). The repository currently lives under a
+personal account; transferring it to an Association-controlled GitHub organisation is an open
+launch-checklist item.

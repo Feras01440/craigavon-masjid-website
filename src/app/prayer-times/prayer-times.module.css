@@ -1,0 +1,261 @@
+.content {
+  padding-block-end: clamp(1.5rem, 3vw, 3rem);
+}
+
+.todayHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.todayHeading h2 {
+  margin: 0;
+}
+
+.live {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
+  padding-top: 1.25rem;
+}
+
+.notice h2,
+.notice h3,
+.notice h4,
+.notice p {
+  margin-top: 0;
+}
+
+.notice p:last-child {
+  margin-bottom: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.controls h2 {
+  margin: 0;
+}
+
+.controlLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.controlLinks a,
+.controlLinks button {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.9rem;
+  color: var(--pine-deep);
+  background: var(--surface);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-quick) var(--ease-standard),
+    border-color var(--motion-quick) var(--ease-standard);
+}
+
+.controlLinks a:hover,
+.controlLinks button:hover {
+  border-color: var(--berry);
+  background: var(--berry-soft);
+}
+
+.source {
+  max-width: 70ch;
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.tableRegion {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--berry);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.table {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.tableCaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: center;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.columnHint {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 0.66rem;
+  font-weight: 550;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 5.5rem;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.begins {
+  display: block;
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.iqamah {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.jumuahChip {
+  display: block;
+  margin-top: 0.15rem;
+  color: #6d3a16;
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.fridayRow th,
+.fridayRow td {
+  background: var(--berry-soft);
+}
+
+.fridayRow th {
+  background: var(--berry-soft);
+}
+
+.todayRow th,
+.todayRow td {
+  background: var(--pine-soft);
+}
+
+.todayRow th {
+  background: var(--pine-soft);
+}
+
+.table tbody tr {
+  scroll-margin-top: 6.5rem;
+}
+
+@media print {
+  .todayHeading,
+  .live,
+  .controls,
+  .notice {
+    display: none !important;
+  }
+
+  .content::before {
+    content: "Craigavon Masjid — monthly prayer timetable";
+    display: block;
+    margin-bottom: 8pt;
+    font-size: 14pt;
+    font-weight: 600;
+  }
+
+  .tableRegion {
+    overflow: visible;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .table {
+    min-width: 0;
+    font-size: 8.5pt;
+  }
+
+  .table thead th,
+  .table tbody th {
+    position: static;
+  }
+
+  .table tbody tr {
+    break-inside: avoid;
+  }
+}
+
+@page {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
+@media (forced-colors: active) {
+  .tableRegion {
+    border: 2px solid CanvasText;
+  }
+
+  .controlLinks a,
+  .controlLinks button {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,199 @@
+/* Today's prayer table, next-prayer strip and sticky-chrome rules. */
+.public-form,
+.next-prayer {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line-strong);
+  border-left: 0.3rem solid var(--berry);
+  background: var(--surface);
+}
+
+.next-prayer h3,
+.next-prayer p:last-child {
+  margin-bottom: 0;
+}
+
+.home-prayer {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+}
+
+.home-prayer__panel {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--berry);
+  background: var(--surface);
+}
+
+.home-prayer__table {
+  width: 100%;
+  min-width: 24rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-prayer__caption {
+  padding: 1.1rem 1.15rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--pine-deep);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.home-prayer__hijri {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.home-prayer__table th,
+.home-prayer__table td {
+  padding: 0.7rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.home-prayer__table thead th {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-prayer__table thead th:not(:first-child),
+.home-prayer__table td {
+  text-align: right;
+}
+
+.home-prayer__table tbody tr:last-child th,
+.home-prayer__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.home-prayer__table td {
+  color: var(--ink);
+  font-size: 1.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.home-prayer__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.home-prayer__arabic {
+  display: inline-block;
+  /* Physical margin: inline-start would resolve to the right edge of this
+     rtl span, leaving no gap after the preceding English name. */
+  margin-left: 0.55rem;
+  color: var(--ink-faint);
+  font-family: var(--font-arabic);
+  font-size: 1.05em;
+  font-weight: 400;
+}
+
+.home-prayer__next {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--pine);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-prayer__row--next th,
+.home-prayer__row--next td {
+  background: var(--pine-soft);
+}
+
+.home-prayer__row--jumuah th,
+.home-prayer__row--jumuah td {
+  border-top: 2px solid var(--line-strong);
+  background: var(--berry-soft);
+}
+
+.home-prayer__note {
+  display: block;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: normal;
+}
+
+.home-prayer__legend {
+  margin: 0;
+  padding: 0.6rem 1.15rem 0.9rem;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.home-prayer__legend span + span {
+  margin-left: 0.75rem;
+}
+
+/* Pinned next-prayer bar on inner pages. */
+.next-prayer-strip {
+  position: sticky;
+  top: 0;
+  z-index: 19;
+  border-bottom: 1px solid #315249;
+  background: var(--pine-deep);
+  color: #edf4f0;
+}
+
+.next-prayer-strip__inner {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: #edf4f0 !important;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.next-prayer-strip__inner:hover {
+  color: #ffffff !important;
+}
+
+.next-prayer-summary strong {
+  font-weight: 750;
+}
+
+.next-prayer-summary__remaining {
+  color: var(--gold-soft);
+  font-weight: 650;
+}
+
+/* One piece of sticky chrome per viewport: the header on desktop, the
+   next-prayer strip on phones (where the 5x-daily check lives). */
+@media (min-width: 52.0625rem) {
+  .next-prayer-strip {
+    position: static;
+  }
+}
+
+@media (max-width: 52rem) {
+  .site-header {
+    position: static;
+  }
+}

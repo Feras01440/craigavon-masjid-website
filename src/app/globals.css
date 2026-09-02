@@ -1,0 +1,23 @@
+/*
+ * Public stylesheet index. Files are imported in cascade order and each
+ * owns one area of the site — see docs/EDITING-GUIDE.md for the map.
+ * Tokens come first; preference overrides (reduced motion, forced colours,
+ * print) come last so they always win.
+ */
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/header.css";
+@import "../styles/hero.css";
+@import "../styles/hero-prayer.css";
+@import "../styles/layout.css";
+@import "../styles/cards.css";
+@import "../styles/panels.css";
+@import "../styles/prayer.css";
+@import "../styles/forms.css";
+@import "../styles/content.css";
+@import "../styles/services.css";
+@import "../styles/contact.css";
+@import "../styles/footer.css";
+@import "../styles/responsive.css";
+@import "../styles/motion.css";
+@import "../styles/preferences.css";

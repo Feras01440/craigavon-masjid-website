@@ -1,0 +1,180 @@
+/* Page enter, scroll reveals, salam, Iqamah window, epigraph, day arc, feed links. */
+/* Motion: page enter, scroll reveals, the hero's live window, the day arc.
+   Every duration collapses under prefers-reduced-motion (rule below). */
+.page-enter {
+  animation: page-enter 360ms var(--ease-standard) both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reveals only ever hide content when scripting is confirmed available, so
+   no-JS visitors and search crawlers see everything immediately. */
+@media (scripting: enabled) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 560ms var(--ease-standard) var(--reveal-delay, 0ms),
+      transform 560ms var(--ease-standard) var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.home-hero__salam {
+  margin: 0 0 0.4rem;
+  color: var(--gold-soft);
+  font-family: var(--font-arabic);
+  font-size: clamp(1.45rem, 1.1rem + 1.3vw, 2rem);
+  line-height: 1.5;
+  text-align: left;
+}
+
+.hero-prayer__window {
+  height: 4px;
+  margin-top: 0.85rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgb(255 253 248 / 14%);
+}
+
+.hero-prayer__window span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--gold-soft);
+  transition: width 600ms var(--ease-standard);
+}
+
+.epigraph {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0.9rem 0 0;
+}
+
+.epigraph__arabic {
+  color: var(--pine-deep);
+  font-family: var(--font-arabic);
+  font-size: 1.25rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.epigraph__english {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+.epigraph__english cite {
+  font-style: normal;
+  color: var(--ink-faint);
+}
+
+/* The day as an arc: Fajr on the left, ʿIshāʾ on the right, the sun where
+   the shared clock says it is. Decorative; the table carries the data. */
+.day-arc {
+  margin: 0 auto 1.25rem;
+  max-width: 44rem;
+}
+
+.day-arc__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.day-arc__track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 3;
+  stroke-dasharray: 1 9;
+  stroke-linecap: round;
+}
+
+.day-arc__progress {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.day-arc__marker circle {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 2.5;
+}
+
+.day-arc__marker--passed circle {
+  fill: var(--gold);
+  stroke: var(--gold);
+}
+
+.day-arc__label {
+  fill: var(--pine-deep);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.day-arc__time {
+  fill: var(--ink-faint);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.day-arc__sun {
+  transition: transform 900ms var(--ease-standard);
+}
+
+.day-arc__sun-glow {
+  fill: var(--gold);
+  opacity: 0.22;
+}
+
+.day-arc__sun-core {
+  fill: var(--gold);
+  stroke: var(--surface);
+  stroke-width: 2.5;
+}
+
+@media (max-width: 40rem) {
+  .day-arc__time {
+    display: none;
+  }
+
+  .day-arc__label {
+    font-size: 21px;
+  }
+}
+
+.feed-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+}

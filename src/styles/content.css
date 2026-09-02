@@ -1,0 +1,79 @@
+/* Prose, plain lists, empty states, definition lists. */
+.prose {
+  max-width: var(--measure-narrow);
+}
+
+.prose--wide {
+  max-width: 54rem;
+}
+
+.prose h2 + p,
+.prose h2 + ul,
+.prose p + p {
+  margin-top: 1.2rem;
+}
+
+.prose p,
+.prose li {
+  color: var(--ink-soft);
+  font-size: 1.04rem;
+}
+
+.plain-list {
+  padding-left: 1.25rem;
+}
+
+.plain-list li + li {
+  margin-top: 0.65rem;
+}
+
+.plain-list li::marker {
+  color: var(--berry);
+}
+
+.empty-state {
+  max-width: 42rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--berry);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-align: left;
+}
+
+.empty-state h2 {
+  font-size: clamp(1.18rem, 1.06rem + 0.55vw, 1.45rem);
+}
+
+.empty-state h2 + div {
+  max-width: 38rem;
+  margin: 1rem auto 0;
+  color: var(--ink-soft);
+}
+
+.status-list {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.status-list > div {
+  display: grid;
+  /* A fixed-minimum label column: long values can no longer crush the term
+     into a one-letter-per-line stack. */
+  grid-template-columns: minmax(11rem, max-content) minmax(0, 1fr);
+  gap: 0.35rem 1.5rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.status-list dt {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.status-list dd {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 450;
+  text-align: left;
+}

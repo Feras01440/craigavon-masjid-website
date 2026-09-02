@@ -1,0 +1,181 @@
+/* Sticky header, wordmark, primary navigation and the mobile disclosure. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 92%, #ffffff);
+  backdrop-filter: saturate(1.1) blur(6px);
+}
+
+.site-header__inner {
+  min-height: 4.5rem;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.wordmark {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--pine-deep) !important;
+  text-decoration: none;
+}
+
+/* The mark is transparent artwork now — no white box, no border. */
+.wordmark__logo,
+.site-footer__logo {
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.wordmark__logo {
+  width: 3.1rem;
+  height: 3.1rem;
+}
+
+.wordmark__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.wordmark__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.02rem, 2vw, 1.18rem);
+  font-weight: var(--weight-display-strong);
+  letter-spacing: -0.008em;
+}
+
+.wordmark__organisation {
+  margin-top: 0.1rem;
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-disclosure {
+  display: none;
+  margin-left: auto;
+}
+
+.site-nav--desktop {
+  margin-left: auto;
+}
+
+.menu-button {
+  display: none;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--pine-deep);
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+  transition: background-color var(--motion-quick) var(--ease-standard);
+}
+
+.menu-button:active {
+  background: var(--paper-deep);
+}
+
+.menu-button::-webkit-details-marker {
+  display: none;
+}
+
+.menu-button__close {
+  display: none;
+}
+
+.nav-disclosure[open] .menu-button__open {
+  display: none;
+}
+
+.nav-disclosure[open] .menu-button__close {
+  display: inline;
+}
+
+.menu-button__mark {
+  position: relative;
+  width: 1.15rem;
+  height: 0.8rem;
+}
+
+.menu-button__mark span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid currentColor;
+  transition: transform var(--motion-quick) var(--ease-standard);
+}
+
+.menu-button__mark span:first-child {
+  top: 0.15rem;
+}
+
+.menu-button__mark span:last-child {
+  bottom: 0.15rem;
+}
+
+.nav-disclosure[open] .menu-button__mark span:first-child {
+  transform: translateY(0.24rem) rotate(45deg);
+}
+
+.nav-disclosure[open] .menu-button__mark span:last-child {
+  transform: translateY(-0.23rem) rotate(-45deg);
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition:
+    color var(--motion-quick) var(--ease-standard),
+    background-color var(--motion-quick) var(--ease-standard),
+    border-color var(--motion-quick) var(--ease-standard);
+}
+
+.site-nav a:hover {
+  border-bottom-color: var(--berry);
+  background: var(--surface);
+  color: var(--pine-deep);
+}
+
+.site-nav a[aria-current="page"] {
+  border-bottom-color: var(--berry);
+  color: var(--pine-deep);
+  font-weight: 750;
+}
+
+.site-main {
+  flex: 1;
+  scroll-margin-top: 1rem;
+}

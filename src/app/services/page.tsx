@@ -1,0 +1,124 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import {
+  PageIntro,
+  PublicShell,
+  PublishedContentList,
+  PublishedContentOmissionNotice,
+  PublishedContentStructuredData,
+  PublishedContentUnavailable,
+  PublishedFaqList,
+  ServiceIcon,
+} from "@/components/site";
+import { serviceCategories } from "@/content/public-copy";
+import { getPublishedContent } from "@/server/repositories/public-content";
+
+export const metadata: Metadata = {
+  title: "Services",
+  description:
+    "Shahada and new Muslim support, Islamic funerals, Nikah, education and mosque visits at Craigavon Masjid.",
+};
+
+// ISR: shared-cached for five minutes; purged instantly on publish.
+export const revalidate = 300;
+
+export default async function ServicesPage() {
+  const [serviceContent, faqContent] = await Promise.all([
+    getPublishedContent(["service"], { limit: 100 }),
+    getPublishedContent(["faq"], { limit: 100 }),
+  ]);
+  const services = serviceContent.status === "ready" ? serviceContent.items : [];
+  const faqs = faqContent.status === "ready" ? faqContent.items : [];
+
+  return (
+    <PublicShell>
+      {faqContent.status === "ready" && <PublishedContentStructuredData items={faqs} />}
+      <PageIntro eyebrow="Services" title="How we can help" current="Services" />
+
+      <section className="section" aria-label="Services offered by the masjid">
+        <div className="site-container">
+          <div className="service-list">
+            {serviceCategories.map((category, index) => (
+              <article
+                className="service-item"
+                id={category.id}
+                key={category.id}
+                aria-labelledby={`${category.id}-heading`}
+                data-reveal
+                style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties}
+              >
+                <div className="service-item__body">
+                  <div className="service-item__title">
+                    <ServiceIcon serviceId={category.id} />
+                    <h2 id={`${category.id}-heading`}>{category.title}</h2>
+                  </div>
+                  <p>{category.summary}</p>
+                  {category.epigraph ? (
+                    <p className="epigraph">
+                      <span className="epigraph__arabic" lang="ar" dir="rtl">
+                        {category.epigraph.arabic}
+                      </span>
+                      <span className="epigraph__english">
+                        {category.epigraph.english} <cite>{category.epigraph.reference}</cite>
+                      </span>
+                    </p>
+                  ) : null}
+                  <ul className="plain-list">
+                    {category.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="service-item__action">
+                  <Link
+                    className="button button--primary"
+                    href={category.id === "education" ? "/education" : "/contact"}
+                  >
+                    {category.action}
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {serviceContent.status === "unavailable" ? (
+        <section className="section section--tinted">
+          <div className="site-container">
+            <PublishedContentUnavailable subject="Service updates" />
+          </div>
+        </section>
+      ) : services.length > 0 ? (
+        <section className="section section--tinted" aria-labelledby="service-updates-heading">
+          <div className="site-container">
+            <div className="section-heading">
+              <h2 id="service-updates-heading">Service updates</h2>
+            </div>
+            <PublishedContentList items={services} />
+            {serviceContent.omittedCount > 0 && <PublishedContentOmissionNotice />}
+          </div>
+        </section>
+      ) : null}
+
+      {faqContent.status !== "empty" && (
+        <section className="section section--tinted" aria-labelledby="service-faq-heading">
+          <div className="site-container">
+            <div className="section-heading">
+              <h2 id="service-faq-heading">Frequently asked questions</h2>
+            </div>
+            {faqContent.status === "unavailable" ? (
+              <PublishedContentUnavailable subject="Frequently asked questions" />
+            ) : (
+              <>
+                <PublishedFaqList items={faqs} />
+                {faqContent.omittedCount > 0 && <PublishedContentOmissionNotice />}
+              </>
+            )}
+          </div>
+        </section>
+      )}
+    </PublicShell>
+  );
+}

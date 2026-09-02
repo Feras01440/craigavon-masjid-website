@@ -6,3 +6,29 @@ Desktop.ini
 # local backups made by committee members
 backup/
 *.bak
+
+# Next.js and package tooling
+.next/
+node_modules/
+.pnpm-store/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Local environment and Supabase state
+.env
+.env.local
+.env.*.local
+!.env.example
+.supabase/
+supabase/.temp/
+
+# Editor and runtime state
+.vscode/
+.idea/
+.claude/
+*.log
+
+# Vercel project link
+.vercel/
