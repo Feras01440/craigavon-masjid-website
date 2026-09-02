@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import {
   EmptyState,
@@ -32,8 +33,10 @@ export default async function NewsPage() {
           {content.status === "unavailable" ? (
             <PublishedContentUnavailable subject="News and events" />
           ) : content.status === "empty" ? (
-            <EmptyState title="Nothing is on the noticeboard right now">
-              <p>Announcements and events appear here as they are published — check back soon.</p>
+            <EmptyState title="Nothing on the noticeboard yet">
+              <p>
+                <Link href="/prayer-times">Prayer times</Link> are always up to date.
+              </p>
             </EmptyState>
           ) : (
             <>

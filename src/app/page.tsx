@@ -7,8 +7,10 @@ import {
   PublishedContentList,
   PublishedContentOmissionNotice,
   PublishedContentUnavailable,
+  PublishedFaqList,
   ServiceIcon,
 } from "@/components/site";
+import { DayArc } from "@/components/prayer/day-arc";
 import { HomeNextPrayerPanel } from "@/components/prayer/home-next-prayer-panel";
 import { TodayTable } from "@/components/prayer/today-table";
 import { serviceCategories, SITE_DESCRIPTION } from "@/content/public-copy";
@@ -37,11 +39,12 @@ export default async function HomePage() {
   const todayKey = dateKeyInZone(now, "Europe/London");
   // Eight days always reaches the next Friday, so the standing Jumuʿah row
   // can be sourced from published data on any weekday.
-  const [prayerBundle, updates, homepage, contact] = await Promise.all([
+  const [prayerBundle, updates, faqs, homepage, contact] = await Promise.all([
     // Transient fetch failures throw so a failed ISR regeneration keeps the
     // last good page instead of caching an apology card.
     getPublishedPrayerBundle(todayKey, 8, { throwOnTransientError: true }),
     getPublishedContent(["news", "event"], { limit: 3 }),
+    getPublishedContent(["faq"], { limit: 3 }),
     getPublicHomepageContent(),
     getPublicContactInformation(),
   ]);
@@ -60,9 +63,29 @@ export default async function HomePage() {
 
   return (
     <PublicShell>
+      {/* React hoists these into <head>; the hero artwork is the page's
+          largest paint, so the browser starts it before the stylesheet. */}
+      <link
+        rel="preload"
+        as="image"
+        type="image/avif"
+        href="/images/backdrop-gold-dome-1920.avif"
+        media="(min-width: 52.01rem)"
+      />
+      <link
+        rel="preload"
+        as="image"
+        type="image/avif"
+        href="/images/backdrop-gold-dome-960.avif"
+        media="(max-width: 52rem)"
+      />
       <section className="home-hero">
+        <div className="home-hero__backdrop" aria-hidden="true" />
         <div className="site-container home-hero__grid">
           <div className="home-hero__copy">
+            <p className="home-hero__salam" lang="ar" dir="rtl">
+              ٱلسَّلَامُ عَلَيْكُمْ
+            </p>
             {homepage.eyebrow && <p className="eyebrow eyebrow--hero">{homepage.eyebrow}</p>}
             <h1>{homepage.heading}</h1>
             {homepage.introduction && <p className="home-hero__lead">{homepage.introduction}</p>}
@@ -104,11 +127,14 @@ export default async function HomePage() {
             <h2 id="prayer-heading">Today&apos;s prayer times</h2>
           </div>
           {prayerBundle.status === "available" && todaySchedule ? (
-            <TodayTable
-              schedules={prayerBundle.schedules}
-              today={todaySchedule}
-              initialNowIso={now.toISOString()}
-            />
+            <>
+              <DayArc today={todaySchedule} initialNowIso={now.toISOString()} />
+              <TodayTable
+                schedules={prayerBundle.schedules}
+                today={todaySchedule}
+                initialNowIso={now.toISOString()}
+              />
+            </>
           ) : (
             <ApprovalCard
               title="Daily prayer times"
@@ -120,15 +146,28 @@ export default async function HomePage() {
 
       <section className="section section--tinted" aria-labelledby="services-heading">
         <div className="site-container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal>
             <h2 id="services-heading">How we can help</h2>
           </div>
           <div className="journey-grid">
-            {featuredServices.map((category) => (
-              <article className="journey-card" key={category.id}>
+            {featuredServices.map((category, index) => (
+              <article
+                className="journey-card"
+                key={category.id}
+                data-reveal
+                style={{ "--reveal-delay": `${index * 90}ms` } as React.CSSProperties}
+              >
                 <ServiceIcon serviceId={category.id} />
                 <h3>{category.title}</h3>
                 <p>{category.summary}</p>
+                {category.epigraph ? (
+                  <p className="epigraph">
+                    <span className="epigraph__arabic" lang="ar" dir="rtl">
+                      {category.epigraph.arabic}
+                    </span>
+                    <span className="epigraph__english">{category.epigraph.english}</span>
+                  </p>
+                ) : null}
                 <Link className="text-link journey-card__link" href={`/services#${category.id}`}>
                   {category.action}
                 </Link>
@@ -154,10 +193,12 @@ export default async function HomePage() {
               <PublishedContentUnavailable subject="News and events" />
             ) : (
               <>
-                <div className="section-heading">
+                <div className="section-heading" data-reveal>
                   <h2 id="updates-heading">News and events</h2>
                 </div>
-                <PublishedContentList compact items={updates.items} />
+                <div data-reveal>
+                  <PublishedContentList compact items={updates.items} />
+                </div>
                 {updates.omittedCount > 0 && <PublishedContentOmissionNotice />}
                 <p className="section-more">
                   <Link className="text-link" href="/news">
@@ -169,6 +210,24 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {faqs.status === "ready" && faqs.items.length > 0 ? (
+        <section className="section section--tinted" aria-labelledby="faq-heading">
+          <div className="site-container">
+            <div className="section-heading" data-reveal>
+              <h2 id="faq-heading">Common questions</h2>
+            </div>
+            <div data-reveal>
+              <PublishedFaqList items={faqs.items} />
+            </div>
+            <p className="section-more">
+              <Link className="text-link" href="/services#service-faq-heading">
+                All questions
+              </Link>
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section section--pine section--photo" aria-labelledby="find-us-heading">
         <div className="site-container home-find__grid">

@@ -14,9 +14,7 @@ export default function PublicError({
         <div className="site-container not-found__inner">
           <p className="eyebrow">Temporary problem</p>
           <h1>This page could not be loaded</h1>
-          <p>
-            No private or unverified fallback information has been shown. You can try again safely.
-          </p>
+          <p>Nothing has been changed — you can try again safely.</p>
           <div className="button-row">
             <button className="button button--primary" onClick={reset} type="button">
               Try again

@@ -19,9 +19,18 @@ export function HomeNextPrayerPanel({
   schedules: PrayerSchedule[];
   initialNowIso: string;
 }): React.ReactNode {
-  const { timezone, next, remaining, anchorLabel } = useNextPrayer(schedules, initialNowIso);
+  const { now, timezone, next, remaining, anchorLabel } = useNextPrayer(schedules, initialNowIso);
   const jumuahDay = schedules.find((schedule) => schedule.jumuah.length > 0) ?? null;
   const jumuah = jumuahDay?.jumuah[0] ?? null;
+  // Between a prayer's Begins time and its Iqamah, show how far along the
+  // window is — the moment the panel is most glanced at.
+  const windowStart = next?.startsAt ? new Date(next.startsAt).getTime() : null;
+  const windowEnd = next?.congregationAt ? new Date(next.congregationAt).getTime() : null;
+  const windowProgress =
+    windowStart !== null && windowEnd !== null && windowEnd > windowStart
+      ? (now.getTime() - windowStart) / (windowEnd - windowStart)
+      : null;
+  const inWindow = windowProgress !== null && windowProgress >= 0 && windowProgress < 1;
 
   return (
     <aside className="hero-prayer" aria-label="Next prayer">
@@ -55,6 +64,11 @@ export function HomeNextPrayerPanel({
             <p className="hero-prayer__countdown">
               {anchorLabel} in {remaining}
             </p>
+          ) : null}
+          {inWindow ? (
+            <div className="hero-prayer__window" aria-hidden="true">
+              <span style={{ width: `${Math.round(windowProgress * 100)}%` }} />
+            </div>
           ) : null}
         </>
       ) : (

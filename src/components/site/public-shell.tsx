@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 
 import { NextPrayerStrip } from "@/components/prayer/next-prayer-live";
+import { PageTransition } from "@/components/site/page-transition";
+import { RevealObserver } from "@/components/site/reveal-observer";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { demoModeIsActive } from "@/lib/demo-mode";
@@ -41,8 +43,9 @@ export async function PublicShell({ children }: PublicShellProps) {
         </div>
       )}
       <main className="site-main" id="main-content" tabIndex={-1}>
-        {children}
+        <PageTransition>{children}</PageTransition>
       </main>
+      <RevealObserver />
       <SiteFooter
         siteName={chrome.siteName}
         masjidName={chrome.masjidName}

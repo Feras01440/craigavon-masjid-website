@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 
+import { DayArc } from "@/components/prayer/day-arc";
 import { NextPrayerSummary } from "@/components/prayer/next-prayer-live";
 import { MonthTimetable } from "@/components/prayer/month-timetable";
 import { TodayTable } from "@/components/prayer/today-table";
 import { PageIntro, PublicShell } from "@/components/site";
 import { dateKeyInZone } from "@/lib/prayer/timezone";
+import { getSiteUrl } from "@/lib/site-url";
 import { getPublishedPrayerBundle } from "@/server/repositories/prayer";
 
 import styles from "./prayer-times.module.css";
@@ -42,6 +44,10 @@ export default async function PrayerTimesPage(): Promise<React.ReactNode> {
   ]);
   const todaySchedules = todayBundle.status === "available" ? todayBundle.schedules : [];
   const today = todaySchedules.find((schedule) => schedule.date === todayKey) ?? null;
+  // Calendar apps subscribe over webcal:// when the public host is known.
+  const siteUrl = getSiteUrl();
+  const feedPath = "/prayer-times/calendar.ics";
+  const subscribeHref = siteUrl ? `webcal://${siteUrl.host}${feedPath}` : feedPath;
 
   return (
     <PublicShell>
@@ -57,12 +63,17 @@ export default async function PrayerTimesPage(): Promise<React.ReactNode> {
                   <NextPrayerSummary schedules={todaySchedules} initialNowIso={now.toISOString()} />
                 </p>
               </div>
+              <DayArc today={today} initialNowIso={now.toISOString()} />
               <TodayTable
                 schedules={todaySchedules}
                 today={today}
                 initialNowIso={now.toISOString()}
                 showLink={false}
               />
+              <p className="feed-links">
+                <a href={subscribeHref}>Subscribe in your calendar app</a>
+                <a href={feedPath}>Calendar feed address</a>
+              </p>
               {today.seasonalArrangements.length > 0 && (
                 <section className={styles.notice} aria-labelledby="seasonal-arrangements-heading">
                   <h3 id="seasonal-arrangements-heading">Current seasonal arrangements</h3>

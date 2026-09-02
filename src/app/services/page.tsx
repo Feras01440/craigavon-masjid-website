@@ -39,12 +39,14 @@ export default async function ServicesPage() {
       <section className="section" aria-label="Services offered by the masjid">
         <div className="site-container">
           <div className="service-list">
-            {serviceCategories.map((category) => (
+            {serviceCategories.map((category, index) => (
               <article
                 className="service-item"
                 id={category.id}
                 key={category.id}
                 aria-labelledby={`${category.id}-heading`}
+                data-reveal
+                style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties}
               >
                 <div className="service-item__body">
                   <div className="service-item__title">
@@ -52,6 +54,16 @@ export default async function ServicesPage() {
                     <h2 id={`${category.id}-heading`}>{category.title}</h2>
                   </div>
                   <p>{category.summary}</p>
+                  {category.epigraph ? (
+                    <p className="epigraph">
+                      <span className="epigraph__arabic" lang="ar" dir="rtl">
+                        {category.epigraph.arabic}
+                      </span>
+                      <span className="epigraph__english">
+                        {category.epigraph.english} <cite>{category.epigraph.reference}</cite>
+                      </span>
+                    </p>
+                  ) : null}
                   <ul className="plain-list">
                     {category.points.map((point) => (
                       <li key={point}>{point}</li>

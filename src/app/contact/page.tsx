@@ -43,6 +43,7 @@ export default async function ContactPage() {
     : "";
   const whatsapp = contact?.public_whatsapp ? whatsappHref(contact.public_whatsapp) : null;
   const visitingItems = [
+    contact?.directions ? { term: "Getting here", detail: contact.directions } : null,
     contact?.parking_information
       ? { term: "Entrance and parking", detail: contact.parking_information }
       : null,

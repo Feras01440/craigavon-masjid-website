@@ -19,6 +19,8 @@ export type ServiceCategory = {
   summary: string;
   points: readonly string[];
   action: string;
+  /* A short scriptural line shown with the category, where one belongs. */
+  epigraph?: { arabic: string; english: string; reference: string };
 };
 
 /* Standing service categories authorised by the Association. Operational
@@ -49,6 +51,11 @@ export const serviceCategories: readonly ServiceCategory[] = [
       "Coordination of the Janazah prayer at the masjid",
     ],
     action: "Contact us about a funeral",
+    epigraph: {
+      arabic: "إِنَّا لِلَّٰهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+      english: "To Allah we belong, and to Him we return.",
+      reference: "Qur'an 2:156",
+    },
   },
   {
     id: "nikah",
