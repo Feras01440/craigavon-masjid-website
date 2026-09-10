@@ -55,7 +55,8 @@
     "jsdom": "29.1.1",
     "prettier": "3.9.5",
     "supabase": "2.101.0",
-    "typescript": "npm:@typescript/typescript6@6.0.2",
+    "typescript": "^5.9.3",
+    "typescript6": "npm:@typescript/typescript6@6.0.2",
     "vitest": "4.1.10"
   }
 }
