@@ -1,74 +1,87 @@
 # Prayer timetable operations
 
-The public timetable is **published data, never a live calculation**. Every surface (homepage,
-`/prayer-times`, the pinned bar, the CSV, the calendar feed and the TV display) reads the same
-published configuration, and the site shows "not available" rather than estimating when coverage
-runs out.
+The public timetable is **published data**: every surface (homepage, `/prayer-times`, the pinned
+bar, the CSV, the calendar feed and the TV display) reads the same committee-approved configuration,
+and the site shows "not available" rather than guessing when coverage runs out.
 
-## Source of truth
+## How the times are produced (from 11 September 2026)
 
-The masjid's own MAWAQIT timetable is the operational source
-(<https://mawaqit.net/en/craigavon-masjid-craigavon-bt65-5be-united-kingdom>). It is imported
-**1:1** — Begins times and Iqamah times per day — so the website always matches the screen inside
-the masjid.
+**Begins times are calculated astronomically for the masjid's own coordinates** (54.4478 N, 6.3712
+W) with the `adhan` library, using:
+
+| Setting              | Value                         | Why                                                                                                                                                |
+| -------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fajr / ʿIshāʾ angles | 15° / 15° (the "ISNA" method) | Reproduces the Belfast Islamic Centre timetable, which the committee uses as its reference, to within 1–4 minutes for ʿIshāʾ and a few for Fajr.   |
+| Short summer nights  | One-seventh of the night      | From mid-May to late July 15° twilight never ends at this latitude; the one-seventh rule keeps Fajr and ʿIshāʾ at practical times (see the table). |
+| ʿAsr                 | Standard (shadow length once) | Matches both local references.                                                                                                                     |
+| Maghrib              | Sunset + 2 minutes            | The margin both local references use.                                                                                                              |
+
+This replaced the 1:1 import of the masjid's MAWAQIT calendar, whose ʿIshāʾ column mixed methods
+(21:46 one day, 21:24 two days later; 20:38 by 30 September) and whose October column was an hour
+late.
+
+**Iqamah times are rules, not fixed clock times.** Each is "begins time + a margin, rounded up to
+the quarter-hour", so they follow the season instead of drifting away from the adhan:
+
+| Prayer  | Rule                          | 10 Sep | 30 Sep | 20 Oct | 21 Dec | 20 Mar | 21 Jun |
+| ------- | ----------------------------- | ------ | ------ | ------ | ------ | ------ | ------ |
+| Fajr    | begins + 35 min → next ¼ hour | 06:00  | 06:30  | 07:00  | 07:30  | 05:30  | 04:30  |
+| Dhuhr   | begins + 30 min → next ¼ hour | 14:00  | 14:00  | 13:45  | 13:00  | 13:15  | 14:00  |
+| ʿAsr    | begins + 60 min → next ¼ hour | 18:00  | 17:30  | 16:45  | 15:00  | 17:00  | 19:00  |
+| Maghrib | begins + 5 min                | 20:00  | 19:09  | 18:21  | 16:07  | 18:43  | 22:10  |
+| ʿIshāʾ  | begins + 20 min → next ¼ hour | 22:00  | 21:15  | 20:15  | 18:30  | 20:45  | 23:30  |
+
+On 10 September these rules reproduce the masjid's current practice exactly (06:00 · 14:00 · 18:00 ·
++5 · 22:00). Jumuʿah is a single khutbah time (13:00); no separate Iqamah is shown.
+
+**The committee owns these rules.** Change any of them in the dashboard (Prayer times → current
+configuration → congregation rules); the published times update within a minute everywhere,
+including the calendar feed. A fixed time is also possible per prayer if the committee prefers it
+for a season. Keep the masjid screen (MAWAQIT) in step with whatever is published here.
 
 ## Coverage today
 
-| Configuration              | Effective               | Notes                                                                               |
-| -------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
-| MAWAQIT official timetable | 2026-08-31 → 2026-09-30 | Maghrib and ʿIshāʾ separate since 9 Aug 2026; October–December withheld (see below) |
+| Configuration                       | Effective               | Notes                                             |
+| ----------------------------------- | ----------------------- | ------------------------------------------------- |
+| Calculated timetable (rules above)  | 2026-09-11 → 2027-09-10 | Renew before 10 September 2027 (see below).       |
+| MAWAQIT official timetable (import) | 2026-08-31 → 2026-09-10 | Historical; ended when the calculation took over. |
 
-## Known source defects (2 Sep 2026) — fix on MAWAQIT, then re-import
-
-The October–December 2026 import was withdrawn after verification against MAWAQIT:
-
-1. **October is an hour late on MAWAQIT.** Every October entry in the masjid's annual calendar is
-   shifted +1h (for example 18 Oct: Sunrise "08:56", Maghrib "19:21"; the true times are about 07:58
-   and 18:22). September and November are correct, so this is the uploaded October column, not the
-   clock change.
-2. **Winter ʿAsr Iqamah is after Maghrib.** From 1 November the iqama calendar keeps ʿAsr at 17:00
-   while Maghrib begins at 16:50 and earlier, which the website's safety checks refuse. The winter
-   ʿAsr (and Dhuhr) Iqamah times need entering for November–December.
-
-Once corrected on MAWAQIT, run the import for `--from 2026-10-01 --to 2026-12-31` (dry run first)
-and spot-check three dates. Until then the site shows September and says the next period is not yet
-published — it never shows the shifted times.
-
-## Re-importing (about two minutes)
+## Renewing the coverage (two minutes, once a year)
 
 ```bash
-# 1. Preview what would be imported (no writes)
-node scripts/import-mawaqit.mjs --from 2027-01-01 --to 2027-06-30 --dry-run
+node scripts/publish-calculated-timetable.mjs --from 2027-09-11 --to 2028-09-10 --dry-run
 ```
 
 ```bash
-# 2. Publish it (secrets from the environment, never from the repo)
 SUPABASE_URL=https://qdcdkarbbfzdcctlvqjt.supabase.co \
 SUPABASE_SERVICE_ROLE_KEY=… \
 PRAYER_IMPORT_ACTOR_ID=… \
-node scripts/import-mawaqit.mjs --from 2027-01-01 --to 2027-06-30
+node scripts/publish-calculated-timetable.mjs --from 2027-09-11 --to 2028-09-10
 ```
 
-The script creates a **new draft** configuration with dated overrides and publishes it through the
-audited `publish_prayer_settings` RPC, so the previous configuration remains in history and the
-change is attributed to the committee account given as the actor.
+The script publishes a **new** configuration through the audited `publish_prayer_settings` RPC; the
+previous one stays in history. Alternatively, the committee can duplicate and publish the
+configuration from the dashboard. The publication horizon is at most 366 days.
 
-Afterwards, check three dates on `/prayer-times/<yyyy-mm>` against MAWAQIT. Public pages revalidate
-within a minute.
+## Changing a single day, Ramadan, Eid
 
-## Changing a single day
+- One day (a late Jumuʿah, a delayed Iqamah): dashboard → overrides. Dated and audited.
+- Ramadan and Eid: dashboard → seasonal arrangements (Tarawih, Iftar, Eid prayer times). They appear
+  on `/prayer-times` and on the TV display only once published.
 
-Use the dashboard: **Prayer times → current configuration → overrides**. Overrides are dated and
-audited; the CSV and the calendar feed pick them up automatically.
+## Verifying
 
-## Seasonal arrangements (Ramadan, Eid)
-
-Also dashboard-managed (seasonal arrangements on the configuration). They appear on `/prayer-times`
-under "Current seasonal arrangements" and on the TV display. Nothing is shown until the committee
-publishes it.
+Spot-check three dates on `/prayer-times/<yyyy-mm>` against the Belfast Islamic Centre timetable.
+Begins times should agree to within a few minutes; Iqamah times follow the rules above.
 
 ## Calendar feed
 
 `/prayer-times/calendar.ics` serves a rolling two-month iCalendar feed (one ten-minute event per
 Iqamah, plus Jumuʿah). Subscribers' apps refresh daily; the feed shortens automatically if coverage
 ends, and never invents a time.
+
+## The MAWAQIT importer
+
+`scripts/import-mawaqit.mjs` remains available for a 1:1 import if the committee ever prefers the
+MAWAQIT calendar again, but its source calendar must be corrected first: as of September 2026 its
+October column is an hour late and its winter iqama calendar keeps ʿAsr after Maghrib.

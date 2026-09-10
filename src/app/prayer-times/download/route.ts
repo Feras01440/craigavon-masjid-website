@@ -51,7 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         ];
       }),
       jumuah ? formatTime(jumuah.khutbahAt, schedule.timezone) : "",
-      jumuah ? formatTime(jumuah.prayerAt ?? jumuah.khutbahAt, schedule.timezone) : "",
+      jumuah?.prayerAt ? formatTime(jumuah.prayerAt, schedule.timezone) : "",
     ];
   });
   const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");

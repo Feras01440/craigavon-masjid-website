@@ -88,7 +88,7 @@ export function TodayTable({
                   )}
                 </th>
                 <td>{formatTime(session.khutbahAt, jumuahDay.timezone)}</td>
-                <td>{formatTime(session.prayerAt ?? session.khutbahAt, jumuahDay.timezone)}</td>
+                <td>{session.prayerAt ? formatTime(session.prayerAt, jumuahDay.timezone) : "—"}</td>
               </tr>
             ))}
           </tbody>

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and releases will use
 semantic versioning once the production platform has a verified release process. Dates use ISO 8601.
 
+## [0.5.0] — 2026-09-10
+
+### Changed
+
+- **Prayer times are now calculated** for the masjid's coordinates (ISNA 15°/15°, one-seventh night,
+  Maghrib +2) after a comparison with the Belfast Islamic Centre timetable showed the MAWAQIT
+  calendar's ʿIshāʾ column mixing methods. Iqamah times follow seasonal rules that round up to the
+  quarter-hour and reproduce the masjid's current practice on the day of the change
+  (`scripts/publish-calculated-timetable.mjs`, `docs/operations/prayer-timetable.md`).
+- Jumuʿah shows its khutbah time only; no separate Iqamah column value.
+- The live clock ticks every five seconds, re-syncs on focus, and refreshes the page's data when the
+  London date changes, so countdowns, the day arc and the "next" highlight never need a reload.
+- Services copy rewritten in plain, professional English; Education moves above Funerals; the
+  funerals epigraph is removed.
+- FAQs are click-to-open disclosures on the Services page; the homepage teaser is removed; the hijab
+  question is withdrawn and two answers rewritten.
+- The eight-point star lattice is removed from every surface.
+- The About and Education pages are rebuilt around the masjid's own photographs (`MasjidPhoto`,
+  `scripts/optimise-masjid-photos.mjs`), with a dedicated class card.
+
 ## [0.4.0] — 2026-08-31
 
 ### Added
