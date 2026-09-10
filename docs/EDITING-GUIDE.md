@@ -7,7 +7,8 @@ reviewed, deployed). This page says which is which and exactly where to look.
 
 | I want to change…                                   | Dashboard section                    |
 | --------------------------------------------------- | ------------------------------------ |
-| Prayer times, Iqamah, Jumuʿah, Ramadan arrangements | Prayer times                         |
+| Iqamah rules or the Jumuʿah time (one step)         | Prayer times → Open quick change     |
+| Prayer method, dates, overrides, Ramadan            | Prayer times → draft → publish       |
 | News, events, notices                               | Content → Announcements / Events     |
 | Classes on the Education page                       | Content → Education                  |
 | FAQs (shown on Services and the homepage)           | Content → FAQ                        |

@@ -840,3 +840,29 @@
     transition: none !important;
   }
 }
+
+/* Quick change of Iqamah rules and the Jumuʿah time on the live timetable. */
+.admin-quick-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.admin-quick-rule {
+  min-width: 0;
+  margin: 0;
+  padding: 0.9rem 1rem 1.1rem;
+  border: 1px solid #d7d2c6;
+  border-radius: 12px;
+  background: #fffdf8;
+}
+
+.admin-quick-rule legend {
+  padding: 0 0.3rem;
+  font-weight: 700;
+}
+
+.admin-quick-rule .admin-field + .admin-field {
+  margin-top: 0.6rem;
+}

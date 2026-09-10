@@ -168,6 +168,50 @@ export function parsePrayerDraftForm(
   };
 }
 
+/* The database payload for an existing configuration — the same mapping the
+   draft form produces, so a quick change can save a clone without a form. */
+export function payloadFromConfiguration(configuration: PrayerConfiguration): {
+  payload: Json;
+  jumuahPayload: Json;
+} {
+  const payload: Json = {
+    name: configuration.name,
+    effective_from: configuration.effectiveFrom,
+    effective_to: configuration.effectiveTo,
+    timezone: configuration.timezone,
+    latitude: configuration.latitude,
+    longitude: configuration.longitude,
+    calculation_method: configuration.calculationMethod,
+    madhab: configuration.madhab,
+    high_latitude_rule: configuration.highLatitudeRule,
+    adjustments: configuration.adjustments,
+    congregation_rules: configuration.congregationRules as unknown as Json,
+    hijri_adjustment: configuration.hijriAdjustment,
+    source_name: configuration.sourceName,
+    source_reference: configuration.sourceReference,
+    calculation_library: configuration.calculationLibrary,
+    calculation_library_version: configuration.calculationLibraryVersion,
+  };
+  const jumuahPayload = configuration.jumuahSessions.map((session: JumuahSession) => ({
+    label: session.label,
+    khutbah_time: session.khutbahTime,
+    prayer_time: session.prayerTime ?? null,
+    display_order: session.displayOrder,
+    notes: session.notes ?? null,
+  })) as Json;
+  return { payload, jumuahPayload };
+}
+
+/* Parses the quick-change form: one offset-or-fixed rule per congregation
+   prayer plus the Jumuʿah khutbah time. */
+export function congregationRulesFromForm(
+  formData: FormData,
+): Record<CongregationPrayerKey, unknown> {
+  return Object.fromEntries(
+    congregationPrayerKeys.map((prayer) => [prayer, ruleFromForm(formData, prayer)]),
+  ) as Record<CongregationPrayerKey, unknown>;
+}
+
 export function congregationRuleDefaults(
   rule: CongregationRule | undefined,
 ): Record<string, string | number> {

@@ -30,6 +30,8 @@ export default async function PrayerTimesIndexPage() {
     throw new Error("Prayer configurations could not be loaded safely.");
   }
   const canWrite = roleHasPermission(context.role, "prayer:write");
+  const canPublish = roleHasPermission(context.role, "prayer:publish");
+  const published = configurations.find((configuration) => configuration.status === "published");
 
   return (
     <>
@@ -49,11 +51,26 @@ export default async function PrayerTimesIndexPage() {
         )}
       </div>
 
+      {published && canPublish && (
+        <div className="admin-card admin-card--narrow">
+          <p className="admin-eyebrow">Most common change</p>
+          <h2>Change Iqamah or Jumuʿah times</h2>
+          <p>
+            Adjust the live timetable&apos;s Iqamah rules or the Jumuʿah time in one step. Every
+            public page, the download and the calendar feed update within a minute.
+          </p>
+          <Link className="admin-button" href={`/admin/prayer-times/${published.id}#quick-change`}>
+            Open quick change
+          </Link>
+        </div>
+      )}
+
       <div className="admin-card admin-card--narrow">
         <h2>Publication safeguard</h2>
         <p>
           Public prayer times only come from an explicitly approved configuration. Published
-          versions cannot be edited; make a new draft whenever the source or arrangement changes.
+          versions cannot be edited in place: the quick change above swaps in a validated copy, and
+          anything larger is prepared as a new draft.
         </p>
       </div>
 

@@ -6,6 +6,7 @@ import { PrayerImportForm } from "@/components/admin/prayer-import-form";
 import { PrayerOverrideForm } from "@/components/admin/prayer-override-form";
 import { PrayerPreview } from "@/components/admin/prayer-preview";
 import { PrayerPublishForm } from "@/components/admin/prayer-publish-form";
+import { PrayerQuickChangeForm } from "@/components/admin/prayer-quick-change-form";
 import { PrayerSettingsForm } from "@/components/admin/prayer-settings-form";
 import { PrayerSeasonalForm } from "@/components/admin/prayer-seasonal-form";
 import {
@@ -281,9 +282,23 @@ export default async function PrayerSettingsDetailPage({
 
       {!isDraft && (
         <div className="admin-feedback" role="status">
-          This {statusLabels[configuration.status].toLowerCase()} configuration is immutable. Any
-          future change must be prepared and approved as a separate draft.
+          This {statusLabels[configuration.status].toLowerCase()} configuration is immutable.
+          {configuration.status === "published" && canPublish
+            ? " Iqamah and Jumuʿah times can be changed below; anything else is prepared as a separate draft."
+            : " Any future change must be prepared and approved as a separate draft."}
         </div>
+      )}
+
+      {configuration.status === "published" && canPublish && (
+        <section className="admin-section" aria-label="Change Iqamah or Jumuʿah times">
+          <PrayerQuickChangeForm
+            id={configuration.id}
+            version={configuration.version}
+            rules={configuration.congregationRules}
+            jumuahKhutbah={configuration.jumuahSessions[0]?.khutbahTime ?? "13:00"}
+            jumuahLabel={configuration.jumuahSessions[0]?.label ?? "Jumuʿah"}
+          />
+        </section>
       )}
 
       {isDraft && canWrite ? (

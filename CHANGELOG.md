@@ -24,6 +24,13 @@ semantic versioning once the production platform has a verified release process.
 - The eight-point star lattice is removed from every surface.
 - The About and Education pages are rebuilt around the masjid's own photographs (`MasjidPhoto`,
   `scripts/optimise-masjid-photos.mjs`), with a dedicated class card.
+- Dashboard: a **quick change** for the live timetable's Iqamah rules and Jumuʿah time — one
+  submit validates the whole period and swaps in the corrected copy atomically
+  (`quickChangeCongregationAction`).
+- Phones: the day-arc labels and the pinned next-prayer bar no longer clip; the menu is a
+  full-width list.
+- Copy: the About page and the contact page's directions and map note trimmed at the owner's
+  request.
 
 ## [0.4.0] — 2026-08-31
 
