@@ -11,7 +11,7 @@ import { prayerKeys, type PrayerSchedule } from "@/lib/prayer/types";
  * day and a sun that travels the arc on the shared client clock. Purely
  * illustrative — the table beside it carries the accessible data.
  */
-const WIDTH = 640;
+const WIDTH = 760;
 const RADIUS = 250;
 const CENTER_X = WIDTH / 2;
 const BASELINE = 268;

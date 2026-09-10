@@ -162,13 +162,23 @@
   display: flex;
   min-height: 2.75rem;
   align-items: center;
+  padding-block: 0.45rem;
   color: #edf4f0 !important;
   font-size: 0.9rem;
+  line-height: 1.35;
   font-variant-numeric: tabular-nums;
   text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+/* Phones: let the summary wrap onto a second line rather than clip. */
+@media (max-width: 36rem) {
+  .next-prayer-strip__inner {
+    font-size: 0.86rem;
+  }
+
+  .next-prayer-summary__remaining {
+    display: block;
+  }
 }
 
 .next-prayer-strip__inner:hover {
