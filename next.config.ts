@@ -15,10 +15,13 @@ const nextConfig: NextConfig = {
         // standalone file trace misses under pnpm's layout on Linux; without them
         // the media action's module fails to load at runtime and every upload dies
         // in the admin error boundary. Copy them into the standalone output.
+        // Files only, anchored to the real package directories: the tracer
+        // reads every match as a file, and the hoisted `.pnpm/node_modules`
+        // tree holds directory symlinks that would fail with EISDIR.
         outputFileTracingIncludes: {
           "/admin/**": [
-            "./node_modules/.pnpm/**/node_modules/sharp/**",
-            "./node_modules/.pnpm/**/node_modules/@img/**",
+            "./node_modules/.pnpm/sharp@*/node_modules/sharp/**/*.*",
+            "./node_modules/.pnpm/@img+*/node_modules/@img/*/**/*.*",
           ],
         },
       }),
