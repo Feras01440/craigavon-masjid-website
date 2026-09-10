@@ -148,9 +148,6 @@ export default async function ContactPage() {
               </a>
             </p>
           ) : null}
-          <p className="contact-safety">
-            In an emergency always call 999 — messages sent here are not monitored around the clock.
-          </p>
         </div>
       </section>
     </PublicShell>

@@ -56,9 +56,9 @@ export default function AboutPage() {
               towns, and it is open to anyone who would like to visit.
             </p>
             <p>
-              The five daily prayers and Jumuʿah are held here, along with the Friday Qur&apos;an
-              class. The Association also arranges funerals, Nikah ceremonies, support for people
-              embracing Islam, and visits for schools and community groups.
+              The five daily prayers and Jumuʿah are held here. The Association also arranges
+              funerals, Nikah ceremonies, support for people embracing Islam, and visits for schools
+              and community groups.
             </p>
             <div className="button-row">
               <Link className="button button--primary" href="/prayer-times">
