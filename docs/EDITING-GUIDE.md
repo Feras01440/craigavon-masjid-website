@@ -5,19 +5,19 @@ reviewed, deployed). This page says which is which and exactly where to look.
 
 ## Dashboard (no code) — `/admin`
 
-| I want to change…                                   | Dashboard section                    |
-| --------------------------------------------------- | ------------------------------------ |
-| Iqamah rules or the Jumuʿah time (one step)         | Prayer times → Open quick change     |
-| Prayer method, dates, overrides, Ramadan            | Prayer times → draft → publish       |
-| News, events, notices                               | Content → Announcements / Events     |
-| Classes on the Education page                       | Content → Education                  |
-| FAQs (shown on Services and the homepage)           | Content → FAQ                        |
-| Privacy notice and other policies                   | Content → Policy                     |
-| Homepage greeting line, heading, buttons            | Settings → Homepage content          |
-| Address, phone, WhatsApp, email, parking, access    | Settings → Contact and visit details |
-| Menu and footer links, footer note                  | Settings → Navigation and footer     |
-| Switch the enquiry form on/off                      | Settings → Feature flags             |
-| TV display (when the phase is authorised)           | Settings → TV display                |
+| I want to change…                                | Dashboard section                    |
+| ------------------------------------------------ | ------------------------------------ |
+| Iqamah rules or the Jumuʿah time (one step)      | Prayer times → Open quick change     |
+| Prayer method, dates, overrides, Ramadan         | Prayer times → draft → publish       |
+| News, events, notices                            | Content → Announcements / Events     |
+| Classes on the Education page                    | Content → Education                  |
+| FAQs (shown on Services and the homepage)        | Content → FAQ                        |
+| Privacy notice and other policies                | Content → Policy                     |
+| Homepage greeting line, heading, buttons         | Settings → Homepage content          |
+| Address, phone, WhatsApp, email, parking, access | Settings → Contact and visit details |
+| Menu and footer links, footer note               | Settings → Navigation and footer     |
+| Switch the enquiry form on/off                   | Settings → Feature flags             |
+| TV display (when the phase is authorised)        | Settings → TV display                |
 
 Content and settings are versioned; publishing needs a signed-in committee account with two-factor
 authentication.

@@ -34,12 +34,12 @@ the quarter-hour", so they follow the season instead of drifting away from the a
 On 10 September these rules reproduce the masjid's current practice exactly (06:00 · 14:00 · 18:00 ·
 +5 · 22:00). Jumuʿah is a single khutbah time (13:00); no separate Iqamah is shown.
 
-**The committee owns these rules.** In the dashboard, Prayer times → **Open quick change** shows
-the five rules and the Jumuʿah time; one submit validates every day of the period and swaps the
-live timetable for the corrected copy (the previous version stays in history). The published times
-update within a minute everywhere, including the calendar feed. A fixed time is also possible per
-prayer if the committee prefers it for a season. Keep the masjid screen (MAWAQIT) in step with
-whatever is published here.
+**The committee owns these rules.** In the dashboard, Prayer times → **Open quick change** shows the
+five rules and the Jumuʿah time; one submit validates every day of the period and swaps the live
+timetable for the corrected copy (the previous version stays in history). The published times update
+within a minute everywhere, including the calendar feed. A fixed time is also possible per prayer if
+the committee prefers it for a season. Keep the masjid screen (MAWAQIT) in step with whatever is
+published here.
 
 ## Coverage today
 
