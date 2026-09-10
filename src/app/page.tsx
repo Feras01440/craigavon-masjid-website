@@ -7,7 +7,6 @@ import {
   PublishedContentList,
   PublishedContentOmissionNotice,
   PublishedContentUnavailable,
-  PublishedFaqList,
   ServiceIcon,
 } from "@/components/site";
 import { DayArc } from "@/components/prayer/day-arc";
@@ -32,19 +31,18 @@ export const metadata: Metadata = {
 // the reader. See docs/architecture/ADR-003-public-caching.md.
 export const revalidate = 60;
 
-const featuredServiceIds = ["new-to-islam", "funerals", "education"] as const;
+const featuredServiceIds = ["new-to-islam", "education", "funerals"] as const;
 
 export default async function HomePage() {
   const now = new Date();
   const todayKey = dateKeyInZone(now, "Europe/London");
   // Eight days always reaches the next Friday, so the standing Jumuʿah row
   // can be sourced from published data on any weekday.
-  const [prayerBundle, updates, faqs, homepage, contact] = await Promise.all([
+  const [prayerBundle, updates, homepage, contact] = await Promise.all([
     // Transient fetch failures throw so a failed ISR regeneration keeps the
     // last good page instead of caching an apology card.
     getPublishedPrayerBundle(todayKey, 8, { throwOnTransientError: true }),
     getPublishedContent(["news", "event"], { limit: 3 }),
-    getPublishedContent(["faq"], { limit: 3 }),
     getPublicHomepageContent(),
     getPublicContactInformation(),
   ]);
@@ -160,14 +158,6 @@ export default async function HomePage() {
                 <ServiceIcon serviceId={category.id} />
                 <h3>{category.title}</h3>
                 <p>{category.summary}</p>
-                {category.epigraph ? (
-                  <p className="epigraph">
-                    <span className="epigraph__arabic" lang="ar" dir="rtl">
-                      {category.epigraph.arabic}
-                    </span>
-                    <span className="epigraph__english">{category.epigraph.english}</span>
-                  </p>
-                ) : null}
                 <Link className="text-link journey-card__link" href={`/services#${category.id}`}>
                   {category.action}
                 </Link>
@@ -210,24 +200,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {faqs.status === "ready" && faqs.items.length > 0 ? (
-        <section className="section section--tinted" aria-labelledby="faq-heading">
-          <div className="site-container">
-            <div className="section-heading" data-reveal>
-              <h2 id="faq-heading">Common questions</h2>
-            </div>
-            <div data-reveal>
-              <PublishedFaqList items={faqs.items} />
-            </div>
-            <p className="section-more">
-              <Link className="text-link" href="/services#service-faq-heading">
-                All questions
-              </Link>
-            </p>
-          </div>
-        </section>
-      ) : null}
 
       <section className="section section--pine section--photo" aria-labelledby="find-us-heading">
         <div className="site-container home-find__grid">

@@ -54,16 +54,6 @@ export default async function ServicesPage() {
                     <h2 id={`${category.id}-heading`}>{category.title}</h2>
                   </div>
                   <p>{category.summary}</p>
-                  {category.epigraph ? (
-                    <p className="epigraph">
-                      <span className="epigraph__arabic" lang="ar" dir="rtl">
-                        {category.epigraph.arabic}
-                      </span>
-                      <span className="epigraph__english">
-                        {category.epigraph.english} <cite>{category.epigraph.reference}</cite>
-                      </span>
-                    </p>
-                  ) : null}
                   <ul className="plain-list">
                     {category.points.map((point) => (
                       <li key={point}>{point}</li>

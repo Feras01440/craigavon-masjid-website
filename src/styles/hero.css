@@ -1,4 +1,4 @@
-/* Homepage hero: photo backdrop layer, lattice, grid, headline, icon badges. */
+/* Homepage hero: photo backdrop layer, grid, headline, icon badges. */
 .home-hero {
   position: relative;
   overflow: hidden;
@@ -32,10 +32,6 @@
   }
 }
 
-.home-hero::before {
-  z-index: 1;
-}
-
 .home-hero__grid {
   z-index: 2;
 }
@@ -58,18 +54,6 @@
       var(--pine-photo-wash),
       var(--pine-deep) url("/images/backdrop-green-ceiling-960.avif") center 60% / cover no-repeat;
   }
-}
-
-.home-hero::before,
-.section--pine::before,
-.site-footer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--khatam-lattice);
-  background-size: 96px 96px;
-  opacity: 0.05;
-  pointer-events: none;
 }
 
 .home-hero > *,

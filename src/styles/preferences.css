@@ -94,9 +94,6 @@
     forced-color-adjust: auto;
   }
 
-  .home-hero::before,
-  .section--pine::before,
-  .site-footer::before,
   .site-footer::after {
     background: none;
   }

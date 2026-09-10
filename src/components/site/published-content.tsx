@@ -79,20 +79,24 @@ export function PublishedContentList({
   );
 }
 
+/* Each question is a native disclosure: click to open, no script required. */
 export function PublishedFaqList({ items }: PublishedContentListProps) {
   return (
-    <dl className="published-faq-list">
+    <div className="published-faq-list">
       {items.map((item) => (
-        <div id={`content-${item.id}`} key={item.id}>
-          <dt>{item.title}</dt>
-          <dd>
+        <details className="faq-item" id={`content-${item.id}`} key={item.id}>
+          <summary className="faq-item__question">
+            <span>{item.title}</span>
+            <span className="faq-item__marker" aria-hidden="true" />
+          </summary>
+          <div className="faq-item__answer">
             {item.bodyBlocks.map((block, index) => (
               <p key={`${item.id}-${index}`}>{block}</p>
             ))}
-          </dd>
-        </div>
+          </div>
+        </details>
       ))}
-    </dl>
+    </div>
   );
 }
 

@@ -54,7 +54,7 @@
   --gold: #d3a84e;
   --gold-soft: #ecd193;
   /* Layered ground for the pine bands and footer: a warm gold glow over a
-     deep pine gradient, with a faint eight-point star lattice. */
+     deep pine gradient. */
   --pine-atmosphere:
     radial-gradient(120% 150% at 85% -10%, rgb(211 168 78 / 14%), transparent 55%),
     linear-gradient(160deg, #133a30 0%, #0d2821 55%, #0a1f1a 100%);
@@ -67,5 +67,4 @@
     rgb(10 31 26 / 90%) 55%,
     rgb(8 26 21 / 94%) 100%
   );
-  --khatam-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23ecd193' stroke-width='1'%3E%3Crect x='24' y='24' width='48' height='48'/%3E%3Crect x='24' y='24' width='48' height='48' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='7'/%3E%3C/g%3E%3C/svg%3E");
 }
