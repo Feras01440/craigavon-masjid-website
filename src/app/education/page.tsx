@@ -65,11 +65,7 @@ export default async function EducationPage() {
             <>
               <div className="class-grid">
                 {programmes.map((item, index) => (
-                  <div
-                    key={item.id}
-                    data-reveal
-                    style={{ "--reveal-delay": `${(index % 3) * 90}ms` } as React.CSSProperties}
-                  >
+                  <div key={item.id} data-reveal data-reveal-delay={index % 3}>
                     <ClassCard item={item} />
                   </div>
                 ))}

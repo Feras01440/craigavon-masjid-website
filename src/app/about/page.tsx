@@ -83,7 +83,7 @@ export default function AboutPage() {
                 className="about-gallery__item"
                 key={photo.name}
                 data-reveal
-                style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties}
+                data-reveal-delay={index % 2}
               >
                 <MasjidPhoto
                   name={photo.name}

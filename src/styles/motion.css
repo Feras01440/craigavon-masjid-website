@@ -32,6 +32,15 @@
     opacity: 1;
     transform: none;
   }
+
+  /* Stagger for grids: the attribute carries the card's position in its row. */
+  [data-reveal-delay="1"] {
+    --reveal-delay: 90ms;
+  }
+
+  [data-reveal-delay="2"] {
+    --reveal-delay: 180ms;
+  }
 }
 
 @media print {
@@ -51,19 +60,18 @@
 }
 
 .hero-prayer__window {
+  display: block;
+  width: 100%;
   height: 4px;
   margin-top: 0.85rem;
-  overflow: hidden;
-  border-radius: var(--radius-pill);
-  background: rgb(255 253 248 / 14%);
 }
 
-.hero-prayer__window span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--gold-soft);
-  transition: width 600ms var(--ease-standard);
+.hero-prayer__window-track {
+  fill: rgb(255 253 248 / 14%);
+}
+
+.hero-prayer__window-fill {
+  fill: var(--gold-soft);
 }
 
 .epigraph {

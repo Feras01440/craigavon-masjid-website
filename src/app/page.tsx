@@ -153,7 +153,7 @@ export default async function HomePage() {
                 className="journey-card"
                 key={category.id}
                 data-reveal
-                style={{ "--reveal-delay": `${index * 90}ms` } as React.CSSProperties}
+                data-reveal-delay={index % 3}
               >
                 <ServiceIcon serviceId={category.id} />
                 <h3>{category.title}</h3>

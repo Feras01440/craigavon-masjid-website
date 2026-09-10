@@ -7,7 +7,7 @@ export const publicRoutes = [
   { path: "/education", heading: "Learning at the masjid" },
   { path: "/news", heading: "News and events" },
   { path: "/contact", heading: "Contact us" },
-  { path: "/about", heading: "About the Association" },
+  { path: "/about", heading: "About the masjid" },
   { path: "/accessibility", heading: "Using this website" },
   { path: "/policies", heading: "Policies" },
   { path: "/policies/privacy", heading: /privacy|policy/i },

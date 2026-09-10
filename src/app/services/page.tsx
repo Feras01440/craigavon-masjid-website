@@ -46,7 +46,7 @@ export default async function ServicesPage() {
                 key={category.id}
                 aria-labelledby={`${category.id}-heading`}
                 data-reveal
-                style={{ "--reveal-delay": `${(index % 2) * 90}ms` } as React.CSSProperties}
+                data-reveal-delay={index % 2}
               >
                 <div className="service-item__body">
                   <div className="service-item__title">

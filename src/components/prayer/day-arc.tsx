@@ -96,7 +96,7 @@ export function DayArc({
             </g>
           );
         })}
-        <g className="day-arc__sun" style={{ transform: `translate(${sun.x}px, ${sun.y}px)` }}>
+        <g className="day-arc__sun" transform={`translate(${sun.x} ${sun.y})`}>
           <circle r={16} className="day-arc__sun-glow" />
           <circle r={8} className="day-arc__sun-core" />
         </g>

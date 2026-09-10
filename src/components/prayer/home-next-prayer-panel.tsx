@@ -66,9 +66,20 @@ export function HomeNextPrayerPanel({
             </p>
           ) : null}
           {inWindow ? (
-            <div className="hero-prayer__window" aria-hidden="true">
-              <span style={{ width: `${Math.round(windowProgress * 100)}%` }} />
-            </div>
+            <svg
+              className="hero-prayer__window"
+              viewBox="0 0 100 4"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <rect className="hero-prayer__window-track" width="100" height="4" rx="2" />
+              <rect
+                className="hero-prayer__window-fill"
+                width={Math.max(1, Math.round(windowProgress * 100))}
+                height="4"
+                rx="2"
+              />
+            </svg>
           ) : null}
         </>
       ) : (
