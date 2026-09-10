@@ -4,7 +4,7 @@ The public timetable is **published data**: every surface (homepage, `/prayer-ti
 bar, the CSV, the calendar feed and the TV display) reads the same committee-approved configuration,
 and the site shows "not available" rather than guessing when coverage runs out.
 
-## How the times are produced (from 11 September 2026)
+## How the times are produced (from 10 September 2026)
 
 **Begins times are calculated astronomically for the masjid's own coordinates** (54.4478 N, 6.3712
 W) with the `adhan` library, using:
@@ -45,8 +45,8 @@ published here.
 
 | Configuration                       | Effective               | Notes                                             |
 | ----------------------------------- | ----------------------- | ------------------------------------------------- |
-| Calculated timetable (rules above)  | 2026-09-11 → 2027-09-10 | Renew before 10 September 2027 (see below).       |
-| MAWAQIT official timetable (import) | 2026-08-31 → 2026-09-10 | Historical; ended when the calculation took over. |
+| Calculated timetable (rules above)  | 2026-09-10 → 2027-09-10 | Renew before 10 September 2027 (see below).       |
+| MAWAQIT official timetable (import) | 2026-08-31 → 2026-09-09 | Historical; ended when the calculation took over. |
 
 ## Renewing the coverage (two minutes, once a year)
 

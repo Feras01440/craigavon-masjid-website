@@ -11,7 +11,7 @@ reviewed, deployed). This page says which is which and exactly where to look.
 | Prayer method, dates, overrides, Ramadan         | Prayer times → draft → publish       |
 | News, events, notices                            | Content → Announcements / Events     |
 | Classes on the Education page                    | Content → Education                  |
-| FAQs (shown on Services and the homepage)        | Content → FAQ                        |
+| FAQs (Services page, click to open)              | Content → FAQ                        |
 | Privacy notice and other policies                | Content → Policy                     |
 | Homepage greeting line, heading, buttons         | Settings → Homepage content          |
 | Address, phone, WhatsApp, email, parking, access | Settings → Contact and visit details |
