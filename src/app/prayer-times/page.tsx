@@ -70,10 +70,28 @@ export default async function PrayerTimesPage(): Promise<React.ReactNode> {
                 initialNowIso={now.toISOString()}
                 showLink={false}
               />
-              <p className="feed-links">
-                <a href={subscribeHref}>Subscribe in your calendar app</a>
-                <a href={feedPath}>Calendar feed address</a>
-              </p>
+              <details className="feed-help">
+                <summary>Add the prayer times to your phone&apos;s calendar</summary>
+                <div className="feed-help__body">
+                  <p>
+                    <strong>iPhone:</strong> tap <a href={subscribeHref}>Subscribe on iPhone</a> and
+                    confirm. The calendar updates itself every day.
+                  </p>
+                  <p>
+                    <strong>Google Calendar (Android or web):</strong> open Google Calendar on a
+                    computer, choose <em>Other calendars → From URL</em>, and paste this address:
+                  </p>
+                  <p>
+                    <code className="feed-help__address">
+                      {siteUrl ? `${siteUrl.origin}${feedPath}` : feedPath}
+                    </code>
+                  </p>
+                  <p className="feed-help__note">
+                    The address is a calendar feed, not a page: opening it directly shows the raw
+                    calendar file.
+                  </p>
+                </div>
+              </details>
               {today.seasonalArrangements.length > 0 && (
                 <section className={styles.notice} aria-labelledby="seasonal-arrangements-heading">
                   <h3 id="seasonal-arrangements-heading">Current seasonal arrangements</h3>

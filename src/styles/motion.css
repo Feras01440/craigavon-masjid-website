@@ -178,11 +178,44 @@
   }
 }
 
-.feed-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.5rem;
+.feed-help {
   margin-top: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.feed-help summary {
+  padding: 0.85rem 1.1rem;
+  color: var(--pine-deep);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.feed-help__body {
+  padding: 0 1.1rem 1rem;
+  color: var(--ink-soft);
   font-size: 0.95rem;
-  font-weight: 650;
+}
+
+.feed-help__body p + p {
+  margin-top: 0.6rem;
+}
+
+.feed-help__address {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.feed-help__note {
+  color: var(--ink-faint);
+  font-size: 0.88rem;
 }
