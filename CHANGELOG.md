@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and releases will use
 semantic versioning once the production platform has a verified release process. Dates use ISO 8601.
 
+## [0.5.1] — 2026-09-12
+
+### Added
+
+- The prayer times page explains how to add the timetable to a phone's calendar (one tap on iPhone;
+  a copyable feed address for Google Calendar) and notes that the feed address is a calendar file
+  rather than a page.
+
+### Fixed
+
+- A hydration error on the cached homepage. The header's "current page" marker and the pinned
+  next-prayer bar were derived from the pathname inside client components, and the pathname seen
+  while Vercel regenerates a cached page differs from the browser's. The shell now decides where the
+  bar appears, and the marker is applied once hydrated.
+- The hero artwork is preloaded through React's `preload()` rather than JSX `<link>` elements, which
+  took part in hydration.
+
+### Security
+
+- Next.js 16.3.3 and sharp 0.35.4 (two critical Next.js advisories and a libheif advisory); the
+  standalone build traces sharp's native files with files-only globs.
+
 ## [0.5.0] — 2026-09-10
 
 ### Changed

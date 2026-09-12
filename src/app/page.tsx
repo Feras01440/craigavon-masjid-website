@@ -73,7 +73,7 @@ export default async function HomePage() {
     : "";
 
   return (
-    <PublicShell>
+    <PublicShell nextPrayerStrip={false}>
       <section className="home-hero">
         <div className="home-hero__backdrop" aria-hidden="true" />
         <div className="site-container home-hero__grid">

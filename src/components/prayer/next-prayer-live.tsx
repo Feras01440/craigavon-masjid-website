@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import { useNow } from "@/components/prayer/use-now";
 import { nextPrayerDetail } from "@/lib/prayer/events";
@@ -52,8 +51,11 @@ export function NextPrayerSummary({
   );
 }
 
-/* Slim pinned bar under the header on inner pages; the homepage hero panel
-   already carries the same information, so the strip hides itself there. */
+/* Slim pinned bar under the header on inner pages. The shell decides where
+   it appears (the homepage hero already carries the same information); the
+   decision is not made from the pathname here because the pathname seen while
+   the host regenerates a cached page can differ from the browser's, and the
+   two renders must match for hydration. */
 export function NextPrayerStrip({
   schedules,
   initialNowIso,
@@ -61,9 +63,8 @@ export function NextPrayerStrip({
   schedules: PrayerSchedule[];
   initialNowIso: string;
 }): React.ReactNode {
-  const pathname = usePathname();
   const { next } = useNextPrayer(schedules, initialNowIso);
-  if (pathname === "/" || !next) return null;
+  if (!next) return null;
   return (
     <div className="next-prayer-strip">
       <Link className="site-container next-prayer-strip__inner" href="/prayer-times">

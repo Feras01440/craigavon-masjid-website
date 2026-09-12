@@ -12,9 +12,11 @@ import { getPublicSiteChrome } from "@/server/repositories/public-site-settings"
 
 type PublicShellProps = {
   children: ReactNode;
+  /** The homepage hero already shows the next prayer, so it omits the bar. */
+  nextPrayerStrip?: boolean;
 };
 
-export async function PublicShell({ children }: PublicShellProps) {
+export async function PublicShell({ children, nextPrayerStrip = true }: PublicShellProps) {
   const now = new Date();
   const [chrome, prayerBundle] = await Promise.all([
     getPublicSiteChrome(),
@@ -33,7 +35,7 @@ export async function PublicShell({ children }: PublicShellProps) {
         masjidName={chrome.masjidName}
         navigation={chrome.primaryNavigation}
       />
-      {prayerBundle.status === "available" && (
+      {nextPrayerStrip && prayerBundle.status === "available" && (
         <NextPrayerStrip schedules={prayerBundle.schedules} initialNowIso={now.toISOString()} />
       )}
       {demoMode && (

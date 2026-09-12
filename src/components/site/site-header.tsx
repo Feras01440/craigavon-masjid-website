@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 
 import type { PublicNavigationItem } from "@/server/repositories/public-site-settings";
 
@@ -44,9 +44,20 @@ export function SiteHeader({
     disclosure.current?.removeAttribute("open");
   }, [pathname]);
 
+  // The "current page" marker is applied only once hydrated: the pathname seen
+  // while a cached page is regenerated on the host is not always the one the
+  // browser sees, and React 19 treats any such attribute difference as a
+  // hydration failure. The server snapshot (false) keeps the first client
+  // render identical to the HTML; the marker follows a moment later.
+  const hydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const items: PublicNavigationItem[] = [{ href: "/", label: "Home" }, ...navigation];
   const navigationItems = items.map((item) => {
-    const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+    const active =
+      hydrated && (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
     return (
       <li key={item.href}>
         <Link href={item.href} aria-current={active ? "page" : undefined}>
