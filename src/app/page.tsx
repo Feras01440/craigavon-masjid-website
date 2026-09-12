@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { preload } from "react-dom";
 
 import {
   ApprovalCard,
@@ -34,6 +35,18 @@ export const revalidate = 60;
 const featuredServiceIds = ["new-to-islam", "education", "funerals"] as const;
 
 export default async function HomePage() {
+  // The hero artwork is the page's largest paint: one hoisted preload hint,
+  // sized so phones and tablets fetch the 960 file and desktops the 1920,
+  // matching the stylesheet's breakpoint. (A JSX <link> would take part in
+  // hydration and mismatch against the cached HTML; preload() does not.)
+  preload("/images/backdrop-gold-dome-1920.avif", {
+    as: "image",
+    type: "image/avif",
+    imageSrcSet:
+      "/images/backdrop-gold-dome-960.avif 960w, /images/backdrop-gold-dome-1920.avif 1920w",
+    imageSizes: "(max-width: 52rem) 50vw, 100vw",
+    fetchPriority: "high",
+  });
   const now = new Date();
   const todayKey = dateKeyInZone(now, "Europe/London");
   // Eight days always reaches the next Friday, so the standing Jumuʿah row
@@ -61,22 +74,6 @@ export default async function HomePage() {
 
   return (
     <PublicShell>
-      {/* React hoists these into <head>; the hero artwork is the page's
-          largest paint, so the browser starts it before the stylesheet. */}
-      <link
-        rel="preload"
-        as="image"
-        type="image/avif"
-        href="/images/backdrop-gold-dome-1920.avif"
-        media="(min-width: 52.01rem)"
-      />
-      <link
-        rel="preload"
-        as="image"
-        type="image/avif"
-        href="/images/backdrop-gold-dome-960.avif"
-        media="(max-width: 52rem)"
-      />
       <section className="home-hero">
         <div className="home-hero__backdrop" aria-hidden="true" />
         <div className="site-container home-hero__grid">
