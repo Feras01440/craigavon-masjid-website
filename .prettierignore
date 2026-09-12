@@ -1,0 +1,10 @@
+.next
+.claude
+coverage
+node_modules
+playwright-report
+test-results
+pnpm-lock.yaml
+legacy
+docs/audits/evidence
+assets/vendor

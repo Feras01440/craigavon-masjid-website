@@ -1,0 +1,108 @@
+/* The hero's live next-prayer panel. */
+/* The hero's live prayer panel. */
+.hero-prayer {
+  padding: clamp(1.4rem, 3.5vw, 2rem);
+  border: 1px solid #315249;
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--pine-deep) 62%, #0a1f1a);
+  color: #edf4f0;
+  box-shadow: var(--shadow-2);
+}
+
+.hero-prayer__eyebrow {
+  margin: 0 0 0.6rem;
+  color: var(--gold-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero-prayer__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  color: #fffdf8;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: var(--weight-display);
+  line-height: 1.15;
+}
+
+.hero-prayer__arabic {
+  color: #b9cec6;
+  font-family: var(--font-arabic);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+.hero-prayer__times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.1rem 0 0;
+}
+
+.hero-prayer__times dt {
+  color: #b9cec6;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-prayer__times dd {
+  margin: 0.15rem 0 0;
+  color: #fffdf8;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  font-weight: var(--weight-display-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.hero-prayer__note {
+  display: block;
+  margin-top: 0.15rem;
+  color: #b9cec6;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.hero-prayer__countdown {
+  min-height: 1.3rem;
+  margin: 0.7rem 0 0;
+  color: var(--gold-soft);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.hero-prayer__unavailable {
+  margin: 0.7rem 0 0;
+  color: #d8e3de;
+}
+
+.hero-prayer__jumuah {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid #315249;
+  color: #edf4f0;
+  font-weight: 650;
+}
+
+.hero-prayer__link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  margin-top: 0.9rem;
+  color: var(--gold-soft) !important;
+  font-weight: 750;
+}

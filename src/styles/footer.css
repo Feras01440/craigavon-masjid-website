@@ -1,0 +1,112 @@
+/* Site footer and the embossed mark. */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid var(--gold);
+  background: var(--pine-atmosphere);
+  color: #dbe7e1;
+}
+
+/* The Association's mark, embossed in gold behind the footer content. */
+.site-footer::after {
+  content: "";
+  position: absolute;
+  right: clamp(-7rem, -4vw, -3rem);
+  bottom: -7rem;
+  width: 28rem;
+  height: 28rem;
+  background: url("/brand/logo-mark-gold-512.png") center / contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(13rem, 0.8fr) minmax(13rem, 0.8fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+.site-footer__name {
+  margin-bottom: 0.75rem;
+  color: #fffdf8;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3vw, 1.65rem);
+  font-weight: var(--weight-display);
+  line-height: 1.2;
+}
+
+.site-footer__organisation {
+  display: block;
+  margin-top: 0.3rem;
+  color: #b9cec6;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-footer__heading {
+  margin: 0 0 0.6rem;
+  color: var(--gold-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.site-footer__contact p {
+  margin: 0;
+}
+
+.site-footer__address {
+  margin-bottom: 0.35rem;
+  color: #dbe7e1;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.site-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.site-footer__logo {
+  width: 3.4rem;
+  height: 3.4rem;
+}
+
+.site-footer__note {
+  max-width: 34rem;
+  color: #c7d7d0;
+}
+
+.site-footer__nav ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer a {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  color: var(--gold-soft);
+  font-weight: 500;
+}
+
+.site-footer a:hover {
+  color: #ffffff;
+}
+
+.site-footer__bottom {
+  padding-block: 1.25rem;
+  border-top: 1px solid #48635a;
+  color: #b8ccc3;
+  font-size: 0.9rem;
+}

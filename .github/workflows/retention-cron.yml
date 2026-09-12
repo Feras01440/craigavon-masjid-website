@@ -1,0 +1,27 @@
+name: Enquiry retention
+
+on:
+  schedule:
+    # 03:30 UTC daily — quiet hours for a UK audience.
+    - cron: "30 3 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: none
+
+jobs:
+  retention:
+    name: Run the enquiry retention job
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST the authorised retention request
+        run: |
+          status=$(curl -s -o /tmp/body -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://craigavon-masjid.vercel.app/api/cron/retention)
+          echo "HTTP $status"
+          cat /tmp/body
+          # 200 = ran; 503 = retention not configured (acceptable, not a failure).
+          if [ "$status" != "200" ] && [ "$status" != "503" ]; then
+            exit 1
+          fi

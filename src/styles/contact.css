@@ -1,0 +1,129 @@
+/* Contact page, policy register, not-found. */
+/* Contact */
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+}
+
+.contact-method {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 2.75rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--motion-quick) var(--ease-standard);
+}
+
+a.contact-method:hover {
+  border-color: var(--berry);
+}
+
+.contact-method__label {
+  color: var(--berry);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contact-method__value {
+  color: var(--pine-deep);
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.contact-form-fallback {
+  max-width: 46ch;
+  margin-top: 1rem;
+  color: var(--ink-soft);
+}
+
+.visiting {
+  border-top: 1px solid var(--line-strong);
+  padding-top: 1.5rem;
+  scroll-margin-top: 6rem;
+}
+
+.visiting h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+}
+
+.visiting > p {
+  margin-top: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.contact-map {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-1);
+}
+
+.contact-map__frame {
+  display: block;
+  width: 100%;
+  height: clamp(20rem, 48vw, 30rem);
+  border: 0;
+}
+
+.contact-map__link {
+  margin: 0.9rem 0 0;
+  font-weight: 700;
+}
+
+.contact-safety {
+  margin: 1.5rem 0 0;
+  color: var(--ink-faint);
+  font-size: 0.88rem;
+}
+
+.policy-register-section + .policy-register-section {
+  margin-top: var(--section-space);
+  padding-top: var(--section-space);
+  border-top: 1px solid var(--line-strong);
+}
+
+.published-policy-date {
+  margin-top: 1rem;
+  color: var(--ink-faint) !important;
+  font-size: 0.9rem !important;
+  font-weight: 700;
+}
+
+.not-found {
+  min-height: 65vh;
+  display: grid;
+  place-items: center;
+  padding-block: var(--section-space);
+}
+
+.not-found__inner {
+  max-width: 47rem;
+}
+
+.not-found h1 + p {
+  max-width: 38rem;
+  margin-top: 1.25rem;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.not-found .button--primary {
+  border-color: var(--pine-deep);
+  background: var(--pine-deep);
+  color: var(--surface) !important;
+}
+
+.not-found .button--secondary {
+  color: var(--pine-deep) !important;
+}
